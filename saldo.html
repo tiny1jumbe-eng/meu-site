@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saldo - DIGIVEND</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .saldo-container {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .saldo-container h2 {
+      color: red;
+      margin-bottom: 20px;
+    }
+
+    .saldo-box {
+      background: #111;
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      width: 300px;
+      margin: 0 auto;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+
+    .btn-saque {
+      margin-top: 20px;
+      background: red;
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #222;
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .modal-content h3 {
+      color: red;
+      margin-bottom: 15px;
+    }
+
+    .modal-content input, .modal-content select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+    }
+
+    .modal-content button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-confirmar {
+      background: red;
+      color: white;
+    }
+
+    .btn-cancelar {
+      background: gray;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- Cabeçalho igual ao dashboard -->
+  <header class="dashboard-header">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <h1 class="logo">DIGIVEND</h1>
+    <div class="user-icon">👤</div>
+  </header>
+
+  <!-- Menu lateral -->
+  <nav id="sidebar" class="sidebar">
+    <button class="close-btn" onclick="toggleMenu()">✖</button>
+    <ul>
+      <li><a href="dashboard_vendedor.html">Home</a></li>
+      <li><a href="meus_produtos.html">Meus Produtos</a></li>
+      <li><a href="vendas.html">Vendas</a></li>
+      <li><a href="analises_relatorios.html">Análises/Relatórios</a></li>
+      <li><a href="saldo.html">Saldo</a></li>
+      <li><a href="digiclub.html">Digiclub</a></li>
+      <li><a href="mercado_afiliacao.html">Mercado de Afiliação</a></li>
+      <li><a href="ferramentas.html">Ferramentas</a></li>
+      <li><a href="chat_afiliados.html">Chat Afiliados</a></li>
+    </ul>
+  </nav>
+
+  <!-- Conteúdo principal -->
+  <div class="saldo-container">
+    <h2>Seu Saldo</h2>
+    <div class="saldo-box">
+      <p><strong>R$ 1.250,00</strong></p>
+      <button class="btn-saque" onclick="abrirModal()">Solicitar Saque</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modalSaque" class="modal">
+    <div class="modal-content">
+      <h3>Solicitar Saque</h3>
+      <input type="number" id="valor" placeholder="Digite o valor">
+      <select id="metodo">
+        <option value="pix">PIX</option>
+        <option value="conta">Conta Bancária</option>
+      </select>
+      <button class="btn-confirmar" onclick="confirmarSaque()">Confirmar</button>
+      <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+    </div>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("sidebar").classList.toggle("open");
+    }
+
+    function abrirModal() {
+      document.getElementById("modalSaque").style.display = "flex";
+    }
+
+    function fecharModal() {
+      document.getElementById("modalSaque").style.display = "none";
+    }
+
+    function confirmarSaque() {
+      const valor = document.getElementById("valor").value;
+      const metodo = document.getElementById("metodo").value;
+
+      if (valor === "" || valor <= 0) {
+        alert("Por favor, insira um valor válido.");
+        return;
+      }
+
+      alert("Saque de R$ " + valor + " via " + metodo.toUpperCase() + " solicitado com sucesso!");
+      fecharModal();
+    }
+  </script>
+</body>
+</html>

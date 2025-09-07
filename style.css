@@ -500,3 +500,166 @@ footer {
   background: #600;
   color: white;
 }
+/* ===== VENDAS ===== */
+.titulo-vermelho {
+  color: red;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(255,0,0,0.4);
+}
+
+.filtros {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.filtros input, 
+.filtros select {
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+}
+
+.btn-vermelho {
+  background: red;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  background: #111;
+  color: white;
+}
+
+.tabela th, .tabela td {
+  border: 1px solid #333;
+  padding: 10px;
+  text-align: center;
+}
+
+.tabela th {
+  background: #222;
+  color: red;
+}
+.menu-lateral {
+  position: fixed;
+  left: -250px;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  background: #111;
+  padding: 20px;
+  transition: left 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-lateral.aberto {
+  left: 0;
+}
+
+.menu-lateral a {
+  color: white;
+  text-decoration: none;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.menu-lateral a:hover {
+  color: red;
+}
+/* ===== CABEÇALHO ===== */
+.topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 900;
+}
+
+.logo {
+  color: red;
+  text-align: center;
+  flex-grow: 1;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.hamburguer {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.usuario {
+  color: white;
+  font-size: 18px;
+}
+
+/* ===== MENU LATERAL ===== */
+.menu-lateral {
+  position: fixed;
+  left: -250px; /* escondido fora da tela */
+  top: 0;
+  width: 250px;
+  height: 100%;
+  background: #111;
+  padding: 20px;
+  transition: left 0.3s;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.menu-lateral.aberto {
+  left: 0;
+}
+
+.menu-lateral a {
+  color: white;
+  text-decoration: none;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.menu-lateral a:hover {
+  color: red;
+}
+
+.menu-lateral .fechar {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: red;
+  font-size: 20px;
+  cursor: pointer;
+}

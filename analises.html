@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DIGIVEND - Análises</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- TOPO -->
+  <header class="dashboard-header">
+    <button class="menu-btn" onclick="openMenu()" aria-label="Abrir menu">☰</button>
+    <h1 class="logo-center">DIGIVEND</h1>
+    <div class="user-profile">👤 Usuário</div>
+  </header>
+
+  <!-- MENU LATERAL -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">×</button>
+    <a href="dashboard_vendedor.html" onclick="closeMenu()">Home</a>
+    <a href="meus_produtos.html" onclick="closeMenu()">Meus Produtos</a>
+    <a href="vendas.html" onclick="closeMenu()">Vendas</a>
+    <a href="analises.html" onclick="closeMenu()">Análises/Relatórios</a>
+    <a href="saldo.html" onclick="closeMenu()">Saldo</a>
+    <a href="digiclub.html" onclick="closeMenu()">Digiclub</a>
+    <a href="mercado_afiliacao.html" onclick="closeMenu()">Mercado de Afiliação</a>
+    <a href="ferramentas.html" onclick="closeMenu()">Ferramentas</a>
+    <a href="chat_afiliados.html" onclick="closeMenu()">Chat Afiliados</a>
+  </nav>
+
+  <!-- CONTEÚDO -->
+  <main class="dashboard-content" style="padding:16px; margin-top:12px;">
+    <h2 class="logo-center" style="color:red;">Relatórios e Análises</h2>
+
+    <!-- Cards Resumo -->
+    <section class="cards-container" style="margin-top:16px;">
+      <div class="card"><h3>📊 Vendas Hoje</h3><p>R$ 0,00</p></div>
+      <div class="card"><h3>📈 Crescimento</h3><p>0%</p></div>
+      <div class="card"><h3>👥 Novos Clientes</h3><p>0</p></div>
+      <div class="card"><h3>📦 Produtos Vendidos</h3><p>0</p></div>
+    </section>
+
+    <!-- Gráficos -->
+    <section style="margin-top:32px; max-width:1000px; margin-left:auto; margin-right:auto;">
+      <h3 style="color:red; text-align:center;">Vendas Semanais</h3>
+      <canvas id="graficoVendas" height="120"></canvas>
+    </section>
+
+    <section style="margin-top:32px; max-width:1000px; margin-left:auto; margin-right:auto;">
+      <h3 style="color:red; text-align:center;">Categorias Mais Vendidas</h3>
+      <canvas id="graficoCategorias" height="120"></canvas>
+    </section>
+  </main>
+
+  <script>
+    function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
+    function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
+
+    // Gráfico de vendas semanais (linha)
+    const ctxVendas = document.getElementById('graficoVendas');
+    new Chart(ctxVendas, {
+      type: 'line',
+      data: {
+        labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+        datasets: [{
+          label: 'Vendas (R$)',
+          data: [0, 0, 0, 0, 0, 0, 0],
+          borderColor: 'red',
+          backgroundColor: 'rgba(255,0,0,0.2)',
+          borderWidth: 2,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: 'white' } } },
+        scales: {
+          x: { ticks: { color: 'white' } },
+          y: { ticks: { color: 'white' } }
+        }
+      }
+    });
+
+    // Gráfico de categorias (pizza)
+    const ctxCategorias = document.getElementById('graficoCategorias');
+    new Chart(ctxCategorias, {
+      type: 'pie',
+      data: {
+        labels: ['Roupas', 'Eletrônicos', 'Cursos', 'Serviços'],
+        datasets: [{
+          label: 'Categorias',
+          data: [0, 0, 0, 0],
+          backgroundColor: ['#ff0000', '#222', '#555', '#888']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: 'white' } } }
+      }
+    });
+  </script>
+</body>
+</html>
