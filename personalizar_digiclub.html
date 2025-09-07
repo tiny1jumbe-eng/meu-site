@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personalizar Digiclub</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .form-container {
+      max-width: 500px;
+      margin: 30px auto;
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+      color: white;
+    }
+    .form-container label {
+      display: block;
+      margin-top: 12px;
+      text-align: left;
+    }
+    .form-container input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: none;
+    }
+    .form-container button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      background: red;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+    <h1 class="logo-center">DIGIVEND</h1>
+    <div class="user-profile">👤 Usuário</div>
+  </header>
+
+  <main>
+    <div class="form-container">
+      <h2>Personalizar Digiclub</h2>
+      <label for="banner">Banner do Digiclub:</label>
+      <input type="file" id="banner" accept="image/*">
+
+      <label for="cor">Cor principal:</label>
+      <input type="color" id="cor">
+
+      <label for="descricao">Descrição do Digiclub:</label>
+      <input type="text" id="descricao" placeholder="Escreva algo sobre seu Digiclub...">
+
+      <button onclick="salvarPersonalizacao()">Salvar Personalização</button>
+    </div>
+  </main>
+
+  <script>
+    function salvarPersonalizacao(){
+      alert("Personalização salva com sucesso!");
+    }
+    function openMenu(){ document.getElementById("sideMenu").style.width = "250px"; }
+    function closeMenu(){ document.getElementById("sideMenu").style.width = "0"; }
+  </script>
+</body>
+</html>

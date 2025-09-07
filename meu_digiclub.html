@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Digiclub</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .progress-container {
+      width: 80%;
+      margin: 20px auto;
+      text-align: center;
+    }
+    .progress-bar {
+      width: 100%;
+      background: #333;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      width: 30%; /* Exemplo inicial */
+      background: red;
+      padding: 8px 0;
+      color: white;
+      text-align: center;
+      border-radius: 10px;
+    }
+    .options {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+    }
+    .options button {
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: red;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+    <h1 class="logo-center">DIGIVEND</h1>
+    <div class="user-profile">👤 Usuário</div>
+  </header>
+
+  <main style="padding:20px; text-align:center;">
+    <h2 style="color:red;">Meu Digiclub</h2>
+
+    <!-- Barra de progresso -->
+    <div class="progress-container">
+      <p>Primeiros passos para personalização básica</p>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill">30%</div>
+      </div>
+    </div>
+
+    <!-- Opções -->
+    <div class="options">
+      <button onclick="alert('Adicionar primeiros produtos')">Adicionar primeiros produtos</button>
+      <button onclick="window.location.href='personalizar_digiclub.html'">Personalizar Digiclub</button>
+      <button onclick="alert('Criar primeira comunidade')">Criar primeira comunidade</button>
+    </div>
+  </main>
+
+  <script>
+    function openMenu(){ document.getElementById("sideMenu").style.width = "250px"; }
+    function closeMenu(){ document.getElementById("sideMenu").style.width = "0"; }
+  </script>
+</body>
+</html>
