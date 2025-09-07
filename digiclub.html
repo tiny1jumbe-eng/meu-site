@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DIGIVEND - Digiclub</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Estilo das abas */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      background: #111;
+      border-bottom: 2px solid red;
+    }
+    .tab {
+      padding: 12px 20px;
+      cursor: pointer;
+      color: white;
+      background: #111;
+      border: none;
+      outline: none;
+      transition: background 0.3s;
+    }
+    .tab:hover { background: #222; }
+    .tab.active { background: red; color: white; }
+
+    .tab-content {
+      display: none;
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+    .tab-content.active { display: block; }
+
+    /* Cards estilo Netflix */
+    .vitrine {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding: 10px;
+    }
+    .card {
+      min-width: 180px;
+      height: 120px;
+      background: #222;
+      border-radius: 10px;
+      flex-shrink: 0;
+      color: red;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .card:hover { transform: scale(1.05); }
+  </style>
+</head>
+<body>
+  <!-- TOPO -->
+  <header class="dashboard-header">
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+    <h1 class="logo-center">DIGIVEND</h1>
+    <div class="user-profile">👤 Usuário</div>
+  </header>
+
+  <!-- MENU LATERAL -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">×</button>
+    <a href="dashboard_vendedor.html" onclick="closeMenu()">Home</a>
+    <a href="meus_produtos.html" onclick="closeMenu()">Meus Produtos</a>
+    <a href="vendas.html" onclick="closeMenu()">Vendas</a>
+    <a href="analises.html" onclick="closeMenu()">Análises/Relatórios</a>
+    <a href="saldo.html" onclick="closeMenu()">Saldo</a>
+    <a href="digiclub.html" onclick="closeMenu()">Digiclub</a>
+    <a href="mercado_afiliacao.html" onclick="closeMenu()">Mercado de Afiliação</a>
+    <a href="ferramentas.html" onclick="closeMenu()">Ferramentas</a>
+    <a href="chat_afiliados.html" onclick="closeMenu()">Chat Afiliados</a>
+  </nav>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main style="margin-top:16px; padding:10px;">
+    <!-- Abas -->
+    <div class="tabs">
+      <button class="tab active" onclick="openTab(event, 'vitrine')">Vitrine</button>
+      <button class="tab" onclick="openTab(event, 'produto')">Página do Produto</button>
+      <button class="tab" onclick="openTab(event, 'sala')">Sala de Aula</button>
+      <button class="tab" onclick="openTab(event, 'comunidade')">Comunidade</button>
+    </div>
+
+    <!-- Conteúdo das Abas -->
+    <div id="vitrine" class="tab-content active">
+      <h2 style="color:red;">🎬 Vitrine</h2>
+      <div class="vitrine">
+        <div class="card">Produto 1</div>
+        <div class="card">Produto 2</div>
+        <div class="card">Comunidade 1</div>
+        <div class="card">Curso 1</div>
+      </div>
+    </div>
+
+    <div id="produto" class="tab-content">
+      <h2 style="color:red;">📦 Página do Produto</h2>
+      <p>Aqui você poderá personalizar banners, adicionar descrições e criar trilhas de estudo.</p>
+    </div>
+
+    <div id="sala" class="tab-content">
+      <h2 style="color:red;">📚 Sala de Aula</h2>
+      <p>Aqui ficam as aulas, arquivos, quizzes e trilhas de conhecimento.</p>
+    </div>
+
+    <div id="comunidade" class="tab-content">
+      <h2 style="color:red;">👥 Comunidade</h2>
+      <p>Espaço para discussão e troca de conhecimento com alunos.</p>
+    </div>
+  </main>
+
+  <script>
+    function openMenu(){ document.getElementById("sideMenu").style.width="250px"; }
+    function closeMenu(){ document.getElementById("sideMenu").style.width="0"; }
+
+    // Função de abas
+    function openTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tab-content");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].classList.remove("active");
+      }
+      tablinks = document.getElementsByClassName("tab");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].classList.remove("active");
+      }
+      document.getElementById(tabName).classList.add("active");
+      evt.currentTarget.classList.add("active");
+    }
+  </script>
+</body>
+</html>
