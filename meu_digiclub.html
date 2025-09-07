@@ -18,12 +18,13 @@
       overflow: hidden;
     }
     .progress-fill {
-      width: 30%; /* Exemplo inicial */
+      width: 0%;
       background: red;
       padding: 8px 0;
       color: white;
       text-align: center;
       border-radius: 10px;
+      transition: width 0.4s ease;
     }
     .options {
       margin-top: 20px;
@@ -57,19 +58,59 @@
     <div class="progress-container">
       <p>Primeiros passos para personalização básica</p>
       <div class="progress-bar">
-        <div class="progress-fill" id="progressFill">30%</div>
+        <div class="progress-fill" id="progressFill">0%</div>
       </div>
     </div>
 
     <!-- Opções -->
     <div class="options">
-      <button onclick="alert('Adicionar primeiros produtos')">Adicionar primeiros produtos</button>
-      <button onclick="window.location.href='personalizar_digiclub.html'">Personalizar Digiclub</button>
-      <button onclick="alert('Criar primeira comunidade')">Criar primeira comunidade</button>
+      <button onclick="concluirEtapa('produtos')">Adicionar primeiros produtos</button>
+      <button onclick="concluirEtapa('personalizar')">Personalizar Digiclub</button>
+      <button onclick="concluirEtapa('comunidade')">Criar primeira comunidade</button>
     </div>
   </main>
 
   <script>
+    let etapasConcluidas = {
+      produtos: false,
+      personalizar: false,
+      comunidade: false
+    };
+
+    // 🔹 Carregar progresso salvo
+    window.onload = function() {
+      const salvo = localStorage.getItem("progressoDigiclub");
+      if (salvo) {
+        etapasConcluidas = JSON.parse(salvo);
+      }
+      atualizarProgresso();
+    };
+
+    function concluirEtapa(etapa) {
+      if (!etapasConcluidas[etapa]) {
+        etapasConcluidas[etapa] = true;
+        salvarProgresso();
+        atualizarProgresso();
+        alert("Etapa concluída: " + etapa);
+      } else {
+        alert("Você já concluiu esta etapa!");
+      }
+    }
+
+    function atualizarProgresso() {
+      const totalEtapas = Object.keys(etapasConcluidas).length;
+      const concluidas = Object.values(etapasConcluidas).filter(Boolean).length;
+      const porcentagem = Math.round((concluidas / totalEtapas) * 100);
+
+      const barra = document.getElementById("progressFill");
+      barra.style.width = porcentagem + "%";
+      barra.textContent = porcentagem + "%";
+    }
+
+    function salvarProgresso() {
+      localStorage.setItem("progressoDigiclub", JSON.stringify(etapasConcluidas));
+    }
+
     function openMenu(){ document.getElementById("sideMenu").style.width = "250px"; }
     function closeMenu(){ document.getElementById("sideMenu").style.width = "0"; }
   </script>
