@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Digiclub</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .form-container {
+      max-width: 400px;
+      margin: 50px auto;
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+      color: white;
+      text-align: center;
+    }
+    .form-container input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: none;
+    }
+    .notification {
+      display: none;
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      color: white;
+    }
+    .notification button {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-personalizar { background: red; color: white; }
+    .btn-explorar { background: green; color: white; }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+    <h1 class="logo-center">DIGIVEND</h1>
+    <div class="user-profile">👤 Usuário</div>
+  </header>
+
+  <main>
+    <div class="form-container">
+      <h2>Crie seu Digiclub</h2>
+      <p>Escolha o nome do link do seu Digiclub:</p>
+      <input type="text" id="nomeLink" placeholder="ex: meudigiclub123">
+      <button class="btn-vermelho" onclick="criarDigiclub()">Criar Digiclub</button>
+
+      <p id="linkGerado" style="margin-top:16px; color:lightgreen;"></p>
+
+      <div class="notification" id="notificacao">
+        <h3>🎉 Digiclub criado com sucesso!</h3>
+        <button class="btn-personalizar" onclick="window.location.href='personalizar_digiclub.html'">Personalizar</button>
+        <button class="btn-explorar" onclick="window.location.href='meu_digiclub.html'">Explorar Digiclub</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function criarDigiclub() {
+      const nome = document.getElementById("nomeLink").value;
+      if(nome.trim() === "") {
+        alert("Por favor, insira um nome para o link!");
+        return;
+      }
+      document.getElementById("linkGerado").innerText = 
+        "Seu link: https://digivend.com/digiclub/" + nome;
+      document.getElementById("notificacao").style.display = "block";
+    }
+    function openMenu(){ document.getElementById("sideMenu").style.width = "250px"; }
+    function closeMenu(){ document.getElementById("sideMenu").style.width = "0"; }
+  </script>
+</body>
+</html>
