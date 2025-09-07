@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro Vendedor - DIGIVEND</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header>
+    <h1 class="logo">DIGIVEND</h1>
+  </header>
+
+  <!-- Formulário do Vendedor -->
+  <section class="cadastro">
+    <h2>Cadastro de Vendedor</h2>
+    <form id="formVendedor">
+      <input type="text" name="nome" placeholder="Nome completo" required>
+      <input type="email" name="email" placeholder="Digite seu email" required>
+      <input type="tel" name="telefone" placeholder="Número de telefone" pattern="[0-9]{9,}" required>
+      <input type="text" name="empresa" placeholder="Nome da empresa/negócio" required>
+      <input type="text" name="produto" placeholder="Tipo de produto/serviço" required>
+      <input type="password" name="senha" placeholder="Crie uma senha" required>
+
+      <label class="termos">
+        <input type="checkbox" required>
+        Concordo com os <a href="termos.html" target="_blank">termos e condições</a>
+      </label>
+
+      <button type="submit">Cadastrar Vendedor</button>
+    </form>
+  </section>
+
+  <!-- Rodapé -->
+  <footer>
+    <p>© 2025 DIGIVEND - Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    document.getElementById("formVendedor").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("Cadastro de vendedor realizado com sucesso! 🚀");
+      window.location.href = "login.html"; // leva para login
+    });
+  </script>
+
+<script>
+  if (/Mobi|Android/i.test(navigator.userAgent)) {
+    console.log("Acessando de um CELULAR");
+    // Aqui você pode esconder/mostrar algo especial
+  } else {
+    console.log("Acessando de um COMPUTADOR");
+  }
+</script>
+</body>
+</html>

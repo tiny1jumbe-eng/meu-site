@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meus Produtos - DIGIVEND</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header class="dashboard-header">
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+    <h1 class="logo-center">DIGIVEND</h1>
+    <div class="user-profile">👤 Usuário</div>
+  </header>
+
+  <!-- Menu lateral -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">×</button>
+    <a href="dashboard_vendedor.html">Home</a>
+    <a href="meus_produtos.html">Meus Produtos</a>
+    <a href="vendas.html">Vendas</a>
+    <a href="analises.html">Análises/Relatórios</a>
+    <a href="saldo.html">Saldo</a>
+    <a href="digiclub.html">Digiclub</a>
+    <a href="mercado.html">Mercado de Afiliação</a>
+    <a href="ferramentas.html">Ferramentas</a>
+    <a href="chat_afiliados.html">Chat Afiliados</a>
+  </nav>
+
+  <!-- Conteúdo principal -->
+  <main class="dashboard-content">
+
+    <div class="page-header">
+      <h2>📦 Meus Produtos</h2>
+      <button class="btn-red">+ Adicionar Produto</button>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" placeholder="🔎 Buscar produto...">
+    </div>
+
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th>Foto</th>
+          <th>Nome</th>
+          <th>Preço</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><img src="https://via.placeholder.com/50" alt="Produto"></td>
+          <td>Produto Exemplo</td>
+          <td>R$ 100,00</td>
+          <td>Ativo</td>
+          <td>
+            <button class="btn-edit">✏️</button>
+            <button class="btn-delete">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </main>
+
+  <!-- Botão WhatsApp -->
+  <a href="https://wa.me/seu_numero" class="whatsapp-btn" target="_blank">💬</a>
+
+  <!-- Chatbot -->
+  <button class="chatbot-btn" onclick="openChatbot()">🤖</button>
+  <div class="chatbot-window" id="chatbotWindow">
+    <div class="chatbot-header">
+      <span>🤖 Chatbot DIGIVEND</span>
+      <button onclick="closeChatbot()">×</button>
+    </div>
+    <div class="chatbot-body">
+      <p><strong>Selecione uma opção:</strong></p>
+      <button onclick="showAnswer('saque')">💸 Levantamento do valor</button>
+      <button onclick="showAnswer('senha')">🔑 Esqueci minha senha</button>
+      <button onclick="showAnswer('outros')">❓ Outras questões</button>
+      <div id="chatbotAnswer"></div>
+    </div>
+  </div>
+
+  <script>
+    function openMenu() { document.getElementById("sideMenu").style.width = "250px"; }
+    function closeMenu() { document.getElementById("sideMenu").style.width = "0"; }
+
+    function openChatbot() { document.getElementById("chatbotWindow").style.display = "block"; }
+    function closeChatbot() { document.getElementById("chatbotWindow").style.display = "none"; }
+
+    function showAnswer(type) {
+      let answer = "";
+      if (type === "saque") answer = "Para levantar seus valores, vá até a seção 'Saldo'.";
+      else if (type === "senha") answer = "Clique em 'Esqueci minha senha' na tela de login.";
+      else answer = "Fale com o suporte via WhatsApp para mais ajuda.";
+      document.getElementById("chatbotAnswer").innerHTML = "<p>" + answer + "</p>";
+    }
+  </script>
+
+</body>
+</html>

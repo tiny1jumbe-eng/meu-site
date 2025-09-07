@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Vendedor - DIGIVEND</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Cabeçalho -->
+<header class="dashboard-header">
+  <button class="menu-btn" onclick="openMenu()" aria-label="Abrir menu">☰</button>
+  <h1 class="logo-center">DIGIVEND</h1>
+  <div class="user-profile" title="Perfil">👤 Usuário</div>
+</header>
+  <!-- Menu lateral -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">✖</button>
+    <a href="dashboard_vendedor.html" onclick="closeMenu()">🏠 Dashboard</a>
+    <a href="meus_produtos.html" onclick="closeMenu()">📦 Meus Produtos</a>
+    <a href="vendas.html" onclick="closeMenu()">💰 Vendas</a>
+    <a href="analises.html" onclick="closeMenu()">📊 Análises/Relatórios</a>
+    <a href="saldo.html" onclick="closeMenu()">💳 Saldo</a>
+    <a href="digiclub.html" onclick="closeMenu()">🎯 Digiclub</a>
+    <a href="mercado_afiliacao.html" onclick="closeMenu()">🌐 Mercado de Afiliação</a>
+    <a href="ferramentas.html" onclick="closeMenu()">⚙️ Ferramentas</a>
+    <a href="chat_afiliados.html" onclick="closeMenu()">💬 Chat Afiliados</a>
+  </nav>
+
+  <!-- Conteúdo -->
+  <main class="dashboard-content">
+    <h2>📊 Resumo de Hoje</h2>
+    <div class="cards-container">
+      <div class="card"><h3 style="color:red">Vendas do dia</h3><p>12</p></div>
+      <div class="card"><h3 style="color:red">Compras</h3><p>8</p></div>
+      <div class="card"><h3 style="color:red">Clientes chegados</h3><p>5</p></div>
+      <div class="card"><h3 style="color:red">Visitantes</h3><p>30</p></div>
+    </div>
+  </main>
+
+  <!-- Script do menu -->
+  <script>
+    function openMenu() {
+      document.getElementById("sideMenu").style.width = "100%";
+    }
+    function closeMenu() {
+      document.getElementById("sideMenu").style.width = "0";
+    }
+  </script>
+</body>

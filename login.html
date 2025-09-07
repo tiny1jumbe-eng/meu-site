@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DIGIVEND - Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 class="logo">DIGIVEND</h1>
+  <div class="form-box">
+    <h2>Login</h2>
+<form onsubmit="return login(event)">
+  <input type="email" id="loginEmail" placeholder="Email" required>
+  <input type="password" id="loginSenha" placeholder="Senha" required>
+  <button type="submit">Entrar</button>
+</form>
+
+<script>
+  function login(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("loginEmail").value;
+    const senha = document.getElementById("loginSenha").value;
+
+    const cadastradoEmail = localStorage.getItem("usuarioEmail");
+    const cadastradoSenha = localStorage.getItem("usuarioSenha");
+    const tipo = localStorage.getItem("usuarioTipo");
+
+    if (email === cadastradoEmail && senha === cadastradoSenha) {
+      if (tipo === "vendedor") {
+        window.location.href = "dashboard_vendedor.html";
+      } else {
+        window.location.href = "dashboard_comprador.html";
+      }
+    } else {
+      alert("Email ou senha incorretos!");
+    }
+  }
+</script>
+    <p>Não tem conta? <a href="cadastro.html">Cadastre-se</a></p>
+  </div>
+</body>
+</html>

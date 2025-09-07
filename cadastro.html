@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DIGIVEND - Cadastro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 class="logo">DIGIVEND</h1>
+  <div class="form-box">
+    <h2>Cadastro</h2>
+<form onsubmit="return cadastrar(event)">
+  <input type="text" placeholder="Nome completo" required>
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="tel" placeholder="Telefone" required>
+  <input type="password" id="senha" placeholder="Senha" required>
+
+  <label>
+    <input type="checkbox" required> Concordo com os termos e condições
+  </label>
+
+  <button type="button" onclick="cadastrar('vendedor')">Vendedor</button>
+  <button type="button" onclick="cadastrar('comprador')">Comprador</button>
+</form>
+
+<script>
+  function cadastrar(tipo) {
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+
+    if (!email || !senha) {
+      alert("Preencha email e senha");
+      return;
+    }
+
+    // Salvar no navegador
+    localStorage.setItem("usuarioEmail", email);
+    localStorage.setItem("usuarioSenha", senha);
+    localStorage.setItem("usuarioTipo", tipo);
+
+    alert("Cadastro realizado com sucesso! Faça login.");
+    window.location.href = "login.html"; // volta para o login
+  }
+</script>
+ </div>
+</body>
+</html>

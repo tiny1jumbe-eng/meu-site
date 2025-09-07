@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suporte DIGIVEND</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: red;
+    }
+    .faq-container {
+      max-width: 600px;
+      margin: 20px auto;
+      text-align: left;
+    }
+    .faq-question {
+      background: #111;
+      color: red;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid red;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .faq-question:hover {
+      background: #222;
+    }
+    .faq-answer {
+      display: none;
+      background: #1a1a1a;
+      color: #fff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-left: 3px solid red;
+    }
+    .user-input {
+      margin-top: 20px;
+    }
+    .user-input input {
+      width: 70%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      outline: none;
+    }
+    .user-input button {
+      padding: 10px 15px;
+      background: red;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .whatsapp-link {
+      margin-top: 20px;
+      display: inline-block;
+      background: #25d366;
+      padding: 12px 20px;
+      border-radius: 6px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Suporte DIGIVEND</h1>
+  <p>Escolha uma das questões abaixo ou escreva sua dúvida:</p>
+
+  <div class="faq-container">
+    <div class="faq-question" onclick="toggleAnswer(1)">💰 Levantamento do valor para sua conta</div>
+    <div id="answer1" class="faq-answer">Vá até o menu → Saldo → Levantar fundos. Escolha sua conta bancária cadastrada e confirme.</div>
+
+    <div class="faq-question" onclick="toggleAnswer(2)">🔑 Como trocar a senha da conta</div>
+    <div id="answer2" class="faq-answer">Vá em Perfil → Configurações → Alterar senha. Caso tenha esquecido, use 'Esqueci minha senha' na tela de login.</div>
+
+    <div class="faq-question" onclick="toggleAnswer(3)">🚪 Problemas com login</div>
+    <div id="answer3" class="faq-answer">Verifique se email e senha estão corretos. Se esqueceu, use 'Esqueci minha senha'.</div>
+
+    <div class="faq-question" onclick="toggleAnswer(4)">📝 Dúvidas sobre cadastro</div>
+    <div id="answer4" class="faq-answer">Escolha se será Vendedor ou Comprador e insira telefone + email válidos.</div>
+
+    <div class="faq-question" onclick="toggleAnswer(5)">💳 Pagamentos e vendas</div>
+    <div id="answer5" class="faq-answer">Os pagamentos são feitos com segurança dentro do site/app. No painel você acompanha em tempo real.</div>
+  </div>
+
+  <div class="user-input">
+    <input type="text" id="userQuestion" placeholder="Digite sua dúvida...">
+    <button onclick="checkQuestion()">Enviar</button>
+  </div>
+
+  <div id="customAnswer" style="margin-top:15px; font-size:14px;"></div>
+
+  <a href="https://wa.me/258872380899" target="_blank" class="whatsapp-link">📞 Falar com suporte humano</a>
+
+  <script>
+    function toggleAnswer(num) {
+      const ans = document.getElementById("answer" + num);
+      ans.style.display = ans.style.display === "block" ? "none" : "block";
+    }
+
+    function checkQuestion() {
+      const userMsg = document.getElementById("userQuestion").value.toLowerCase();
+      let resposta = "";
+
+      if (userMsg.includes("senha")) {
+        resposta = "🔑 Para trocar sua senha vá em Perfil → Configurações → Alterar senha.";
+      } else if (userMsg.includes("login")) {
+        resposta = "🚪 Problemas de login: verifique email e senha. Caso precise, use 'Esqueci minha senha'.";
+      } else if (userMsg.includes("pagamento")) {
+        resposta = "💳 Os pagamentos são feitos dentro do site/app e você pode acompanhar no painel.";
+      } else if (userMsg.includes("levantamento") || userMsg.includes("sacar") || userMsg.includes("saldo")) {
+        resposta = "💰 Para levantar valores: vá até o menu → Saldo → Levantar fundos.";
+      } else if (userMsg.includes("cadastro")) {
+        resposta = "📝 No cadastro escolha se será Vendedor ou Comprador e insira dados válidos.";
+      } else {
+        resposta = "❓ Não encontrei sua dúvida. Clique acima em uma questão ou fale com suporte no WhatsApp.";
+      }
+
+      document.getElementById("customAnswer").innerHTML = resposta;
+    }
+  </script>
+</body>
+</html>
