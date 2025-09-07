@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DIGIVEND - Vendas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- TOPO (iguais ao dashboard) -->
+  <header class="dashboard-header">
+    <button class="menu-btn" onclick="openMenu()" aria-label="Abrir menu">☰</button>
+    <h1 class="logo-center">DIGIVEND</h1>
+    <div class="user-profile">👤 Usuário</div>
+  </header>
+
+  <!-- MENU LATERAL (mesmas classes do dashboard) -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">×</button>
+    <a href="dashboard_vendedor.html" onclick="closeMenu()">Home</a>
+    <a href="meus_produtos.html" onclick="closeMenu()">Meus Produtos</a>
+    <a href="vendas.html" onclick="closeMenu()">Vendas</a>
+    <a href="analises.html" onclick="closeMenu()">Análises/Relatórios</a>
+    <a href="saldo.html" onclick="closeMenu()">Saldo</a>
+    <a href="digiclub.html" onclick="closeMenu()">Digiclub</a>
+    <a href="mercado_afiliacao.html" onclick="closeMenu()">Mercado de Afiliação</a>
+    <a href="ferramentas.html" onclick="closeMenu()">Ferramentas</a>
+    <a href="chat_afiliados.html" onclick="closeMenu()">Chat Afiliados</a>
+  </nav>
+
+  <!-- CONTEÚDO -->
+  <main class="dashboard-content" style="padding: 16px; margin-top: 12px;">
+    <h2 class="logo-center" style="color:red; margin-top:16px;">Resumo de Vendas</h2>
+
+    <!-- usa os MESMOS cards do dashboard -->
+    <section class="cards-container" style="margin-top:16px;">
+      <div class="card"><h3>📊 Hoje</h3><p>R$ 0,00</p></div>
+      <div class="card"><h3>📈 Semana</h3><p>R$ 0,00</p></div>
+      <div class="card"><h3>📅 Mês</h3><p>R$ 0,00</p></div>
+      <div class="card"><h3>💰 Total</h3><p>R$ 0,00</p></div>
+    </section>
+
+    <h2 class="logo-center" style="color:red; margin-top:24px;">Lista de Vendas</h2>
+
+    <!-- filtros simples -->
+    <div class="filtros" style="display:flex; gap:10px; justify-content:center; margin:14px 0;">
+      <input type="text" placeholder="Buscar por cliente ou produto..." style="padding:8px; border-radius:8px; border:1px solid #333; background:#111; color:#fff; width:60%; max-width:420px;">
+      <select style="padding:8px; border-radius:8px; background:#111; color:#fff; border:1px solid #333;">
+        <option>Status</option>
+        <option>Pago</option>
+        <option>Pendente</option>
+        <option>Cancelado</option>
+      </select>
+      <button class="btn-vermelho" style="background:red; color:#fff; border:none; padding:8px 14px; border-radius:8px; cursor:pointer;">Filtrar</button>
+    </div>
+
+    <!-- tabela -->
+    <table class="product-table" style="width:95%; max-width:1000px; margin:0 auto; border-collapse:collapse; background:#111; color:#fff; border-radius:8px; overflow:hidden;">
+      <thead>
+        <tr>
+          <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Pedido</th>
+          <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Produto</th>
+          <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Cliente</th>
+          <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Data</th>
+          <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Valor</th>
+          <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">#001</td>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">Produto Exemplo</td>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">Maria Silva</td>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">07/09/2025</td>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">R$ 150,00</td>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">Pago</td>
+        </tr>
+        <tr>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">#002</td>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">Produto Teste</td>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">João Santos</td>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">07/09/2025</td>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">R$ 200,00</td>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">Pendente</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    // usa o mesmo comportamento do dashboard
+    function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
+    function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
+  </script>
+</body>
+</html>
