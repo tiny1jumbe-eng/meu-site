@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DIGIVEND - Meus Links de Afiliação</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- TOPO -->
+  <header class="dashboard-header">
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+    <h1 class="logo-center">DIGIVEND</h1>
+    <div class="user-profile">👤 Usuário</div>
+  </header>
+
+  <!-- MENU LATERAL -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">×</button>
+    <a href="dashboard_vendedor.html" onclick="closeMenu()">Home</a>
+    <a href="meus_produtos.html" onclick="closeMenu()">Meus Produtos</a>
+    <a href="vendas.html" onclick="closeMenu()">Vendas</a>
+    <a href="analises.html" onclick="closeMenu()">Análises/Relatórios</a>
+    <a href="saldo.html" onclick="closeMenu()">Saldo</a>
+    <a href="digiclub.html" onclick="closeMenu()">Digiclub</a>
+    <a href="mercado_afiliacao.html" onclick="closeMenu()">Mercado de Afiliação</a>
+    <a href="meus_links.html" onclick="closeMenu()">Meus Links de Afiliação</a>
+    <a href="ferramentas.html" onclick="closeMenu()">Ferramentas</a>
+    <a href="chat_afiliados.html" onclick="closeMenu()">Chat Afiliados</a>
+  </nav>
+
+  <!-- CONTEÚDO -->
+  <main class="dashboard-content" style="padding:16px;">
+    <h2 class="logo-center" style="color:red;">Meus Links de Afiliação</h2>
+
+    <table class="product-table" style="width:95%; max-width:1000px; margin:20px auto; border-collapse:collapse; background:#111; color:#fff; border-radius:8px; overflow:hidden;">
+      <thead>
+        <tr>
+          <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Produto</th>
+          <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Link</th>
+          <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Ação</th>
+        </tr>
+      </thead>
+      <tbody id="linksTable">
+        <!-- Links carregados pelo JS -->
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    // Recuperar links do localStorage
+    const tbody = document.getElementById("linksTable");
+    tbody.innerHTML = "";
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith("afiliacao_")) {
+        const link = localStorage.getItem(key);
+        const nomeProduto = "Produto " + key.split("_")[1]; // simplificado
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td style="padding:10px; border:1px solid #333; text-align:center;">${nomeProduto}</td>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">
+            <a href="${link}" target="_blank" style="color:lightblue;">${link}</a>
+          </td>
+          <td style="padding:10px; border:1px solid #333; text-align:center;">
+            <button class="btn-vermelho" onclick="copiarLink('${link}')">Copiar</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      }
+    }
+
+    function copiarLink(link) {
+      navigator.clipboard.writeText(link).then(() => {
+        alert("Link copiado: " + link);
+      });
+    }
+
+    // Menu
+    function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
+    function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
+  </script>
+</body>
+</html>
