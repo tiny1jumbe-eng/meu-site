@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DIGIVEND - Loja</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Cards de Produtos */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      padding: 20px;
+    }
+    .product-card {
+      background: #111;
+      color: #fff;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .product-card h3 {
+      color: red;
+      margin-bottom: 10px;
+    }
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 6px;
+      font-size: 14px;
+    }
+    .btn-red { background: red; color: white; }
+    .btn-dark { background: #222; color: white; }
+
+    /* Modal de Afiliação */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #fff;
+      color: #000;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      text-align: left;
+      position: relative;
+    }
+    .modal-content h2 {
+      color: red;
+      margin-bottom: 12px;
+    }
+    .modal-content label {
+      font-weight: bold;
+      display: block;
+      margin-top: 8px;
+    }
+    .modal-content input, .modal-content textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .close-modal {
+      position: absolute;
+      top: 10px; right: 12px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: red;
+    }
+
+    /* Mensagem de sucesso */
+    .success-box {
+      display: none;
+      text-align: center;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- TOPO -->
+  <header class="dashboard-header">
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+    <h1 class="logo-center">DIGIVEND</h1>
+    <div class="user-profile">👤 Usuário</div>
+  </header>
+
+  <!-- MENU LATERAL -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">×</button>
+    <a href="dashboard_vendedor.html" onclick="closeMenu()">Home</a>
+    <a href="meus_produtos.html" onclick="closeMenu()">Meus Produtos</a>
+    <a href="vendas.html" onclick="closeMenu()">Vendas</a>
+    <a href="analises.html" onclick="closeMenu()">Análises/Relatórios</a>
+    <a href="saldo.html" onclick="closeMenu()">Saldo</a>
+    <a href="digiclub.html" onclick="closeMenu()">Digiclub</a>
+    <a href="mercado_afiliacao.html" onclick="closeMenu()">Mercado de Afiliação</a>
+    <a href="ferramentas.html" onclick="closeMenu()">Ferramentas</a>
+    <a href="chat_afiliados.html" onclick="closeMenu()">Chat Afiliados</a>
+    <a href="loja.html" onclick="closeMenu()">Loja</a>
+  </nav>
+
+  <!-- CONTEÚDO -->
+  <main class="dashboard-content">
+    <h2 class="logo-center" style="color:red;">Loja de Produtos</h2>
+
+    <section class="product-grid">
+      <!-- Produto Digital -->
+      <div class="product-card">
+        <h3>Curso de Marketing</h3>
+        <p>Aprenda marketing digital do zero.</p>
+        <p><strong>Preço:</strong> R$ 200,00</p>
+        <p><strong>Comissão:</strong> 40%</p>
+        <button class="btn btn-red" onclick="openAffiliateModal('Curso de Marketing', '40%')">Afiliar-se</button>
+        <button class="btn btn-dark">Comprar</button>
+      </div>
+
+      <!-- Produto Físico -->
+      <div class="product-card">
+        <h3>Fone de Ouvido Bluetooth</h3>
+        <p>Som de alta qualidade com conforto.</p>
+        <p><strong>Preço:</strong> R$ 120,00</p>
+        <button class="btn btn-dark">Comprar</button>
+      </div>
+
+      <!-- Outro Digital -->
+      <div class="product-card">
+        <h3>E-book de Investimentos</h3>
+        <p>Guia completo para começar a investir.</p>
+        <p><strong>Preço:</strong> R$ 50,00</p>
+        <p><strong>Comissão:</strong> 30%</p>
+        <button class="btn btn-red" onclick="openAffiliateModal('E-book de Investimentos', '30%')">Afiliar-se</button>
+        <button class="btn btn-dark">Comprar</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div id="affiliateModal" class="modal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeAffiliateModal()">×</button>
+      <h2 id="productName">Afiliar-se ao Produto</h2>
+      <p><strong>Comissão:</strong> <span id="productCommission"></span></p>
+
+      <form id="affiliateForm">
+        <label>Nome:</label>
+        <input type="text" required>
+        <label>Email:</label>
+        <input type="email" required>
+        <label>Telefone:</label>
+        <input type="text" required>
+        <label>
+          <input type="checkbox" required> Concordo com a comissão e termos
+        </label>
+        <button type="submit" class="btn btn-red" style="width:100%; margin-top:10px;">Confirmar Afiliação</button>
+      </form>
+
+      <!-- Mensagem de sucesso -->
+      <div id="successMessage" class="success-box">
+        <h3 style="color:green;">✅ Afiliação concluída!</h3>
+        <p>Agora você é afiliado deste produto.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Abrir e fechar menu
+    function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
+    function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
+
+    // Abrir modal de afiliação
+    function openAffiliateModal(productName, commission) {
+      document.getElementById('affiliateModal').style.display = 'flex';
+      document.getElementById('productName').innerText = "Afiliar-se a " + productName;
+      document.getElementById('productCommission').innerText = commission;
+      document.getElementById('affiliateForm').style.display = 'block';
+      document.getElementById('successMessage').style.display = 'none';
+    }
+    function closeAffiliateModal() {
+      document.getElementById('affiliateModal').style.display = 'none';
+    }
+
+    // Formulário de afiliação
+    document.getElementById('affiliateForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      this.style.display = 'none';
+      document.getElementById('successMessage').style.display = 'block';
+    });
+  </script>
+</body>
+</html>

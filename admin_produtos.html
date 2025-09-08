@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Aprovar Produtos</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:20px; background:#f5f5f5; }
+    h1 { text-align:center; color:#333; margin-bottom:20px; }
+    .produto-card {
+      display:flex; align-items:center; justify-content:space-between;
+      background:white; padding:15px; margin-bottom:15px;
+      border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    }
+    .produto-info { flex:1; margin-left:15px; }
+    .produto-info h3 { margin:0 0 5px; color:#222; }
+    .produto-info p { margin:3px 0; color:#555; }
+    .produto-img {
+      width:80px; height:80px; border-radius:8px; object-fit:cover; border:1px solid #ddd;
+    }
+    .botoes {
+      display:flex; gap:10px;
+    }
+    .btn {
+      padding:8px 12px; border:none; border-radius:5px; cursor:pointer;
+      font-weight:bold;
+    }
+    .btn-aprovar { background:#28a745; color:white; }
+    .btn-rejeitar { background:#dc3545; color:white; }
+  </style>
+</head>
+<body>
+  <h1>Admin - Aprovar Produtos</h1>
+  
+  <div id="lista-produtos"></div>
+
+  <script>
+    // Carregar produtos do LocalStorage
+    let produtos = JSON.parse(localStorage.getItem("produtosPendentes")) || [];
+
+    function renderProdutos() {
+      const lista = document.getElementById("lista-produtos");
+      lista.innerHTML = "";
+
+      if (produtos.length === 0) {
+        lista.innerHTML = "<p style='text-align:center; color:#777;'>Nenhum produto pendente</p>";
+        return;
+      }
+
+      produtos.forEach((produto, index) => {
+        const card = document.createElement("div");
+        card.className = "produto-card";
+
+        card.innerHTML = `
+          <img src="${produto.foto}" class="produto-img" alt="Produto">
+          <div class="produto-info">
+            <h3>${produto.nome}</h3>
+            <p><b>Preço:</b> R$ ${produto.preco}</p>
+            <p><b>Descrição:</b> ${produto.descricao}</p>
+            <p><b>Status:</b> ${produto.status}</p>
+          </div>
+          <div class="botoes">
+            <button class="btn btn-aprovar" onclick="aprovarProduto(${index})">Aprovar</button>
+            <button class="btn btn-rejeitar" onclick="rejeitarProduto(${index})">Rejeitar</button>
+          </div>
+        `;
+
+        lista.appendChild(card);
+      });
+    }
+
+    function aprovarProduto(index) {
+      let produto = produtos[index];
+      produto.status = "Aprovado";
+
+      // Salvar em "produtosAprovados"
+      let aprovados = JSON.parse(localStorage.getItem("produtosAprovados")) || [];
+      aprovados.push(produto);
+      localStorage.setItem("produtosAprovados", JSON.stringify(aprovados));
+
+      // Remover da lista de pendentes
+      produtos.splice(index, 1);
+      localStorage.setItem("produtosPendentes", JSON.stringify(produtos));
+
+      renderProdutos();
+      alert("Produto aprovado com sucesso!");
+    }
+
+    function rejeitarProduto(index) {
+      produtos.splice(index, 1);
+      localStorage.setItem("produtosPendentes", JSON.stringify(produtos));
+      renderProdutos();
+      alert("Produto rejeitado.");
+    }
+
+    renderProdutos();
+  </script>
+</body>
+</html>

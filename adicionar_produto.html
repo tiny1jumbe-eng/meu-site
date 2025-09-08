@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adicionar Produto - DIGIVEND</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .form-container {
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #111;
+      color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255,0,0,0.3);
+    }
+    .form-container h2 { text-align: center; color: red; margin-bottom: 20px; }
+    .form-container label { display: block; margin-top: 10px; font-weight: bold; }
+    .form-container input, 
+    .form-container textarea, 
+    .form-container select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #222;
+      color: #fff;
+    }
+    .form-container button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .form-container button:hover { background: darkred; }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+    <h1 class="logo-center">DIGIVEND</h1>
+    <div class="user-profile">👤 Usuário</div>
+  </header>
+
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">×</button>
+    <a href="dashboard_vendedor.html">Home</a>
+    <a href="meus_produtos.html">Meus Produtos</a>
+    <a href="vendas.html">Vendas</a>
+    <a href="analises.html">Análises/Relatórios</a>
+    <a href="saldo.html">Saldo</a>
+    <a href="digiclub.html">Digiclub</a>
+    <a href="mercado_afiliacao.html">Mercado de Afiliação</a>
+  </nav>
+
+  <main class="dashboard-content">
+    <div class="form-container">
+      <h2>Adicionar Produto</h2>
+      <form id="produtoForm">
+        <label>Nome do Produto</label>
+        <input type="text" id="nome" required>
+
+        <label>Preço (R$)</label>
+        <input type="number" id="preco" required>
+
+        <label>Descrição</label>
+        <textarea id="descricao" rows="3" required></textarea>
+
+        <label>Tipo do Produto</label>
+        <select id="tipo" required>
+          <option value="fisico">Físico</option>
+          <option value="digital">Digital</option>
+        </select>
+
+        <label>Imagem do Produto</label>
+        <input type="file" id="imagem" accept="image/*" required>
+
+        <div id="arquivoDigitalContainer" style="display:none;">
+          <label>Arquivo Digital (PDF, MP3, MP4, ZIP)</label>
+          <input type="file" id="arquivoDigital" accept=".pdf,.mp3,.mp4,.zip">
+        </div>
+
+        <button type="submit">Adicionar Produto</button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // Mostrar campo de arquivo digital apenas se for produto digital
+    document.getElementById("tipo").addEventListener("change", function() {
+      document.getElementById("arquivoDigitalContainer").style.display =
+        this.value === "digital" ? "block" : "none";
+    });
+
+    // Salvar produto no localStorage
+    document.getElementById("produtoForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const nome = document.getElementById("nome").value;
+      const preco = document.getElementById("preco").value;
+      const descricao = document.getElementById("descricao").value;
+      const tipo = document.getElementById("tipo").value;
+
+      const imagemFile = document.getElementById("imagem").files[0];
+      let imagemURL = "";
+      if (imagemFile) {
+        imagemURL = URL.createObjectURL(imagemFile);
+      }
+
+      let arquivoURL = "";
+      if (tipo === "digital") {
+        const arquivoFile = document.getElementById("arquivoDigital").files[0];
+        if (arquivoFile) {
+          arquivoURL = URL.createObjectURL(arquivoFile);
+        }
+      }
+
+      const produto = {
+        id: Date.now(),
+        nome,
+        preco,
+        descricao,
+        tipo,
+        imagem: imagemURL,
+        arquivo: arquivoURL,
+        status: "Pendente"
+      };
+
+      let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+      produtos.push(produto);
+      localStorage.setItem("produtos", JSON.stringify(produtos));
+
+      alert("Produto adicionado com sucesso! Aguarde aprovação do administrador.");
+      window.location.href = "meus_produtos.html";
+    });
+
+    function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
+    function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
+  </script>
+</body>
+</html>
