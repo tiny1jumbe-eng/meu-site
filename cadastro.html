@@ -46,42 +46,36 @@
     <p>Já tem conta? <a href="login.html">Entrar</a></p>
   </main>
 
-  <script>
-    document.getElementById("cadastroForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+<script>
+  document.getElementById("cadastroForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-      const nome = document.getElementById("nome").value.trim();
-      const email = document.getElementById("email").value.trim().toLowerCase();
-      const telefone = document.getElementById("telefone").value.trim();
-      const senha = document.getElementById("senha").value.trim();
-      const tipoConta = document.getElementById("tipoConta").value;
+    const nome = document.getElementById("nome").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+    const tipoConta = document.getElementById("tipoConta").value;
 
-      let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-      // Verificação de duplicados
-      const existe = usuarios.find(u => u.email === email || u.telefone === telefone);
-      if (existe) {
-        showMessage("errorMsg", "❌ Já existe uma conta com este e-mail ou telefone.");
-        return;
-      }
-
-      // Salva novo usuário
-      usuarios.push({ nome, email, telefone, senha, tipo: tipoConta });
-      localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
-      showMessage("successMsg", "✅ Conta criada com sucesso! Redirecionando...");
-      setTimeout(() => {
-        window.location.href = "login.html";
-      }, 2000);
-    });
-
-    function showMessage(id, msg) {
-      document.getElementById("errorMsg").style.display = "none";
-      document.getElementById("successMsg").style.display = "none";
-      const box = document.getElementById(id);
-      box.innerText = msg;
-      box.style.display = "block";
+    // 🚫 Bloqueia se tentar criar conta admin
+    if (tipoConta === "admin") {
+      alert("Não é possível criar uma conta de Administrador!");
+      return;
     }
+
+    // 🔍 Impede duplicados
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    if (usuarios.some(u => u.email === email)) {
+      alert("Este e-mail já está cadastrado!");
+      return;
+    }
+
+    // Salva novo usuário
+    usuarios.push({ nome, email, senha, tipo: tipoConta });
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+    alert("Cadastro realizado com sucesso!");
+    window.location.href = "index.html";
+  });
+</script>
   </script>
 </body>
 </html>
