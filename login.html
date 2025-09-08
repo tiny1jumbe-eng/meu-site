@@ -35,52 +35,36 @@
     <p>Ainda não tem conta? <a href="cadastro.html">Cadastrar</a></p>
   </main>
 
-  <script>
-    document.getElementById("loginForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+<script>
+  document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-      const email = document.getElementById("email").value.trim().toLowerCase();
-      const senha = document.getElementById("senha").value.trim();
-      const tipoConta = document.getElementById("tipoConta").value;
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value.trim();
 
-      const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-      // ADMIN (fixo)
-      if (tipoConta === "admin") {
-        if (email === "admin@digivend.com" && senha === "admin123") {
-          window.location.href = "dashboard_admin.html";
-        } else {
-          showError("❌ Dados de administrador incorretos.");
-        }
-        return;
-      }
-
-      // Busca usuário normal
-      const usuario = usuarios.find(u => u.email === email && u.senha === senha);
-      if (!usuario) {
-        showError("❌ E-mail ou senha incorretos.");
-        return;
-      }
-
-      // Verifica tipo de conta
-      if (usuario.tipo !== tipoConta) {
-        showError(`❌ Sua conta é de ${usuario.tipo}. Selecione o tipo correto.`);
-        return;
-      }
-
-      // Redireciona conforme tipo
-      if (usuario.tipo === "vendedor") {
-        window.location.href = "dashboard_vendedor.html";
-      } else if (usuario.tipo === "comprador") {
-        window.location.href = "dashboard_comprador.html";
-      }
-    });
-
-    function showError(msg) {
-      const box = document.getElementById("errorMsg");
-      box.innerText = msg;
-      box.style.display = "block";
+    // Verifica se é o admin
+    if (email === "admin@gmail.com" && senha === "admin123") {
+      alert("Login de administrador realizado com sucesso!");
+      window.location.href = "admin_dashboard.html";
+      return;
     }
-  </script>
+
+    // Verifica contas do localStorage (vendedor/comprador)
+    const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    const usuario = usuarios.find(u => u.email === email && u.senha === senha);
+
+    if (usuario) {
+      alert("Login realizado com sucesso!");
+
+      if (usuario.tipo === "vendedor") {
+        window.location.href = "dashboard.html";
+      } else if (usuario.tipo === "comprador") {
+        window.location.href = "loja.html";
+      }
+    } else {
+      alert("Email ou senha incorretos!");
+    }
+  });
+</script>
 </body>
 </html>
