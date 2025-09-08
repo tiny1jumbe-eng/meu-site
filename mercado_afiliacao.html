@@ -9,7 +9,7 @@
 <body>
   <!-- TOPO -->
   <header class="dashboard-header">
-    <button class="menu-btn" onclick="openMenu()">☰</button>
+    <button class="menu-btn" onclick="openMenu()" aria-label="Abrir menu">☰</button>
     <h1 class="logo-center">DIGIVEND</h1>
     <div class="user-profile">👤 Usuário</div>
   </header>
@@ -29,69 +29,56 @@
   </nav>
 
   <!-- CONTEÚDO -->
-  <main class="dashboard-content">
+  <main class="dashboard-content" style="padding:16px; margin-top:12px;">
     <h2 class="logo-center" style="color:red;">Mercado de Afiliação</h2>
 
-    <!-- Lista de Produtos -->
-    <section class="cards-container" id="produtos">
-      <!-- Produtos serão carregados via JavaScript -->
+    <section id="listaProdutos" class="cards-container" style="margin-top:20px; display:flex; flex-wrap:wrap; gap:16px; justify-content:center;">
+      <p>Carregando produtos...</p>
     </section>
   </main>
 
   <script>
-    // Produtos simulados
-    const produtos = [
-      { id: 1, nome: "Curso de Marketing Digital", preco: "R$ 200,00", comissao: "30%", imagem: "https://via.placeholder.com/150" },
-      { id: 2, nome: "Ebook de Finanças Pessoais", preco: "R$ 50,00", comissao: "40%", imagem: "https://via.placeholder.com/150" },
-      { id: 3, nome: "Software de Automação", preco: "R$ 500,00", comissao: "25%", imagem: "https://via.placeholder.com/150" }
-    ];
-
-    // Carregar produtos na tela
-    const container = document.getElementById('produtos');
-    produtos.forEach(p => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <img src="${p.imagem}" alt="${p.nome}" style="width:100%; border-radius:8px;">
-        <h3>${p.nome}</h3>
-        <p><strong>Preço:</strong> ${p.preco}</p>
-        <p><strong>Comissão:</strong> ${p.comissao}</p>
-        <button class="btn-vermelho" onclick="afiliar(${p.id}, '${p.nome}')">Afiliar-se</button>
-      `;
-      container.appendChild(card);
-    });
-
-    // Função de afiliação
-    function afiliar(id, nome) {
-      const link = `https://digivend.com/produto/${id}?ref=usuario123`;
-      localStorage.setItem(`afiliacao_${id}`, link);
-      alert(`Você agora é afiliado de "${nome}".\nSeu link de afiliação: ${link}`);
-    }
-
-    // Menu
     function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
     function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
-  </script>
 
-...
-  </main>
+    const API = "http://localhost:3000";
 
-  <!-- JS -->
-  <script>
-    function afiliarSe(produtoId) {
-      const linkAfiliado = "https://digivend.com/produto/" + produtoId + "?ref=usuario123";
-      localStorage.setItem("afiliacao_" + produtoId, linkAfiliado);
+    // Buscar produtos
+    fetch(API + "/produtos")
+      .then(res => res.json())
+      .then(produtos => {
+        let container = document.getElementById("listaProdutos");
+        container.innerHTML = "";
+        produtos.forEach(p => {
+          container.innerHTML += `
+            <div class="card" style="width:250px; text-align:center; padding:16px; background:#111; border-radius:8px;">
+              <img src="${p.imagem}" alt="${p.nome}" style="width:100%; height:150px; object-fit:cover; border-radius:8px;">
+              <h3 style="color:white; margin:10px 0;">${p.nome}</h3>
+              <p style="color:gray;">${p.descricao}</p>
+              <p style="color:red; font-weight:bold; margin:8px 0;">R$ ${p.preco}</p>
+              <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
+                <button onclick="comprarProduto('${p.nome}')" style="padding:8px 14px; background:green; border:none; color:white; border-radius:6px; cursor:pointer;">Comprar</button>
+                ${p.afiliacao ? `<button onclick="afiliarProduto('${p.nome}', '${p.comissao}')" style="padding:8px 14px; background:red; border:none; color:white; border-radius:6px; cursor:pointer;">Afiliar (${p.comissao}%)</button>` : ""}
+              </div>
+              <p style="color:gray; margin-top:6px;">Afiliados: ${p.afiliados || 0} | Vendas: ${p.vendasAfiliados || 0}</p>
+            </div>
+          `;
+        });
+      });
 
-      alert("Você agora é afiliado deste produto!\nLink gerado: " + linkAfiliado);
-
-      // Redirecionar automaticamente para Meus Links
-      window.location.href = "meus_links.html";
+    function comprarProduto(nome){
+      alert("🛒 Você comprou o produto: " + nome);
     }
 
-    function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
-    function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
+    function afiliarProduto(nome, comissao){
+      let email = prompt("Digite seu email válido:");
+      let telefone = prompt("Digite seu número de telefone:");
+      if(email && telefone){
+        alert("✅ Você se afiliou ao produto " + nome + " com comissão de " + comissao + "%.\nEntraremos em contato pelo email: " + email);
+      } else {
+        alert("❌ Preencha os dados corretamente para se afiliar.");
+      }
+    }
   </script>
-</body>
-</html>
 </body>
 </html>

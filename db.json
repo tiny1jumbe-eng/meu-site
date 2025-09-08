@@ -1,0 +1,46 @@
+
+
+{
+  "saldo": {
+    "disponivel": 1200,
+    "pendente": 300,
+    "saques": 800,
+    "ganhos": 2000
+  },
+  "vendas": [
+    { "id": 1, "data": "07/09/2025", "produto": "Curso de Marketing", "valor": 150 },
+    { "id": 2, "data": "06/09/2025", "produto": "E-book de Finanças", "valor": 100 }
+  ],
+  "produtos": [
+    {
+      "id": 1,
+      "nome": "Curso de Marketing Digital",
+      "descricao": "Aprenda estratégias modernas de marketing online.",
+      "preco": 197,
+      "imagem": "https://via.placeholder.com/250x150.png?text=Curso+Marketing",
+      "afiliacao": true,
+      "comissao": 30,
+      "afiliados": 12,
+      "vendasAfiliados": 45
+    },
+    {
+      "id": 2,
+      "nome": "E-book de Finanças Pessoais",
+      "descricao": "Domine seu dinheiro com dicas práticas.",
+      "preco": 49,
+      "imagem": "https://via.placeholder.com/250x150.png?text=Ebook+Financas",
+      "afiliacao": true,
+      "comissao": 20,
+      "afiliados": 8,
+      "vendasAfiliados": 25
+    },
+    {
+      "id": 3,
+      "nome": "Software de Gestão",
+      "descricao": "Ferramenta para organizar suas vendas e clientes.",
+      "preco": 499,
+      "imagem": "https://via.placeholder.com/250x150.png?text=Software+Gestao",
+      "afiliacao": false
+    }
+  ]
+}}

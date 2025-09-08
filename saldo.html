@@ -5,62 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DIGIVEND - Saldo</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.7);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background: #222;
-      color: white;
-      padding: 20px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-    }
-
-    .modal-content h3 {
-      color: red;
-      margin-bottom: 15px;
-    }
-
-    .modal-content input, .modal-content select {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-    }
-
-    .modal-content button {
-      margin-top: 10px;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .btn-confirmar {
-      background: red;
-      color: white;
-    }
-
-    .btn-cancelar {
-      background: gray;
-      color: white;
-    }
-  </style>
 </head>
 <body>
   <!-- TOPO -->
@@ -90,88 +34,72 @@
 
     <!-- Cards Resumo -->
     <section class="cards-container" style="margin-top:16px;">
-      <div class="card"><h3>💰 Saldo Disponível</h3><p>R$ 1.250,00</p></div>
-      <div class="card"><h3>⏳ Saldo Pendente</h3><p>R$ 0,00</p></div>
-      <div class="card"><h3>📤 Saques Realizados</h3><p>R$ 500,00</p></div>
-      <div class="card"><h3>💵 Total de Ganhos</h3><p>R$ 1.750,00</p></div>
+      <div class="card"><h3>💰 Saldo Disponível</h3><p id="saldoDisponivel">Carregando...</p></div>
+      <div class="card"><h3>⏳ Saldo Pendente</h3><p id="saldoPendente">Carregando...</p></div>
+      <div class="card"><h3>📤 Saques Realizados</h3><p id="saques">Carregando...</p></div>
+      <div class="card"><h3>💵 Total de Ganhos</h3><p id="ganhos">Carregando...</p></div>
     </section>
 
     <!-- Botão de Saque -->
     <div style="text-align:center; margin:24px 0;">
-      <button class="btn-vermelho" style="padding:12px 20px; font-size:16px; border:none; border-radius:8px; background:red; color:white; cursor:pointer;"
-              onclick="abrirModal()">
+      <button id="btnSaque" class="btn-vermelho" style="padding:12px 20px; font-size:16px; border:none; border-radius:8px; background:red; color:white; cursor:pointer;">
         Solicitar Saque
       </button>
     </div>
 
     <!-- Histórico de Transações -->
     <h2 class="logo-center" style="color:red; margin-top:24px;">Histórico de Transações</h2>
-    <table class="product-table" style="width:95%; max-width:1000px; margin:0 auto; border-collapse:collapse; background:#111; color:#fff; border-radius:8px; overflow:hidden; margin-top:16px;">
+    <table id="tabelaTransacoes" class="product-table" style="width:95%; max-width:1000px; margin:0 auto; border-collapse:collapse; background:#111; color:#fff; border-radius:8px; overflow:hidden; margin-top:16px;">
       <thead>
         <tr>
           <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Data</th>
-          <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Tipo</th>
+          <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Produto</th>
           <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Valor</th>
-          <th style="background:#222; color:red; padding:10px; border:1px solid #333;">Status</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td style="padding:10px; border:1px solid #333; text-align:center;">07/09/2025</td>
-          <td style="padding:10px; border:1px solid #333; text-align:center;">Venda</td>
-          <td style="padding:10px; border:1px solid #333; text-align:center;">R$ 150,00</td>
-          <td style="padding:10px; border:1px solid #333; text-align:center;">Concluído</td>
-        </tr>
-        <tr>
-          <td style="padding:10px; border:1px solid #333; text-align:center;">06/09/2025</td>
-          <td style="padding:10px; border:1px solid #333; text-align:center;">Saque</td>
-          <td style="padding:10px; border:1px solid #333; text-align:center;">R$ 100,00</td>
-          <td style="padding:10px; border:1px solid #333; text-align:center;">Pendente</td>
-        </tr>
+        <tr><td colspan="3" style="padding:10px; text-align:center;">Carregando...</td></tr>
       </tbody>
     </table>
   </main>
-
-  <!-- Modal de Saque -->
-  <div id="modalSaque" class="modal">
-    <div class="modal-content">
-      <h3>Solicitar Saque</h3>
-      <input type="number" id="valor" placeholder="Digite o valor">
-      <select id="metodo">
-        <option value="emola">Emola</option>
-        <option value="mpesa">Mpesa</option>
-        <option value="paypal">Paypal</option>
-        <option value="banco">Banco</option>
-      </select>
-      <button class="btn-confirmar" onclick="confirmarSaque()">Confirmar</button>
-      <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-    </div>
-  </div>
 
   <script>
     function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
     function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
 
-    function abrirModal() {
-      document.getElementById("modalSaque").style.display = "flex";
-    }
+    // 🔥 Conectar ao JSON Server
+    const API = "http://localhost:3000";
 
-    function fecharModal() {
-      document.getElementById("modalSaque").style.display = "none";
-    }
+    // Atualizar saldo
+    fetch(API + "/saldo")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('saldoDisponivel').innerText = "R$ " + data.disponivel;
+        document.getElementById('saldoPendente').innerText = "R$ " + data.pendente;
+        document.getElementById('saques').innerText = "R$ " + data.saques;
+        document.getElementById('ganhos').innerText = "R$ " + data.ganhos;
+      });
 
-    function confirmarSaque() {
-      const valor = document.getElementById("valor").value;
-      const metodo = document.getElementById("metodo").value;
+    // Carregar histórico de vendas
+    fetch(API + "/vendas")
+      .then(res => res.json())
+      .then(vendas => {
+        let tbody = document.querySelector("#tabelaTransacoes tbody");
+        tbody.innerHTML = "";
+        vendas.forEach(v => {
+          tbody.innerHTML += `
+            <tr>
+              <td style="padding:10px; border:1px solid #333; text-align:center;">${v.data}</td>
+              <td style="padding:10px; border:1px solid #333; text-align:center;">${v.produto}</td>
+              <td style="padding:10px; border:1px solid #333; text-align:center;">R$ ${v.valor}</td>
+            </tr>`;
+        });
+      });
 
-      if (valor === "" || valor <= 0) {
-        alert("Por favor, insira um valor válido.");
-        return;
-      }
-
-      alert("Saque de R$ " + valor + " via " + metodo.toUpperCase() + " solicitado com sucesso!");
-      fecharModal();
-    }
+    // Função para solicitar saque
+    document.getElementById("btnSaque").addEventListener("click", () => {
+      alert("💸 Solicitação de saque enviada com sucesso!");
+    });
   </script>
 </body>
 </html>
