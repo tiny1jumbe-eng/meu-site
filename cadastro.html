@@ -5,44 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DIGIVEND - Cadastro</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .error-box {
+      background: #ff4d4d;
+      color: white;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 12px 0;
+      text-align: center;
+      display: none;
+    }
+    .success-box {
+      background: #4caf50;
+      color: white;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 12px 0;
+      text-align: center;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <h1 class="logo">DIGIVEND</h1>
-  <div class="form-box">
-    <h2>Cadastro</h2>
-<form onsubmit="return cadastrar(event)">
-  <input type="text" placeholder="Nome completo" required>
-  <input type="email" id="email" placeholder="Email" required>
-  <input type="tel" placeholder="Telefone" required>
-  <input type="password" id="senha" placeholder="Senha" required>
+  <main class="form-container">
+    <h2>Criar Conta</h2>
+    <div id="errorMsg" class="error-box"></div>
+    <div id="successMsg" class="success-box"></div>
+    <form id="cadastroForm">
+      <input type="text" id="nome" placeholder="Nome completo" required>
+      <input type="email" id="email" placeholder="E-mail" required>
+      <input type="tel" id="telefone" placeholder="Telefone" required>
+      <input type="password" id="senha" placeholder="Senha" required>
+      <select id="tipoConta" required>
+        <option value="">Selecione o tipo de conta</option>
+        <option value="vendedor">Vendedor</option>
+        <option value="comprador">Comprador</option>
+      </select>
+      <button type="submit">Cadastrar</button>
+    </form>
+    <p>Já tem conta? <a href="login.html">Entrar</a></p>
+  </main>
 
-  <label>
-    <input type="checkbox" required> Concordo com os termos e condições
-  </label>
+  <script>
+    document.getElementById("cadastroForm").addEventListener("submit", function(e) {
+      e.preventDefault();
 
-  <button type="button" onclick="cadastrar('vendedor')">Vendedor</button>
-  <button type="button" onclick="cadastrar('comprador')">Comprador</button>
-</form>
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const telefone = document.getElementById("telefone").value.trim();
+      const senha = document.getElementById("senha").value.trim();
+      const tipoConta = document.getElementById("tipoConta").value;
 
-<script>
-  function cadastrar(tipo) {
-    const email = document.getElementById("email").value;
-    const senha = document.getElementById("senha").value;
+      let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-    if (!email || !senha) {
-      alert("Preencha email e senha");
-      return;
+      // Verificação de duplicados
+      const existe = usuarios.find(u => u.email === email || u.telefone === telefone);
+      if (existe) {
+        showMessage("errorMsg", "❌ Já existe uma conta com este e-mail ou telefone.");
+        return;
+      }
+
+      // Salva novo usuário
+      usuarios.push({ nome, email, telefone, senha, tipo: tipoConta });
+      localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+      showMessage("successMsg", "✅ Conta criada com sucesso! Redirecionando...");
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 2000);
+    });
+
+    function showMessage(id, msg) {
+      document.getElementById("errorMsg").style.display = "none";
+      document.getElementById("successMsg").style.display = "none";
+      const box = document.getElementById(id);
+      box.innerText = msg;
+      box.style.display = "block";
     }
-
-    // Salvar no navegador
-    localStorage.setItem("usuarioEmail", email);
-    localStorage.setItem("usuarioSenha", senha);
-    localStorage.setItem("usuarioTipo", tipo);
-
-    alert("Cadastro realizado com sucesso! Faça login.");
-    window.location.href = "login.html"; // volta para o login
-  }
-</script>
- </div>
+  </script>
 </body>
 </html>

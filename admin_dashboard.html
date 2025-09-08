@@ -3,57 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - DIGIVEND</title>
+  <title>DIGIVEND - Painel do Administrador</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    body { background:#111; color:#fff; font-family:Arial, sans-serif; margin:0; padding:20px; }
-    header { background:#222; padding:15px; border-radius:10px; text-align:center; }
-    h1 { color:red; }
-    .container { margin-top:20px; }
-    .card { background:#222; padding:15px; border-radius:10px; margin:10px 0; box-shadow:0 0 10px rgba(255,0,0,0.3); }
-    button { background:red; border:none; padding:10px 15px; border-radius:6px; color:#fff; cursor:pointer; }
-    button:hover { background:darkred; }
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #111;
+      color: white;
+    }
+    .logo-center {
+      text-align: center;
+      flex: 1;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 30px auto;
+      max-width: 900px;
+      padding: 16px;
+    }
+    .card {
+      background: #1c1c1c;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .card h3 {
+      margin-bottom: 10px;
+      color: red;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Área do Administrador</h1>
-    <button onclick="logout()">Sair</button>
+  <!-- TOPO -->
+  <header class="dashboard-header">
+    <button class="menu-btn" onclick="openMenu()" aria-label="Abrir menu">☰</button>
+    <h1 class="logo-center">DIGIVEND - ADMIN</h1>
+    <div class="user-profile">👤 Admin</div>
   </header>
 
-  <div class="container">
-    <div class="card">
-      <h2>Gerenciar Produtos</h2>
-      <p>Aqui você pode aprovar ou rejeitar produtos cadastrados pelos vendedores.</p>
-      <button onclick="window.location.href='admin_produtos.html'">Gerenciar</button>
-    </div>
+  <!-- MENU LATERAL -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">×</button>
+    <a href="dashboard_admin.html" onclick="closeMenu()">Início</a>
+    <a href="usuarios_admin.html" onclick="closeMenu()">Usuários</a>
+    <a href="produtos_admin.html" onclick="closeMenu()">Produtos</a>
+    <a href="saques_admin.html" onclick="closeMenu()">Saques</a>
+  </nav>
 
-    <div class="card">
-      <h2>Gerenciar Comunidades</h2>
-      <p>Modere comunidades criadas pelos vendedores.</p>
-      <button onclick="window.location.href='admin_comunidades.html'">Gerenciar</button>
-    </div>
+  <!-- CONTEÚDO -->
+  <main class="dashboard-content">
+    <h2 style="text-align:center; color:red; margin-top:20px;">Resumo Administrativo</h2>
 
-    <div class="card">
-      <h2>Gerenciar Usuários</h2>
-      <p>Visualize e controle contas de compradores e vendedores.</p>
-      <button onclick="window.location.href='admin_usuarios.html'">Gerenciar</button>
-    </div>
-  </div>
+    <section class="cards-container">
+      <div class="card">
+        <h3>👥 Usuários</h3>
+        <p>Total cadastrados: <b>0</b></p>
+      </div>
+      <div class="card">
+        <h3>📦 Produtos</h3>
+        <p>Pendentes aprovação: <b>0</b></p>
+      </div>
+      <div class="card">
+        <h3>💵 Saques</h3>
+        <p>Pendentes: <b>0</b></p>
+      </div>
+      <div class="card">
+        <h3>📊 Relatórios</h3>
+        <p>Acompanhar atividades</p>
+      </div>
+    </section>
+  </main>
 
   <script>
-    // Verificação de login
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-
-    if (!usuarioLogado || usuarioLogado.tipo !== "admin") {
-      alert("Acesso negado! Faça login como administrador.");
-      window.location.href = "login.html";
-    }
-
-    function logout() {
-      localStorage.removeItem("usuarioLogado");
-      window.location.href = "login.html";
-    }
+    function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
+    function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
   </script>
 </body>
 </html>
