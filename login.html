@@ -41,30 +41,34 @@
 
     const email = document.getElementById("email").value.trim();
     const senha = document.getElementById("senha").value.trim();
+    const tipoConta = document.getElementById("tipoConta").value;
 
-    // Verifica se é o admin
-    if (email === "admin@gmail.com" && senha === "admin123") {
+    // 🔑 Login fixo do administrador
+    if (email === "admini@gmail.com" && senha === "admin123" && tipoConta === "admin") {
       alert("Login de administrador realizado com sucesso!");
+      localStorage.setItem("usuarioLogado", JSON.stringify({ email, tipo: "admin" }));
       window.location.href = "admin_dashboard.html";
       return;
     }
 
-    // Verifica contas do localStorage (vendedor/comprador)
+    // Demais usuários (vendedor/comprador) do localStorage
     const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-    const usuario = usuarios.find(u => u.email === email && u.senha === senha);
+    const usuario = usuarios.find(u => u.email === email && u.senha === senha && u.tipo === tipoConta);
 
     if (usuario) {
       alert("Login realizado com sucesso!");
+      localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
 
       if (usuario.tipo === "vendedor") {
-        window.location.href = "dashboard.html";
+        window.location.href = "dashboard_vendedor.html";
       } else if (usuario.tipo === "comprador") {
         window.location.href = "loja.html";
       }
     } else {
-      alert("Email ou senha incorretos!");
+      alert("Email, senha ou tipo de conta incorretos!");
     }
   });
+</script>
 </script>
 </body>
 </html>
