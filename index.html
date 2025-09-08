@@ -3,87 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DIGIVEND</title>
+  <title>DIGIVEND - Login</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .error-box {
+      background: #ff4d4d;
+      color: white;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 12px 0;
+      text-align: center;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <!-- Logo -->
-  <header>
-    <h1>DIGIVEND</h1>
-  </header>
+  <main class="form-container">
+    <h2>Login</h2>
+    <div id="errorMsg" class="error-box"></div>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="E-mail" required>
+      <input type="password" id="senha" placeholder="Senha" required>
+      <select id="tipoConta" required>
+        <option value="">Selecione o tipo de conta</option>
+        <option value="vendedor">Vendedor</option>
+        <option value="comprador">Comprador</option>
+        <option value="admin">Administrador</option>
+      </select>
+      <button type="submit">Entrar</button>
+    </form>
 
-  <!-- Botões -->
-  <section>
-    <a href="login.html" class="button">Login</a>
-    <a href="cadastro.html" class="button">Cadastro</a>
-  </section>
+    <!-- Link esqueci senha -->
+    <p><a href="esqueci_senha.html">Esqueci minha senha</a></p>
 
-  <!-- Porquê escolher -->
-  <section>
-    <h2 style="color:red;">Porquê escolher a DIGIVEND</h2>
-    <p>Simplificamos suas vendas, oferecemos segurança e conectamos você a milhares de clientes.</p>
-  </section>
-
-  <!-- Depoimentos -->
-  <section>
-    <h2 style="color:red;">O que dizem nossos clientes</h2>
-    <div class="card-container">
-      <div class="card"><p><strong>Melena:</strong> a DIGIVEND ajudou-me a expandir o meu negócio de forma totalmente gratuita.</p></div>
-      <div class="card"><p><strong>Paulo:</strong> agora consigo vender online sem complicações.</p></div>
-      <div class="card"><p><strong>Sofia:</strong> plataforma simples e segura!</p></div>
-      <div class="card"><p><strong>Carlos:</strong> aumentei minhas vendas em 40% usando a DIGIVEND.</p></div>
-      <div class="card"><p><strong>Ana:</strong> nunca foi tão fácil vender e receber.</p></div>
-    </div>
-  </section>
-
-  <!-- Rodapé -->
-  <footer>
-    <p>© 2025 DIGIVEND - Todos os direitos reservados.</p>
-  </footer>
-
-  <!-- Botão WhatsApp -->
-  <div class="whatsapp-float" onclick="window.open('https://wa.me/55999999999','_blank')">
-    💬
-  </div>
-
-  <!-- Chatbot -->
-  <div class="chatbot-container" id="chatbot">
-    <div class="chatbot-header">Atendimento DIGIVEND</div>
-    <div class="chatbot-body" id="chatBody">
-      <p>Olá! Como posso ajudar?</p>
-      <p>1️⃣ Levantamento de valor</p>
-      <p>2️⃣ Trocar senha</p>
-      <p>3️⃣ Outras questões</p>
-    </div>
-    <div class="chatbot-footer">
-      <input type="text" id="chatInput" placeholder="Digite aqui...">
-      <button onclick="sendMessage()">Enviar</button>
-    </div>
-  </div>
+    <p>Ainda não tem conta? <a href="cadastro.html">Cadastrar</a></p>
+  </main>
 
   <script>
-    function sendMessage() {
-      let input = document.getElementById("chatInput");
-      let body = document.getElementById("chatBody");
-      let msg = input.value.trim();
-      if(msg){
-        body.innerHTML += "<p><strong>Você:</strong> " + msg + "</p>";
-        if(msg.includes("1")) body.innerHTML += "<p>Para levantar seu valor, vá até 'Saldo' no menu do Dashboard.</p>";
-        else if(msg.includes("2")) body.innerHTML += "<p>Para trocar sua senha, acesse 'Perfil'.</p>";
-        else body.innerHTML += "<p>Encaminhando você ao suporte WhatsApp...</p>";
-        input.value = "";
-        body.scrollTop = body.scrollHeight;
-      }
-    }
-  </script>
+    // Recupera tentativas salvas
+    let tentativas = JSON.parse(localStorage.getItem("tentativasLogin")) || {};
+    const MAX_TENTATIVAS = 5;
 
-<script>
-  if (/Mobi|Android/i.test(navigator.userAgent)) {
-    console.log("Acessando de um CELULAR");
-    // Aqui você pode esconder/mostrar algo especial
-  } else {
-    console.log("Acessando de um COMPUTADOR");
-  }
-</script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const senha = document.getElementById("senha").value.trim();
+      const tipoConta = document.getElementById("tipoConta").value.trim();
+
+      const errorBox = document.getElementById("errorMsg");
+      errorBox.style.display = "none";
+
+      // Verifica se a conta está bloqueada
+      if (tentativas[email] && tentativas[email].bloqueado) {
+        errorBox.innerText = "⚠️ Esta conta está bloqueada. Contate o administrador.";
+        errorBox.style.display = "block";
+        return;
+      }
+
+      // ADMIN login fixo
+      if (email === "admini@gmail.com" && senha === "admin123" && tipoConta === "admin") {
+        alert("✅ Login de administrador realizado com sucesso!");
+        tentativas[email] = { erros: 0, bloqueado: false };
+        localStorage.setItem("tentativasLogin", JSON.stringify(tentativas));
+        window.location.href = "admin_dashboard.html";
+        return;
+      }
+
+      // Verifica usuários do localStorage
+      const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+      const usuario = usuarios.find(u => u.email === email && u.senha === senha && u.tipo === tipoConta);
+
+      if (usuario) {
+        alert("✅ Login realizado com sucesso!");
+        tentativas[email] = { erros: 0, bloqueado: false };
+        localStorage.setItem("tentativasLogin", JSON.stringify(tentativas));
+
+        if (usuario.tipo === "vendedor") {
+          window.location.href = "dashboard.html";
+        } else if (usuario.tipo === "comprador") {
+          window.location.href = "loja.html";
+        }
+      } else {
+        // Conta inválida → adiciona erro
+        if (!tentativas[email]) {
+          tentativas[email] = { erros: 0, bloqueado: false };
+        }
+        tentativas[email].erros++;
+
+        if (tentativas[email].erros >= MAX_TENTATIVAS) {
+          tentativas[email].bloqueado = true;
+          errorBox.innerText = "🚫 Conta bloqueada após 5 tentativas. Contate o administrador.";
+        } else {
+          errorBox.innerText = `❌ Email ou senha incorretos! Tentativa ${tentativas[email].erros}/${MAX_TENTATIVAS}`;
+        }
+
+        errorBox.style.display = "block";
+        localStorage.setItem("tentativasLogin", JSON.stringify(tentativas));
+      }
+    });
+  </script>
 </body>
 </html>

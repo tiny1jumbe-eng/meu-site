@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Segurança</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="form-container">
+    <h2>Gerenciar Segurança</h2>
+
+    <section>
+      <h3>Contas Bloqueadas</h3>
+      <div id="bloqueados"></div>
+    </section>
+
+    <section>
+      <h3>Solicitações de Redefinição</h3>
+      <div id="solicitacoes"></div>
+    </section>
+  </main>
+
+<script>
+  function carregarSeguranca() {
+    const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || {};
+    const requests = JSON.parse(localStorage.getItem("resetRequests")) || [];
+
+    const bloqueadosDiv = document.getElementById("bloqueados");
+    bloqueadosDiv.innerHTML = "";
+
+    Object.keys(attempts).forEach(email => {
+      if (attempts[email].locked) {
+        const div = document.createElement("div");
+        div.innerHTML = `${email} <button onclick="desbloquear('${email}')">Desbloquear</button>`;
+        bloqueadosDiv.appendChild(div);
+      }
+    });
+
+    const solicitacoesDiv = document.getElementById("solicitacoes");
+    solicitacoesDiv.innerHTML = "";
+
+    requests.forEach((req, i) => {
+      if (req.status === "pendente") {
+        const div = document.createElement("div");
+        div.innerHTML = `
+          ${req.email} 
+          <input type="text" id="tempSenha${i}" placeholder="Nova senha temporária">
+          <button onclick="aprovar(${i})">Aprovar</button>
+        `;
+        solicitacoesDiv.appendChild(div);
+      }
+    });
+  }
+
+  function desbloquear(email) {
+    let attempts = JSON.parse(localStorage.getItem("loginAttempts")) || {};
+    if (attempts[email]) {
+      attempts[email].locked = false;
+      attempts[email].count = 0;
+    }
+    localStorage.setItem("loginAttempts", JSON.stringify(attempts));
+    alert(`✅ Conta ${email} desbloqueada!`);
+    carregarSeguranca();
+  }
+
+  function aprovar(i) {
+    let requests = JSON.parse(localStorage.getItem("resetRequests")) || [];
+    const novaSenha = document.getElementById("tempSenha"+i).value;
+
+    if (!novaSenha) {
+      alert("Digite uma senha temporária!");
+      return;
+    }
+
+    requests[i].status = "resolvido";
+    requests[i].tempSenha = novaSenha;
+    localStorage.setItem("resetRequests", JSON.stringify(requests));
+
+    // Atualiza senha no banco de usuarios
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    const userIndex = usuarios.findIndex(u => u.email === requests[i].email);
+    if (userIndex !== -1) {
+      usuarios[userIndex].senha = novaSenha;
+      localStorage.setItem("usuarios", JSON.stringify(usuarios));
+    }
+
+    alert(`🔑 Senha redefinida para ${requests[i].email}`);
+    carregarSeguranca();
+  }
+
+  carregarSeguranca();
+</script>
+</body>
+</html>
