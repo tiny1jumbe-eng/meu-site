@@ -1,51 +1,54 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Adicionar Produtos - Digiclub</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adicionar Produtos - DIGICLUB</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- TOPO -->
   <header class="dashboard-header">
-    <button onclick="window.location.href='meu_digiclub.html'">⬅</button>
-    <h1 class="logo-center">Adicionar Produtos</h1>
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+    <h1 class="logo-center">DIGIVEND</h1>
+    <div class="user-profile">👤 Usuário</div>
   </header>
 
-  <main class="dashboard-content" style="padding:20px; text-align:center; color:white;">
-    <h2 style="color:red;">Adicionar Produto</h2>
-    <input type="text" id="produtoNome" placeholder="Nome do Produto" style="padding:10px; width:80%; margin-top:10px; border-radius:6px;">
-    <br>
-    <button onclick="salvarProduto()" class="btn-vermelho" style="margin-top:15px;">Salvar Produto</button>
+  <!-- MENU LATERAL -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">×</button>
+    <a href="dashboard_vendedor.html" onclick="closeMenu()">Home</a>
+    <a href="digiclub.html" onclick="closeMenu()">Digiclub</a>
+    <a href="meu_digiclub.html" onclick="closeMenu()">Meu Digiclub</a>
+  </nav>
 
-    <h3 style="margin-top:30px; color:red;">Meus Produtos</h3>
-    <ul id="listaProdutos" style="list-style:none; padding:0;"></ul>
+  <!-- CONTEÚDO -->
+  <main class="dashboard-content" style="padding:20px;">
+    <h2 class="logo-center" style="color:red;">Adicionar Produto ao Digiclub</h2>
+
+    <form id="formProduto" style="max-width:500px; margin:20px auto; background:#111; padding:20px; border-radius:10px; color:white;">
+      <label for="nomeProduto">Nome do Produto:</label><br/>
+      <input type="text" id="nomeProduto" required style="width:100%; padding:10px; margin:10px 0; border-radius:6px; border:none;"><br/>
+
+      <button type="submit" class="btn-vermelho">Salvar Produto</button>
+    </form>
   </main>
 
   <script>
-    function salvarProduto(){
-      let nome = document.getElementById("produtoNome").value.trim();
-      if(!nome) return alert("Digite um nome para o produto!");
+    function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
+    function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
+
+    document.getElementById("formProduto").addEventListener("submit", function(e){
+      e.preventDefault();
+      let nome = document.getElementById("nomeProduto").value;
 
       let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
       produtos.push(nome);
       localStorage.setItem("produtos", JSON.stringify(produtos));
 
-      document.getElementById("produtoNome").value = "";
-      carregarProdutos();
-      alert("Produto adicionado com sucesso!");
-    }
-
-    function carregarProdutos(){
-      let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
-      let lista = document.getElementById("listaProdutos");
-      lista.innerHTML = "";
-      produtos.forEach(p => {
-        lista.innerHTML += `<li style="background:#111; margin:8px auto; padding:10px; border-radius:6px; max-width:500px;">📦 ${p}</li>`;
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", carregarProdutos);
+      alert("✅ Produto adicionado com sucesso!");
+      window.location.href = "meu_digiclub.html";
+    });
   </script>
 </body>
 </html>

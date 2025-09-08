@@ -1,51 +1,54 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criar Comunidade - Digiclub</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Criar Comunidade - DIGICLUB</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- TOPO -->
   <header class="dashboard-header">
-    <button onclick="window.location.href='meu_digiclub.html'">⬅</button>
-    <h1 class="logo-center">Criar Comunidade</h1>
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+    <h1 class="logo-center">DIGIVEND</h1>
+    <div class="user-profile">👤 Usuário</div>
   </header>
 
-  <main class="dashboard-content" style="padding:20px; text-align:center; color:white;">
-    <h2 style="color:red;">Nova Comunidade</h2>
-    <input type="text" id="comunidadeNome" placeholder="Nome da Comunidade" style="padding:10px; width:80%; margin-top:10px; border-radius:6px;">
-    <br>
-    <button onclick="salvarComunidade()" class="btn-vermelho" style="margin-top:15px;">Criar Comunidade</button>
+  <!-- MENU LATERAL -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">×</button>
+    <a href="dashboard_vendedor.html" onclick="closeMenu()">Home</a>
+    <a href="digiclub.html" onclick="closeMenu()">Digiclub</a>
+    <a href="meu_digiclub.html" onclick="closeMenu()">Meu Digiclub</a>
+  </nav>
 
-    <h3 style="margin-top:30px; color:red;">Minhas Comunidades</h3>
-    <ul id="listaComunidades" style="list-style:none; padding:0;"></ul>
+  <!-- CONTEÚDO -->
+  <main class="dashboard-content" style="padding:20px;">
+    <h2 class="logo-center" style="color:red;">Criar Comunidade no Digiclub</h2>
+
+    <form id="formComunidade" style="max-width:500px; margin:20px auto; background:#111; padding:20px; border-radius:10px; color:white;">
+      <label for="nomeComunidade">Nome da Comunidade:</label><br/>
+      <input type="text" id="nomeComunidade" required style="width:100%; padding:10px; margin:10px 0; border-radius:6px; border:none;"><br/>
+
+      <button type="submit" class="btn-vermelho">Criar Comunidade</button>
+    </form>
   </main>
 
   <script>
-    function salvarComunidade(){
-      let nome = document.getElementById("comunidadeNome").value.trim();
-      if(!nome) return alert("Digite um nome para a comunidade!");
+    function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
+    function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
+
+    document.getElementById("formComunidade").addEventListener("submit", function(e){
+      e.preventDefault();
+      let nome = document.getElementById("nomeComunidade").value;
 
       let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
       comunidades.push(nome);
       localStorage.setItem("comunidades", JSON.stringify(comunidades));
 
-      document.getElementById("comunidadeNome").value = "";
-      carregarComunidades();
-      alert("Comunidade criada com sucesso!");
-    }
-
-    function carregarComunidades(){
-      let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
-      let lista = document.getElementById("listaComunidades");
-      lista.innerHTML = "";
-      comunidades.forEach(c => {
-        lista.innerHTML += `<li style="background:#111; margin:8px auto; padding:10px; border-radius:6px; max-width:500px;">👥 ${c}</li>`;
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", carregarComunidades);
+      alert("✅ Comunidade criada com sucesso!");
+      window.location.href = "meu_digiclub.html";
+    });
   </script>
 </body>
 </html>

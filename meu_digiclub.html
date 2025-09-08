@@ -98,21 +98,77 @@
       let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
       let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
 
+      // Produtos
       if (produtos.length === 0) {
         listaProdutos.innerHTML = `<li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px;">Nenhum produto adicionado ainda.</li>`;
       } else {
-        produtos.forEach(p => {
-          listaProdutos.innerHTML += `<li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px;">📦 ${p}</li>`;
+        produtos.forEach((p, index) => {
+          listaProdutos.innerHTML += `
+            <li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px; display:flex; justify-content:space-between; align-items:center;">
+              📦 ${p}
+              <span>
+                <button onclick="editarProduto(${index})" style="margin-right:5px;">✏️</button>
+                <button onclick="excluirProduto(${index})">🗑️</button>
+              </span>
+            </li>`;
         });
       }
 
+      // Comunidades
       if (comunidades.length === 0) {
         listaComunidades.innerHTML = `<li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px;">Nenhuma comunidade criada ainda.</li>`;
       } else {
-        comunidades.forEach(c => {
-          listaComunidades.innerHTML += `<li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px;">👥 ${c}</li>`;
+        comunidades.forEach((c, index) => {
+          listaComunidades.innerHTML += `
+            <li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px; display:flex; justify-content:space-between; align-items:center;">
+              👥 ${c}
+              <span>
+                <button onclick="editarComunidade(${index})" style="margin-right:5px;">✏️</button>
+                <button onclick="excluirComunidade(${index})">🗑️</button>
+              </span>
+            </li>`;
         });
       }
+    }
+
+    // Funções Produtos
+    function editarProduto(index) {
+      let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
+      let novoNome = prompt("Editar nome do produto:", produtos[index]);
+      if (novoNome) {
+        produtos[index] = novoNome;
+        localStorage.setItem("produtos", JSON.stringify(produtos));
+        carregarListas();
+        atualizarProgresso();
+      }
+    }
+
+    function excluirProduto(index) {
+      let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
+      produtos.splice(index, 1);
+      localStorage.setItem("produtos", JSON.stringify(produtos));
+      carregarListas();
+      atualizarProgresso();
+    }
+
+    // Funções Comunidades
+    function editarComunidade(index) {
+      let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
+      let novoNome = prompt("Editar nome da comunidade:", comunidades[index]);
+      if (novoNome) {
+        comunidades[index] = novoNome;
+        localStorage.setItem("comunidades", JSON.stringify(comunidades));
+        carregarListas();
+        atualizarProgresso();
+      }
+    }
+
+    function excluirComunidade(index) {
+      let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
+      comunidades.splice(index, 1);
+      localStorage.setItem("comunidades", JSON.stringify(comunidades));
+      carregarListas();
+      atualizarProgresso();
     }
 
     // Inicialização
