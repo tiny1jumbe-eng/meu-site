@@ -3,52 +3,255 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DIGIVEND - Admin</title>
+  <title>Painel do Administrador</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* TOPO */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111;
+      padding: 15px 20px;
+      border-bottom: 2px solid red;
+    }
+
+    .dashboard-header h1 {
+      font-size: 22px;
+      color: white;
+      margin: 0;
+    }
+
+    .header-icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .menu-btn {
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: white;
+    }
+
+    /* Notificações */
+    .notification-container {
+      position: relative;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .badge {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+    }
+
+    .notification-dropdown {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 60px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      width: 250px;
+      padding: 10px;
+      color: white;
+      z-index: 1001;
+      box-shadow: 0 0 10px rgba(255,0,0,0.3);
+    }
+
+    .notification-dropdown h4 {
+      margin: 0 0 10px;
+      color: red;
+    }
+
+    .notification-dropdown ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .notification-dropdown ul li {
+      padding: 8px;
+      border-bottom: 1px solid #333;
+      font-size: 14px;
+    }
+
+    .notification-dropdown ul li:last-child {
+      border-bottom: none;
+    }
+
+    .notification-dropdown button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 6px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* MENU LATERAL */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: -250px;
+      width: 250px;
+      height: 100%;
+      background: #111;
+      color: white;
+      transition: 0.3s;
+      padding: 20px;
+      z-index: 2000;
+      box-shadow: -3px 0 10px rgba(255,0,0,0.3);
+    }
+
+    .side-menu.active {
+      right: 0;
+    }
+
+    .side-menu h3 {
+      margin-bottom: 15px;
+      color: red;
+      border-bottom: 1px solid #333;
+      padding-bottom: 10px;
+    }
+
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .side-menu ul li {
+      padding: 10px 0;
+      border-bottom: 1px solid #333;
+      cursor: pointer;
+    }
+
+    .side-menu ul li:hover {
+      color: red;
+    }
+
+    /* CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 30px;
+    }
+
+    .card {
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255,0,0,0.3);
+      border: 1px solid #333;
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      color: red;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- TOPO -->
   <header class="dashboard-header">
     <h1>Painel do Administrador</h1>
+    <div class="header-icons">
+      <!-- Ícone de notificações -->
+      <div class="notification-container" onclick="toggleNotifications()">
+        ✉️
+        <span id="notificationBadge" class="badge">3</span>
+      </div>
+      <!-- Botão Hamburguer -->
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    </div>
   </header>
 
-  <main style="padding:20px;">
-    <h2>Visão Geral</h2>
-    <canvas id="graficoResumo" width="400" height="200"></canvas>
+  <!-- Dropdown de notificações -->
+  <div id="notificationDropdown" class="notification-dropdown">
+    <h4>Notificações</h4>
+    <ul id="notificationList">
+      <li>👥 Novo usuário aguardando aprovação</li>
+      <li>📦 Produto pendente de validação</li>
+      <li>💸 Solicitação de saque</li>
+    </ul>
+    <button onclick="markAllRead()">Marcar todas como lidas</button>
+  </div>
 
-    <section class="cards-container" style="margin-top:24px;">
-      <div class="card"><h3>👥 Usuários</h3><p id="totalUsuarios">0</p></div>
-      <div class="card"><h3>📦 Produtos</h3><p id="totalProdutos">0</p></div>
-      <div class="card"><h3>💰 Saques Pendentes</h3><p id="totalSaques">0</p></div>
+  <!-- MENU LATERAL -->
+  <div id="sideMenu" class="side-menu">
+    <h3>Menu</h3>
+    <ul>
+      <li onclick="location.href='admin_dashboard.html'">🏠 Início</li>
+      <li onclick="location.href='admin_usuarios.html'">👥 Usuários</li>
+      <li onclick="location.href='admin_produtos.html'">📦 Produtos</li>
+      <li onclick="location.href='admin_saques.html'">💸 Saques</li>
+      <li onclick="location.href='admin_relatorios.html'">📊 Relatórios</li>
+      <li onclick="location.href='admin_config.html'">⚙️ Configurações</li>
+    </ul>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main>
+    <section class="cards">
+      <div class="card">
+        <h3>Usuários</h3>
+        <p>Gerenciar contas</p>
+      </div>
+      <div class="card">
+        <h3>Produtos</h3>
+        <p>Validar e controlar vendas</p>
+      </div>
+      <div class="card">
+        <h3>Saques</h3>
+        <p>Aprovar retiradas</p>
+      </div>
+      <div class="card">
+        <h3>Relatórios</h3>
+        <p>Análises financeiras</p>
+      </div>
     </section>
   </main>
 
-<script>
-  // Simulação de dados iniciais
-  document.getElementById("totalUsuarios").innerText = JSON.parse(localStorage.getItem("usuarios"))?.length || 0;
-  document.getElementById("totalProdutos").innerText = "3";
-  document.getElementById("totalSaques").innerText = "1";
-
-  const ctx = document.getElementById('graficoResumo');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Usuários', 'Produtos', 'Saques'],
-      datasets: [{
-        label: 'Estatísticas Gerais',
-        data: [JSON.parse(localStorage.getItem("usuarios"))?.length || 0, 3, 1],
-        backgroundColor: 'white'
-      }]
-    },
-    options: {
-      scales: {
-        y: { beginAtZero: true }
-      },
-      plugins: {
-        legend: { display: false }
-      }
+  <script>
+    function toggleNotifications() {
+      const dropdown = document.getElementById("notificationDropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
     }
-  });
-</script>
+
+    function markAllRead() {
+      document.getElementById("notificationBadge").innerText = "";
+      document.getElementById("notificationDropdown").style.display = "none";
+    }
+
+    function toggleMenu() {
+      const menu = document.getElementById("sideMenu");
+      menu.classList.toggle("active");
+    }
+  </script>
 </body>
 </html>
