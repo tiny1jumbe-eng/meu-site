@@ -163,17 +163,19 @@
       </div>
     </div>
   </main>
+<script>
+  const hamburger = document.querySelector(".hamburger");
+  const menu = document.getElementById("menu");
+  const closeMenu = document.getElementById("closeMenu");
 
-  <script>
-    function toggleMenu() {
-      document.getElementById("sideMenu").classList.toggle("active");
-    }
+  hamburger.addEventListener("click", () => {
+    menu.classList.add("open");
+  });
 
-    // Simulação de clique em notificações
-    document.querySelector(".notification-icon").addEventListener("click", () => {
-      alert("Você tem novas notificações!");
-      document.getElementById("notifBadge").style.display = "none"; // Limpa badge após abrir
-    });
-  </script>
+  closeMenu.addEventListener("click", () => {
+    menu.classList.remove("open");
+  });
+</script>
+
 </body>
 </html>
