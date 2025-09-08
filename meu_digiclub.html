@@ -3,13 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meu Digiclub - DIGIVEND</title>
+  <title>Meu Digiclub</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .btn { padding:6px 10px; border:none; border-radius:6px; cursor:pointer; }
+    .btn-red { background:red; color:white; }
+    .btn-gray { background:#444; color:white; }
+    .btn-small { font-size:14px; margin-left:4px; }
+    li { list-style:none; }
+  </style>
 </head>
 <body>
   <!-- TOPO -->
   <header class="dashboard-header">
-    <button class="menu-btn" onclick="openMenu()">☰</button>
+    <button class="menu-btn" onclick="openMenu()" aria-label="Abrir menu">☰</button>
     <h1 class="logo-center">DIGIVEND</h1>
     <div class="user-profile">👤 Usuário</div>
   </header>
@@ -29,153 +36,152 @@
   </nav>
 
   <!-- CONTEÚDO -->
-  <main class="dashboard-content" style="padding:16px;">
+  <main class="dashboard-content" style="padding:16px; margin-top:12px;">
+    <h2 class="logo-center" style="color:red;">Meu Digiclub</h2>
 
-    <!-- Progresso -->
-    <div style="display:flex; align-items:center; justify-content:center; margin-top:20px;">
-      <!-- Círculo -->
-      <div style="position:relative; width:100px; height:100px;">
-        <svg width="100" height="100">
-          <circle cx="50" cy="50" r="45" stroke="#333" stroke-width="10" fill="none"/>
-          <circle id="progressCircle" cx="50" cy="50" r="45" stroke="red" stroke-width="10" fill="none" stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round"/>
-        </svg>
-        <div id="progressText" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:18px; font-weight:bold; color:white;">0%</div>
-      </div>
-
-      <!-- Texto ao lado -->
-      <div style="margin-left:20px; font-size:16px; color:white;">
-        Primeiros passos para personalização básica
+    <!-- Barra de progresso -->
+    <div style="display:flex; align-items:center; justify-content:center; margin:20px 0;">
+      <svg width="80" height="80">
+        <circle cx="40" cy="40" r="36" stroke="#444" stroke-width="6" fill="none"/>
+        <circle id="progressCircle" cx="40" cy="40" r="36" stroke="red" stroke-width="6" fill="none"
+          stroke-dasharray="226" stroke-dashoffset="226" transform="rotate(-90 40 40)"/>
+      </svg>
+      <div style="margin-left:12px;">
+        <strong>Primeiros passos para personalização básica</strong>
+        <p id="progressText">0% concluído</p>
       </div>
     </div>
 
-    <!-- Botões -->
-    <div style="text-align:center; margin-top:20px;">
-      <a href="adicionar_produtos.html"><button class="btn-vermelho">Adicionar primeiros produtos</button></a>
-      <a href="personalizar_digiclub.html"><button class="btn-vermelho">Personalizar Digiclub</button></a>
-      <a href="criar_comunidade.html"><button class="btn-vermelho">Criar primeira comunidade</button></a>
+    <!-- Botões principais -->
+    <div style="text-align:center; margin-bottom:24px;">
+      <button class="btn btn-red" onclick="adicionarProduto()">➕ Adicionar primeiros produtos</button><br/><br/>
+      <button class="btn btn-red" onclick="personalizar()">🎨 Personalizar Digiclub</button><br/><br/>
+      <button class="btn btn-red" onclick="criarComunidade()">👥 Criar primeira comunidade</button>
     </div>
 
-    <!-- Lista de Comunidades -->
-    <section style="margin-top:30px; text-align:center; color:white;">
-      <h3 style="color:red;">Minhas Comunidades</h3>
-      <ul id="listaComunidades" style="list-style:none; padding:0; margin-top:10px;"></ul>
+    <!-- Listas -->
+    <section>
+      <h3 style="color:red; margin-top:16px;">Comunidades Criadas</h3>
+      <ul id="listaComunidades"></ul>
     </section>
 
-    <!-- Lista de Produtos -->
-    <section style="margin-top:30px; text-align:center; color:white;">
-      <h3 style="color:red;">Meus Produtos</h3>
-      <ul id="listaProdutos" style="list-style:none; padding:0; margin-top:10px;"></ul>
+    <section>
+      <h3 style="color:red; margin-top:16px;">Produtos no Digiclub</h3>
+      <ul id="listaProdutos"></ul>
     </section>
-
   </main>
 
   <script>
+    // MENU
     function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
     function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
 
-    // -------- LÓGICA LOCALSTORAGE --------
-    function atualizarProgresso() {
-      let progresso = 0;
-      if (localStorage.getItem("produtos") && JSON.parse(localStorage.getItem("produtos")).length > 0) progresso += 33;
-      if (localStorage.getItem("personalizado") === "true") progresso += 33;
-      if (localStorage.getItem("comunidades") && JSON.parse(localStorage.getItem("comunidades")).length > 0) progresso += 34;
-
-      const circle = document.getElementById("progressCircle");
-      const text = document.getElementById("progressText");
-      const offset = 283 - (283 * progresso) / 100;
-
-      circle.style.strokeDashoffset = offset;
-      text.textContent = progresso + "%";
+    // Funções principais
+    function adicionarProduto(){
+      window.location.href = "meus_produtos.html";
     }
 
-    function carregarListas() {
-      const listaProdutos = document.getElementById("listaProdutos");
-      const listaComunidades = document.getElementById("listaComunidades");
-
-      listaProdutos.innerHTML = "";
-      listaComunidades.innerHTML = "";
-
-      let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
-      let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
-
-      // Produtos
-      if (produtos.length === 0) {
-        listaProdutos.innerHTML = `<li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px;">Nenhum produto adicionado ainda.</li>`;
-      } else {
-        produtos.forEach((p, index) => {
-          listaProdutos.innerHTML += `
-            <li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px; display:flex; justify-content:space-between; align-items:center;">
-              📦 ${p}
-              <span>
-                <button onclick="editarProduto(${index})" style="margin-right:5px;">✏️</button>
-                <button onclick="excluirProduto(${index})">🗑️</button>
-              </span>
-            </li>`;
-        });
-      }
-
-      // Comunidades
-      if (comunidades.length === 0) {
-        listaComunidades.innerHTML = `<li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px;">Nenhuma comunidade criada ainda.</li>`;
-      } else {
-        comunidades.forEach((c, index) => {
-          listaComunidades.innerHTML += `
-            <li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px; display:flex; justify-content:space-between; align-items:center;">
-              👥 ${c}
-              <span>
-                <button onclick="editarComunidade(${index})" style="margin-right:5px;">✏️</button>
-                <button onclick="excluirComunidade(${index})">🗑️</button>
-              </span>
-            </li>`;
-        });
-      }
+    function personalizar(){
+      window.location.href = "personalizar_digiclub.html";
     }
 
-    // Funções Produtos
-    function editarProduto(index) {
-      let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
-      let novoNome = prompt("Editar nome do produto:", produtos[index]);
-      if (novoNome) {
-        produtos[index] = novoNome;
-        localStorage.setItem("produtos", JSON.stringify(produtos));
-        carregarListas();
+    function criarComunidade(){
+      const nome = prompt("Digite o nome da nova comunidade:");
+      if(nome){
+        let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
+        comunidades.push(nome);
+        localStorage.setItem("comunidades", JSON.stringify(comunidades));
         atualizarProgresso();
+        carregarListas();
       }
     }
 
-    function excluirProduto(index) {
-      let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
-      produtos.splice(index, 1);
-      localStorage.setItem("produtos", JSON.stringify(produtos));
-      carregarListas();
-      atualizarProgresso();
+    function entrarComunidade(nome){
+      localStorage.setItem("comunidadeAtual", nome);
+      window.location.href = "comunidade.html";
     }
 
-    // Funções Comunidades
-    function editarComunidade(index) {
+    function editarComunidade(index){
       let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
-      let novoNome = prompt("Editar nome da comunidade:", comunidades[index]);
-      if (novoNome) {
+      const novoNome = prompt("Novo nome da comunidade:", comunidades[index]);
+      if(novoNome){
         comunidades[index] = novoNome;
         localStorage.setItem("comunidades", JSON.stringify(comunidades));
         carregarListas();
-        atualizarProgresso();
       }
     }
 
-    function excluirComunidade(index) {
+    function excluirComunidade(index){
       let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
-      comunidades.splice(index, 1);
-      localStorage.setItem("comunidades", JSON.stringify(comunidades));
-      carregarListas();
-      atualizarProgresso();
+      if(confirm("Tem certeza que deseja excluir esta comunidade?")){
+        comunidades.splice(index,1);
+        localStorage.setItem("comunidades", JSON.stringify(comunidades));
+        carregarListas();
+      }
+    }
+
+    // Listas
+    function carregarListas(){
+      const listaComunidades = document.getElementById("listaComunidades");
+      const listaProdutos = document.getElementById("listaProdutos");
+
+      let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
+      let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
+
+      listaComunidades.innerHTML = "";
+      if(comunidades.length === 0){
+        listaComunidades.innerHTML = `<li style="background:#111; padding:10px; margin:8px 0; border-radius:6px;">Nenhuma comunidade criada ainda.</li>`;
+      } else {
+        comunidades.forEach((c,index)=>{
+          listaComunidades.innerHTML += `
+            <li style="background:#111; padding:10px; margin:8px 0; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+              <span>👥 ${c}</span>
+              <span>
+                <button class="btn btn-gray btn-small" onclick="entrarComunidade('${c}')">🚪 Entrar</button>
+                <button class="btn btn-gray btn-small" onclick="editarComunidade(${index})">✏️</button>
+                <button class="btn btn-gray btn-small" onclick="excluirComunidade(${index})">🗑️</button>
+              </span>
+            </li>`;
+        });
+      }
+
+      listaProdutos.innerHTML = "";
+      if(produtos.length === 0){
+        listaProdutos.innerHTML = `<li style="background:#111; padding:10px; margin:8px 0; border-radius:6px;">Nenhum produto adicionado ainda.</li>`;
+      } else {
+        produtos.forEach((p)=>{
+          listaProdutos.innerHTML += `
+            <li style="background:#111; padding:10px; margin:8px 0; border-radius:6px;">
+              📦 ${p}
+            </li>`;
+        });
+      }
+    }
+
+    // Progresso
+    function atualizarProgresso(){
+      let progresso = 0;
+      let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
+      let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
+      let personalizado = localStorage.getItem("digiclubPersonalizado");
+
+      if(produtos.length > 0) progresso += 33;
+      if(personalizado) progresso += 33;
+      if(comunidades.length > 0) progresso += 34;
+
+      document.getElementById("progressText").innerText = progresso + "% concluído";
+
+      const circle = document.getElementById("progressCircle");
+      const totalLength = 226; 
+      const offset = totalLength - (progresso/100 * totalLength);
+      circle.style.strokeDashoffset = offset;
     }
 
     // Inicialização
-    document.addEventListener("DOMContentLoaded", () => {
+    window.onload = function(){
       carregarListas();
       atualizarProgresso();
-    });
+    }
   </script>
 </body>
 </html>

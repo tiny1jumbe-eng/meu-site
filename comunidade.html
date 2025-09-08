@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comunidade</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .chat-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 16px;
+      background: #111;
+      border-radius: 8px;
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 12px;
+    }
+    .message {
+      background: #222;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin: 6px 0;
+      max-width: 70%;
+    }
+    .message.user { background: red; margin-left: auto; }
+    .chat-input {
+      display: flex;
+      gap: 8px;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+    }
+    .chat-input button {
+      padding: 10px 14px;
+      background: red;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- TOPO -->
+  <header class="dashboard-header">
+    <button onclick="window.location.href='meu_digiclub.html'" class="menu-btn" aria-label="Voltar">⬅</button>
+    <h1 class="logo-center">Comunidade</h1>
+    <div class="user-profile">👤 Usuário</div>
+  </header>
+
+  <!-- CONTEÚDO -->
+  <main class="dashboard-content" style="padding:16px; margin-top:12px;">
+    <h2 id="nomeComunidade" class="logo-center" style="color:red;"></h2>
+
+    <div class="chat-container">
+      <div id="chatMessages" class="chat-messages"></div>
+      <div class="chat-input">
+        <input type="text" id="messageInput" placeholder="Digite sua mensagem..." />
+        <button onclick="enviarMensagem()">Enviar</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const comunidadeAtual = localStorage.getItem("comunidadeAtual") || "Comunidade";
+    document.getElementById("nomeComunidade").innerText = comunidadeAtual;
+
+    function carregarMensagens() {
+      let mensagens = JSON.parse(localStorage.getItem("mensagens_" + comunidadeAtual) || "[]");
+      const chat = document.getElementById("chatMessages");
+      chat.innerHTML = "";
+
+      mensagens.forEach(msg => {
+        const div = document.createElement("div");
+        div.classList.add("message");
+        if(msg.tipo === "user") div.classList.add("user");
+        div.innerText = msg.texto;
+        chat.appendChild(div);
+      });
+
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function enviarMensagem() {
+      const input = document.getElementById("messageInput");
+      const texto = input.value.trim();
+      if(!texto) return;
+
+      let mensagens = JSON.parse(localStorage.getItem("mensagens_" + comunidadeAtual) || "[]");
+      mensagens.push({ texto, tipo: "user" });
+      localStorage.setItem("mensagens_" + comunidadeAtual, JSON.stringify(mensagens));
+
+      input.value = "";
+      carregarMensagens();
+    }
+
+    window.onload = carregarMensagens;
+  </script>
+</body>
+</html>
