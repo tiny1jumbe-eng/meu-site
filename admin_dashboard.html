@@ -7,15 +7,14 @@
   <link rel="stylesheet" href="style.css">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: white;
       margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      overflow-x: hidden; /* 🚫 Remove rolagem lateral */
     }
 
-    /* TOPO */
-    .dashboard-header {
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -24,94 +23,40 @@
       border-bottom: 2px solid red;
     }
 
-    .dashboard-header h1 {
-      font-size: 22px;
-      color: white;
+    header h1 {
+      color: red;
+      font-size: 20px;
       margin: 0;
     }
 
-    .header-icons {
+    .menu-icon, .notification-icon {
+      font-size: 24px;
+      cursor: pointer;
+      margin-left: 15px;
+    }
+
+    .top-icons {
       display: flex;
       align-items: center;
-      gap: 15px;
     }
 
-    .menu-btn {
-      font-size: 24px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: white;
-    }
-
-    /* Notificações */
+    /* Badge de notificações */
     .notification-container {
       position: relative;
-      font-size: 22px;
-      cursor: pointer;
     }
 
-    .badge {
+    .notification-badge {
       position: absolute;
-      top: -8px;
-      right: -10px;
+      top: -5px;
+      right: -8px;
       background: red;
       color: white;
-      border-radius: 50%;
-      padding: 2px 6px;
       font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
     }
 
-    .notification-dropdown {
-      display: none;
-      position: absolute;
-      top: 60px;
-      right: 60px;
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 8px;
-      width: 250px;
-      padding: 10px;
-      color: white;
-      z-index: 1001;
-      box-shadow: 0 0 10px rgba(255,0,0,0.3);
-    }
-
-    .notification-dropdown h4 {
-      margin: 0 0 10px;
-      color: red;
-    }
-
-    .notification-dropdown ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    .notification-dropdown ul li {
-      padding: 8px;
-      border-bottom: 1px solid #333;
-      font-size: 14px;
-    }
-
-    .notification-dropdown ul li:last-child {
-      border-bottom: none;
-    }
-
-    .notification-dropdown button {
-      margin-top: 10px;
-      width: 100%;
-      padding: 6px;
-      background: red;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    /* MENU LATERAL */
+    /* Menu lateral */
     .side-menu {
       position: fixed;
       top: 0;
@@ -120,44 +65,43 @@
       height: 100%;
       background: #111;
       color: white;
-      transition: 0.3s;
+      transition: right 0.3s;
       padding: 20px;
-      z-index: 2000;
-      box-shadow: -3px 0 10px rgba(255,0,0,0.3);
+      box-shadow: -2px 0 6px rgba(0,0,0,0.6);
     }
 
     .side-menu.active {
       right: 0;
     }
 
-    .side-menu h3 {
-      margin-bottom: 15px;
+    .side-menu h2 {
+      margin-top: 0;
       color: red;
-      border-bottom: 1px solid #333;
-      padding-bottom: 10px;
     }
 
-    .side-menu ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .side-menu ul li {
+    .side-menu a {
+      display: block;
       padding: 10px 0;
+      color: white;
+      text-decoration: none;
       border-bottom: 1px solid #333;
-      cursor: pointer;
     }
 
-    .side-menu ul li:hover {
+    .close-btn {
+      font-size: 20px;
       color: red;
+      cursor: pointer;
+      text-align: right;
+      display: block;
+      margin-bottom: 20px;
     }
 
-    /* CARDS */
+    /* Cards */
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 20px;
-      padding: 30px;
+      padding: 20px;
     }
 
     .card {
@@ -165,93 +109,71 @@
       padding: 20px;
       border-radius: 10px;
       text-align: center;
-      box-shadow: 0 0 10px rgba(255,0,0,0.3);
-      border: 1px solid #333;
+      border: 1px solid red;
     }
 
     .card h3 {
-      margin-bottom: 10px;
+      margin: 0 0 10px;
       color: red;
     }
   </style>
 </head>
 <body>
-
-  <!-- TOPO -->
-  <header class="dashboard-header">
+  <header>
     <h1>Painel do Administrador</h1>
-    <div class="header-icons">
-      <!-- Ícone de notificações -->
-      <div class="notification-container" onclick="toggleNotifications()">
-        ✉️
-        <span id="notificationBadge" class="badge">3</span>
+    <div class="top-icons">
+      <div class="notification-container">
+        <span class="notification-icon">✉️</span>
+        <span class="notification-badge" id="notifBadge">3</span>
       </div>
-      <!-- Botão Hamburguer -->
-      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      <span class="menu-icon" onclick="toggleMenu()">☰</span>
     </div>
   </header>
 
-  <!-- Dropdown de notificações -->
-  <div id="notificationDropdown" class="notification-dropdown">
-    <h4>Notificações</h4>
-    <ul id="notificationList">
-      <li>👥 Novo usuário aguardando aprovação</li>
-      <li>📦 Produto pendente de validação</li>
-      <li>💸 Solicitação de saque</li>
-    </ul>
-    <button onclick="markAllRead()">Marcar todas como lidas</button>
-  </div>
-
-  <!-- MENU LATERAL -->
+  <!-- Menu lateral -->
   <div id="sideMenu" class="side-menu">
-    <h3>Menu</h3>
-    <ul>
-      <li onclick="location.href='admin_dashboard.html'">🏠 Início</li>
-      <li onclick="location.href='admin_usuarios.html'">👥 Usuários</li>
-      <li onclick="location.href='admin_produtos.html'">📦 Produtos</li>
-      <li onclick="location.href='admin_saques.html'">💸 Saques</li>
-      <li onclick="location.href='admin_relatorios.html'">📊 Relatórios</li>
-      <li onclick="location.href='admin_config.html'">⚙️ Configurações</li>
-    </ul>
+    <span class="close-btn" onclick="toggleMenu()">✖</span>
+    <h2>Menu</h2>
+    <a href="admin_dashboard.html">Início</a>
+    <a href="usuarios.html">Usuários</a>
+    <a href="produtos.html">Produtos</a>
+    <a href="saques.html">Saques</a>
+    <a href="configuracoes.html">Configurações</a>
+    <a href="index.html">Sair</a>
   </div>
 
-  <!-- CONTEÚDO PRINCIPAL -->
+  <!-- Cards de exemplo -->
   <main>
-    <section class="cards">
+    <div class="cards">
       <div class="card">
         <h3>Usuários</h3>
-        <p>Gerenciar contas</p>
+        <p>120 cadastrados</p>
       </div>
       <div class="card">
         <h3>Produtos</h3>
-        <p>Validar e controlar vendas</p>
+        <p>58 ativos</p>
       </div>
       <div class="card">
-        <h3>Saques</h3>
-        <p>Aprovar retiradas</p>
+        <h3>Vendas</h3>
+        <p>230 concluídas</p>
       </div>
       <div class="card">
-        <h3>Relatórios</h3>
-        <p>Análises financeiras</p>
+        <h3>Saques Pendentes</h3>
+        <p>5 solicitações</p>
       </div>
-    </section>
+    </div>
   </main>
 
   <script>
-    function toggleNotifications() {
-      const dropdown = document.getElementById("notificationDropdown");
-      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-    }
-
-    function markAllRead() {
-      document.getElementById("notificationBadge").innerText = "";
-      document.getElementById("notificationDropdown").style.display = "none";
-    }
-
     function toggleMenu() {
-      const menu = document.getElementById("sideMenu");
-      menu.classList.toggle("active");
+      document.getElementById("sideMenu").classList.toggle("active");
     }
+
+    // Simulação de clique em notificações
+    document.querySelector(".notification-icon").addEventListener("click", () => {
+      alert("Você tem novas notificações!");
+      document.getElementById("notifBadge").style.display = "none"; // Limpa badge após abrir
+    });
   </script>
 </body>
 </html>
