@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DIGIVEND - Meu Digiclub</title>
+  <title>Meu Digiclub - DIGIVEND</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -17,17 +17,23 @@
   <!-- MENU LATERAL -->
   <nav id="sideMenu" class="side-menu">
     <button class="close-btn" onclick="closeMenu()">×</button>
-    <a href="dashboard_vendedor.html">Home</a>
-    <a href="digiclub.html">Digiclub</a>
-    <a href="meu_digiclub.html">Meu Digiclub</a>
+    <a href="dashboard_vendedor.html" onclick="closeMenu()">Home</a>
+    <a href="meus_produtos.html" onclick="closeMenu()">Meus Produtos</a>
+    <a href="vendas.html" onclick="closeMenu()">Vendas</a>
+    <a href="analises.html" onclick="closeMenu()">Análises/Relatórios</a>
+    <a href="saldo.html" onclick="closeMenu()">Saldo</a>
+    <a href="digiclub.html" onclick="closeMenu()">Digiclub</a>
+    <a href="mercado_afiliacao.html" onclick="closeMenu()">Mercado de Afiliação</a>
+    <a href="ferramentas.html" onclick="closeMenu()">Ferramentas</a>
+    <a href="chat_afiliados.html" onclick="closeMenu()">Chat Afiliados</a>
   </nav>
 
   <!-- CONTEÚDO -->
-  <main class="dashboard-content" style="padding:20px;">
+  <main class="dashboard-content" style="padding:16px;">
 
-    <!-- Círculo de progresso + Texto -->
+    <!-- Progresso -->
     <div style="display:flex; align-items:center; justify-content:center; margin-top:20px;">
-      <!-- Círculo de progresso -->
+      <!-- Círculo -->
       <div style="position:relative; width:100px; height:100px;">
         <svg width="100" height="100">
           <circle cx="50" cy="50" r="45" stroke="#333" stroke-width="10" fill="none"/>
@@ -43,29 +49,77 @@
     </div>
 
     <!-- Botões -->
-    <div style="margin-top:30px; text-align:center; display:flex; flex-direction:column; gap:15px;">
-      <button onclick="location.href='adicionar_produtos.html'" class="btn-vermelho">Adicionar primeiros produtos</button>
-      <button onclick="location.href='personalizar_digiclub.html'" class="btn-vermelho">Personalizar Digiclub</button>
-      <button onclick="location.href='criar_comunidade.html'" class="btn-vermelho">Criar primeira comunidade</button>
+    <div style="text-align:center; margin-top:20px;">
+      <a href="adicionar_produtos.html"><button class="btn-vermelho">Adicionar primeiros produtos</button></a>
+      <a href="personalizar_digiclub.html"><button class="btn-vermelho">Personalizar Digiclub</button></a>
+      <a href="criar_comunidade.html"><button class="btn-vermelho">Criar primeira comunidade</button></a>
     </div>
+
+    <!-- Lista de Comunidades -->
+    <section style="margin-top:30px; text-align:center; color:white;">
+      <h3 style="color:red;">Minhas Comunidades</h3>
+      <ul id="listaComunidades" style="list-style:none; padding:0; margin-top:10px;"></ul>
+    </section>
+
+    <!-- Lista de Produtos -->
+    <section style="margin-top:30px; text-align:center; color:white;">
+      <h3 style="color:red;">Meus Produtos</h3>
+      <ul id="listaProdutos" style="list-style:none; padding:0; margin-top:10px;"></ul>
+    </section>
+
   </main>
 
   <script>
     function openMenu(){ document.getElementById('sideMenu').style.width = '250px'; }
     function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
 
-    // Função para atualizar o progresso
-    function setProgress(percent){
+    // -------- LÓGICA LOCALSTORAGE --------
+    function atualizarProgresso() {
+      let progresso = 0;
+      if (localStorage.getItem("produtos") && JSON.parse(localStorage.getItem("produtos")).length > 0) progresso += 33;
+      if (localStorage.getItem("personalizado") === "true") progresso += 33;
+      if (localStorage.getItem("comunidades") && JSON.parse(localStorage.getItem("comunidades")).length > 0) progresso += 34;
+
       const circle = document.getElementById("progressCircle");
       const text = document.getElementById("progressText");
-      const offset = 283 - (283 * percent / 100);
+      const offset = 283 - (283 * progresso) / 100;
+
       circle.style.strokeDashoffset = offset;
-      text.textContent = percent + "%";
+      text.textContent = progresso + "%";
     }
 
-    // Carregar progresso do usuário salvo no navegador
-    let progress = localStorage.getItem("digiclubProgress") || 0;
-    setProgress(progress);
+    function carregarListas() {
+      const listaProdutos = document.getElementById("listaProdutos");
+      const listaComunidades = document.getElementById("listaComunidades");
+
+      listaProdutos.innerHTML = "";
+      listaComunidades.innerHTML = "";
+
+      let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
+      let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
+
+      if (produtos.length === 0) {
+        listaProdutos.innerHTML = `<li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px;">Nenhum produto adicionado ainda.</li>`;
+      } else {
+        produtos.forEach(p => {
+          listaProdutos.innerHTML += `<li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px;">📦 ${p}</li>`;
+        });
+      }
+
+      if (comunidades.length === 0) {
+        listaComunidades.innerHTML = `<li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px;">Nenhuma comunidade criada ainda.</li>`;
+      } else {
+        comunidades.forEach(c => {
+          listaComunidades.innerHTML += `<li style="background:#111; margin:10px auto; padding:10px; border-radius:6px; max-width:500px;">👥 ${c}</li>`;
+        });
+      }
+    }
+
+    // Inicialização
+    document.addEventListener("DOMContentLoaded", () => {
+      carregarListas();
+      atualizarProgresso();
+    });
   </script>
 </body>
 </html>

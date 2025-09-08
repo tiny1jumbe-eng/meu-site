@@ -1,33 +1,51 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Criar Comunidade - DIGICLUB</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Comunidade - Digiclub</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="dashboard-header">
-    <button class="menu-btn" onclick="openMenu()">☰</button>
-    <h1 class="logo-center">DIGIVEND</h1>
-    <div class="user-profile">👤 Usuário</div>
+    <button onclick="window.location.href='meu_digiclub.html'">⬅</button>
+    <h1 class="logo-center">Criar Comunidade</h1>
   </header>
 
-  <main class="dashboard-content" style="padding:16px;">
-    <h2 style="color:red; text-align:center;">Criar Primeira Comunidade</h2>
+  <main class="dashboard-content" style="padding:20px; text-align:center; color:white;">
+    <h2 style="color:red;">Nova Comunidade</h2>
+    <input type="text" id="comunidadeNome" placeholder="Nome da Comunidade" style="padding:10px; width:80%; margin-top:10px; border-radius:6px;">
+    <br>
+    <button onclick="salvarComunidade()" class="btn-vermelho" style="margin-top:15px;">Criar Comunidade</button>
 
-    <form style="max-width:500px; margin:20px auto; background:#111; padding:20px; border-radius:10px; color:white;">
-      <label>Nome da Comunidade:</label><br>
-      <input type="text" style="width:100%; padding:10px; margin:10px 0; border-radius:6px;"><br>
-
-      <label>Descrição:</label><br>
-      <textarea style="width:100%; padding:10px; margin:10px 0; border-radius:6px;"></textarea><br>
-
-      <label>Regras:</label><br>
-      <textarea style="width:100%; padding:10px; margin:10px 0; border-radius:6px;"></textarea><br>
-
-      <button type="submit" class="btn-vermelho">Criar Comunidade</button>
-    </form>
+    <h3 style="margin-top:30px; color:red;">Minhas Comunidades</h3>
+    <ul id="listaComunidades" style="list-style:none; padding:0;"></ul>
   </main>
+
+  <script>
+    function salvarComunidade(){
+      let nome = document.getElementById("comunidadeNome").value.trim();
+      if(!nome) return alert("Digite um nome para a comunidade!");
+
+      let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
+      comunidades.push(nome);
+      localStorage.setItem("comunidades", JSON.stringify(comunidades));
+
+      document.getElementById("comunidadeNome").value = "";
+      carregarComunidades();
+      alert("Comunidade criada com sucesso!");
+    }
+
+    function carregarComunidades(){
+      let comunidades = JSON.parse(localStorage.getItem("comunidades") || "[]");
+      let lista = document.getElementById("listaComunidades");
+      lista.innerHTML = "";
+      comunidades.forEach(c => {
+        lista.innerHTML += `<li style="background:#111; margin:8px auto; padding:10px; border-radius:6px; max-width:500px;">👥 ${c}</li>`;
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", carregarComunidades);
+  </script>
 </body>
 </html>

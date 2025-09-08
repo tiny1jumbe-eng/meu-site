@@ -1,33 +1,57 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Personalizar Digiclub - DIGIVEND</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personalizar Digiclub</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="dashboard-header">
-    <button class="menu-btn" onclick="openMenu()">☰</button>
-    <h1 class="logo-center">DIGIVEND</h1>
-    <div class="user-profile">👤 Usuário</div>
+    <button onclick="window.location.href='meu_digiclub.html'">⬅</button>
+    <h1 class="logo-center">Personalizar Digiclub</h1>
   </header>
 
-  <main class="dashboard-content" style="padding:16px;">
-    <h2 style="color:red; text-align:center;">Personalizar Digiclub</h2>
+  <main class="dashboard-content" style="padding:20px; text-align:center; color:white;">
+    <h2 style="color:red;">Personalizar Informações</h2>
+    <input type="text" id="digiclubNome" placeholder="Nome do Digiclub" style="padding:10px; width:80%; margin-top:10px; border-radius:6px;">
+    <br>
+    <textarea id="digiclubDescricao" placeholder="Descrição do Digiclub" style="padding:10px; width:80%; margin-top:10px; border-radius:6px;"></textarea>
+    <br>
+    <button onclick="salvarPersonalizacao()" class="btn-vermelho" style="margin-top:15px;">Salvar Personalização</button>
 
-    <form style="max-width:500px; margin:20px auto; background:#111; padding:20px; border-radius:10px; color:white;">
-      <label>Nome do Digiclub:</label><br>
-      <input type="text" style="width:100%; padding:10px; margin:10px 0; border-radius:6px;"><br>
-
-      <label>Descrição:</label><br>
-      <textarea style="width:100%; padding:10px; margin:10px 0; border-radius:6px;"></textarea><br>
-
-      <label>Cor de Destaque:</label><br>
-      <input type="color" style="margin:10px 0;"><br><br>
-
-      <button type="submit" class="btn-vermelho">Salvar Personalização</button>
-    </form>
+    <div id="preview" style="margin-top:30px; background:#111; padding:15px; border-radius:8px; max-width:500px; margin:auto; display:none;">
+      <h3 id="previewNome" style="color:red;"></h3>
+      <p id="previewDescricao"></p>
+    </div>
   </main>
+
+  <script>
+    function salvarPersonalizacao(){
+      let nome = document.getElementById("digiclubNome").value.trim();
+      let desc = document.getElementById("digiclubDescricao").value.trim();
+      if(!nome || !desc) return alert("Preencha todas as informações!");
+
+      localStorage.setItem("personalizado", "true");
+      localStorage.setItem("digiclubNome", nome);
+      localStorage.setItem("digiclubDescricao", desc);
+
+      mostrarPreview();
+      alert("Personalização salva com sucesso!");
+    }
+
+    function mostrarPreview(){
+      let nome = localStorage.getItem("digiclubNome");
+      let desc = localStorage.getItem("digiclubDescricao");
+
+      if(nome && desc){
+        document.getElementById("preview").style.display = "block";
+        document.getElementById("previewNome").textContent = nome;
+        document.getElementById("previewDescricao").textContent = desc;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", mostrarPreview);
+  </script>
 </body>
 </html>
