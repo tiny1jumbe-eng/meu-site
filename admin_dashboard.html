@@ -1,181 +1,183 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel do Administrador</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #000;
-      color: #fff;
-      overflow-x: hidden; /* 🚫 Remove rolagem lateral */
+      background: #000;
+      color: white;
     }
 
-    header {
+    .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: #111;
-      padding: 15px 20px;
-      border-bottom: 2px solid red;
-    }
-
-    header h1 {
+      padding: 12px 16px;
       color: red;
-      font-size: 20px;
-      margin: 0;
     }
 
-    .menu-icon, .notification-icon {
+    .menu-btn {
       font-size: 24px;
       cursor: pointer;
-      margin-left: 15px;
-    }
-
-    .top-icons {
-      display: flex;
-      align-items: center;
-    }
-
-    /* Badge de notificações */
-    .notification-container {
-      position: relative;
-    }
-
-    .notification-badge {
-      position: absolute;
-      top: -5px;
-      right: -8px;
-      background: red;
+      background: none;
+      border: none;
       color: white;
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 50%;
     }
 
-    /* Menu lateral */
     .side-menu {
+      height: 100%;
+      width: 0; /* fechado por padrão */
       position: fixed;
       top: 0;
-      right: -250px;
-      width: 250px;
-      height: 100%;
-      background: #111;
-      color: white;
-      transition: right 0.3s;
-      padding: 20px;
-      box-shadow: -2px 0 6px rgba(0,0,0,0.6);
-    }
-
-    .side-menu.active {
-      right: 0;
-    }
-
-    .side-menu h2 {
-      margin-top: 0;
-      color: red;
+      left: 0;
+      background-color: #111;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      z-index: 1000;
     }
 
     .side-menu a {
-      display: block;
-      padding: 10px 0;
-      color: white;
+      padding: 12px 24px;
       text-decoration: none;
-      border-bottom: 1px solid #333;
-    }
-
-    .close-btn {
-      font-size: 20px;
-      color: red;
-      cursor: pointer;
-      text-align: right;
+      font-size: 18px;
+      color: white;
       display: block;
-      margin-bottom: 20px;
+      transition: 0.3s;
     }
 
-    /* Cards */
-    .cards {
+    .side-menu a:hover {
+      background: red;
+      color: #fff;
+    }
+
+    .side-menu .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: white;
+    }
+
+    .cards-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
       padding: 20px;
     }
 
     .card {
       background: #111;
-      padding: 20px;
-      border-radius: 10px;
+      padding: 16px;
+      border-radius: 8px;
       text-align: center;
-      border: 1px solid red;
+      color: white;
+      border: 1px solid #333;
     }
 
     .card h3 {
-      margin: 0 0 10px;
       color: red;
+      margin-bottom: 8px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Painel do Administrador</h1>
-    <div class="top-icons">
-      <div class="notification-container">
-        <span class="notification-icon">✉️</span>
-        <span class="notification-badge" id="notifBadge">3</span>
-      </div>
-      <span class="menu-icon" onclick="toggleMenu()">☰</span>
-    </div>
-  </header>
+<!-- TOPO ADMIN -->
+<header class="dashboard-header">
+  <!-- Botão Hamburguer no canto esquerdo -->
+  <button class="menu-btn" onclick="openMenu()" aria-label="Abrir menu">☰</button>
 
-  <!-- Menu lateral -->
-  <div id="sideMenu" class="side-menu">
-    <span class="close-btn" onclick="toggleMenu()">✖</span>
-    <h2>Menu</h2>
-    <a href="admin_dashboard.html">Início</a>
-    <a href="usuarios.html">Usuários</a>
-    <a href="produtos.html">Produtos</a>
-    <a href="saques.html">Saques</a>
-    <a href="configuracoes.html">Configurações</a>
-    <a href="index.html">Sair</a>
+  <!-- Título centralizado -->
+  <h1 class="logo-center">Painel do Administrador</h1>
+
+  <!-- Perfil Admin + Notificações no canto direito -->
+  <div class="right-section">
+    <div class="notification-icon" onclick="toggleNotifications()">
+      ✉️ <span id="notifCount" class="notif-count">0</span>
+    </div>
+    <div class="user-profile">👤 Admin</div>
   </div>
+</header>
 
-  <!-- Cards de exemplo -->
+<!-- Caixa de notificações -->
+<div id="notificationBox" class="notification-box">
+  <h3>Notificações</h3>
+  <ul id="notifList">
+    <li>Nenhuma notificação no momento.</li>
+  </ul>
+</div>
+
+  <!-- MENU LATERAL -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">×</button>
+    <a href="admin_dashboard.html" onclick="closeMenu()">Início</a>
+    <a href="admin_usuarios.html" onclick="closeMenu()">Usuários</a>
+    <a href="admin_produtos.html" onclick="closeMenu()">Produtos</a>
+    <a href="admin_saques.html" onclick="closeMenu()">Saques</a>
+    <a href="index.html" onclick="closeMenu()">Sair</a>
+  </nav>
+
+  <!-- CONTEÚDO -->
   <main>
-    <div class="cards">
+    <section class="cards-container">
       <div class="card">
-        <h3>Usuários</h3>
-        <p>120 cadastrados</p>
+        <h3>👥 Usuários Ativos</h3>
+        <p>120</p>
       </div>
       <div class="card">
-        <h3>Produtos</h3>
-        <p>58 ativos</p>
+        <h3>🛒 Produtos</h3>
+        <p>58</p>
       </div>
       <div class="card">
-        <h3>Vendas</h3>
-        <p>230 concluídas</p>
+        <h3>💰 Saques Pendentes</h3>
+        <p>5</p>
       </div>
       <div class="card">
-        <h3>Saques Pendentes</h3>
-        <p>5 solicitações</p>
+        <h3>📊 Relatórios</h3>
+        <p>Acessar detalhes</p>
       </div>
-    </div>
+    </section>
   </main>
+
+  <script>
+    function openMenu() {
+      document.getElementById("sideMenu").style.width = "250px";
+    }
+    function closeMenu() {
+      document.getElementById("sideMenu").style.width = "0";
+    }
+  </script>
+
 <script>
-  const hamburger = document.querySelector(".hamburger");
-  const menu = document.getElementById("menu");
-  const closeMenu = document.getElementById("closeMenu");
+function toggleNotifications() {
+  const box = document.getElementById("notificationBox");
+  box.style.display = box.style.display === "block" ? "none" : "block";
+}
 
-  hamburger.addEventListener("click", () => {
-    menu.classList.add("open");
-  });
+// exemplo para adicionar notificações
+function addNotification(msg) {
+  const list = document.getElementById("notifList");
+  const count = document.getElementById("notifCount");
 
-  closeMenu.addEventListener("click", () => {
-    menu.classList.remove("open");
-  });
+  if (list.children[0].innerText === "Nenhuma notificação no momento.") {
+    list.innerHTML = "";
+  }
+
+  const li = document.createElement("li");
+  li.textContent = msg;
+  list.appendChild(li);
+
+  count.textContent = parseInt(count.textContent) + 1;
+}
 </script>
-
 </body>
 </html>
