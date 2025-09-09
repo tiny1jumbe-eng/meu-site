@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Planos</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background:#111; color:#fff; margin:0; font-family:Arial,sans-serif; }
+    header { background:#000; color:red; padding:15px; text-align:center; font-size:20px; }
+    .container { width:90%; margin:20px auto; }
+    .card { background:#222; padding:15px; margin:10px 0; border-radius:8px; }
+    h3 { color:red; margin-bottom:10px; }
+    table { width:100%; border-collapse:collapse; margin-top:15px; background:#222; }
+    th,td { border:1px solid #333; padding:8px; text-align:center; }
+    th { background:#000; color:red; }
+    .btn { padding:6px 12px; background:red; border:none; color:white; border-radius:4px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <header>📦 Gestão de Planos</header>
+
+  <div class="container">
+    <div class="card">
+      <h3>👥 Usuários com Planos Ativos</h3>
+      <table id="tabelaPlanos">
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>Email</th>
+            <th>Plano</th>
+            <th>Validade</th>
+            <th>Status</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const planos = JSON.parse(localStorage.getItem("planos")) || [];
+    const tbody = document.querySelector("#tabelaPlanos tbody");
+
+    planos.forEach(p => {
+      const tr = document.createElement("tr");
+      const hoje = new Date();
+      const validade = new Date(p.validade);
+      let status = validade > hoje ? "Ativo" : "Expirado";
+
+      tr.innerHTML = `
+        <td>${p.nome}</td>
+        <td>${p.email}</td>
+        <td>${p.plano}</td>
+        <td>${p.validade}</td>
+        <td>${status}</td>
+        <td><button class="btn" onclick="cancelarPlano('${p.email}')">Cancelar</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    function cancelarPlano(email) {
+      let planos = JSON.parse(localStorage.getItem("planos")) || [];
+      planos = planos.filter(p => p.email !== email);
+      localStorage.setItem("planos", JSON.stringify(planos));
+      alert("Plano cancelado para: " + email);
+      location.reload();
+    }
+  </script>
+</body>
+</html>

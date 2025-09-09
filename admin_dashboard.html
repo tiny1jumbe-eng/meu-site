@@ -3,220 +3,203 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel do Administrador</title>
+  <title>Admin - Dashboard</title>
   <link rel="stylesheet" href="style.css">
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #000;
+      background: #111;
       color: #fff;
-      overflow-x: hidden; /* remove rolagem lateral */
     }
 
+    /* Header */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: #000;
       padding: 12px 20px;
-      background: #111;
-      border-bottom: 2px solid red;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 18px;
       color: red;
     }
+    header h1 { margin: 0; font-size: 20px; }
+    .header-icons { display: flex; align-items: center; gap: 20px; }
+    .icon { cursor: pointer; font-size: 20px; }
 
-    .admin-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .icon-btn {
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    /* Menu lateral */
+    /* Side menu */
     .side-menu {
       height: 100%;
       width: 0;
       position: fixed;
       top: 0;
-      left: 0;
-      background-color: #111;
+      right: 0;
+      background-color: #222;
       overflow-x: hidden;
-      transition: 0.3s;
+      transition: 0.5s;
       padding-top: 60px;
-      border-right: 2px solid red;
-      z-index: 1000;
+      z-index: 999;
     }
-
     .side-menu a {
       padding: 10px 20px;
       text-decoration: none;
       font-size: 18px;
-      color: white;
+      color: #fff;
       display: block;
       transition: 0.3s;
     }
-
-    .side-menu a:hover {
-      background: red;
-    }
-
+    .side-menu a:hover { background: red; }
     .side-menu .close-btn {
       position: absolute;
       top: 10px;
-      right: 20px;
+      left: 10px;
       font-size: 24px;
-      cursor: pointer;
+      background: none;
+      border: none;
       color: red;
-    }
-
-    .open-btn {
-      font-size: 22px;
       cursor: pointer;
     }
 
-    /* Conteúdo */
-    main {
-      padding: 20px;
-    }
-
+    /* Cards */
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 16px;
+      padding: 20px;
     }
-
     .card {
-      background: #111;
-      padding: 16px;
-      border-radius: 8px;
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
       text-align: center;
-      border: 1px solid red;
+      box-shadow: 0 0 8px rgba(0,0,0,0.6);
+    }
+    .card h3 { margin-bottom: 10px; color: red; }
+
+    /* Gráfico */
+    .chart-container {
+      background: #222;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 12px;
     }
 
-    .card h2 {
-      color: red;
-      margin-bottom: 10px;
+    /* Notificações */
+    .notification-box {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 20px;
+      background: #fff;
+      color: #000;
+      width: 280px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+      padding: 10px;
+      z-index: 1000;
     }
-
-    /* Painel de notificações */
-    .notifications-panel {
-      position: fixed;
-      top: 0;
-      right: -300px; /* começa escondido */
-      width: 300px;
-      height: 100%;
-      background: #111;
-      color: white;
-      border-left: 2px solid red;
-      transition: right 0.3s ease;
-      z-index: 2000;
-      padding: 16px;
-      box-sizing: border-box;
-    }
-
-    .notifications-panel.active {
-      right: 0; /* aparece quando ativo */
-    }
-
-    .notifications-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .notifications-header h3 {
-      margin: 0;
+    .notification-box h4 {
+      margin: 0 0 10px;
       color: red;
     }
-
-    .notifications-header .close-btn {
-      background: red;
-      border: none;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 4px;
-      padding: 4px 8px;
+    .notification-box p {
+      font-size: 14px;
+      margin: 5px 0;
+      padding: 6px;
+      background: #f5f5f5;
+      border-radius: 6px;
     }
   </style>
 </head>
 <body>
+  <!-- Header -->
+  <header>
+    <h1>Painel do Administrador</h1>
+    <div class="header-icons">
+      <span class="icon" onclick="toggleNotifications()">✉️</span>
+      <span class="icon" onclick="openMenu()">☰</span>
+    </div>
+  </header>
 
   <!-- Menu lateral -->
-  <div id="sideMenu" class="side-menu">
-    <span class="close-btn" onclick="closeMenu()">✖</span>
+  <nav id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="closeMenu()">×</button>
     <a href="admin_dashboard.html">Início</a>
     <a href="admin_usuarios.html">Usuários</a>
     <a href="admin_produtos.html">Produtos</a>
     <a href="admin_saques.html">Saques</a>
+    <a href="admin_financas.html">Finanças</a>
     <a href="admin_seguranca.html">Segurança</a>
+  </nav>
+
+  <!-- Notificações -->
+  <div id="notificationBox" class="notification-box">
+    <h4>Notificações</h4>
+    <div id="notificacoes"></div>
   </div>
 
-  <!-- Cabeçalho -->
-  <header>
-    <span class="open-btn" onclick="openMenu()">☰</span>
-    <h1>Painel do Administrador</h1>
-    <div class="admin-info">
-      <span class="icon-btn" onclick="toggleNotifications()">✉️</span>
-      <span>👤 Admin</span>
+  <!-- Cards -->
+  <section class="cards">
+    <div class="card">
+      <h3>💰 Taxas arrecadadas</h3>
+      <p id="taxasTotal">0 MZN</p>
     </div>
-  </header>
+    <div class="card">
+      <h3>📦 Ganhos com Planos</h3>
+      <p id="planosTotal">0 MZN</p>
+    </div>
+    <div class="card">
+      <h3>👥 Usuários ativos</h3>
+      <p id="usuariosAtivos">0</p>
+    </div>
+  </section>
 
-  <!-- Painel de notificações -->
-  <div id="notificationsPanel" class="notifications-panel">
-    <div class="notifications-header">
-      <h3>Notificações</h3>
-      <button class="close-btn" onclick="toggleNotifications()">✖</button>
-    </div>
-    <ul id="notificationsList">
-      <li>Exemplo: Produto aguardando aprovação</li>
-    </ul>
+  <!-- Gráfico -->
+  <div class="chart-container">
+    <canvas id="financasChart"></canvas>
   </div>
 
-  <!-- Conteúdo principal -->
-  <main>
-    <h2>Visão Geral</h2>
-    <div class="cards">
-      <div class="card">
-        <h2>Ganhos</h2>
-        <p>R$ 2.500</p>
-      </div>
-      <div class="card">
-        <h2>Usuários</h2>
-        <p>120</p>
-      </div>
-      <div class="card">
-        <h2>Produtos Pendentes</h2>
-        <p>5</p>
-      </div>
-      <div class="card">
-        <h2>Saques Pendentes</h2>
-        <p>3</p>
-      </div>
-    </div>
-  </main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  function openMenu(){ document.getElementById("sideMenu").style.width = "250px"; }
+  function closeMenu(){ document.getElementById("sideMenu").style.width = "0"; }
 
-  <script>
-    function openMenu() {
-      document.getElementById("sideMenu").style.width = "250px";
-    }
-    function closeMenu() {
-      document.getElementById("sideMenu").style.width = "0";
-    }
+  function toggleNotifications(){
+    const box = document.getElementById("notificationBox");
+    box.style.display = box.style.display === "block" ? "none" : "block";
+  }
 
-    function toggleNotifications() {
-      document.getElementById("notificationsPanel").classList.toggle("active");
-    }
-  </script>
+  // Simulação de dados
+  const dados = {
+    taxas: [100, 200, 150, 300, 400],
+    planos: [50, 100, 120, 200, 250],
+    usuarios: 87
+  };
 
+  // Preenche cards
+  document.getElementById("taxasTotal").textContent = dados.taxas.reduce((a,b)=>a+b,0) + " MZN";
+  document.getElementById("planosTotal").textContent = dados.planos.reduce((a,b)=>a+b,0) + " MZN";
+  document.getElementById("usuariosAtivos").textContent = dados.usuarios;
+
+  // Gráfico
+  new Chart(document.getElementById("financasChart"), {
+    type: "line",
+    data: {
+      labels: ["Jan","Fev","Mar","Abr","Mai"],
+      datasets: [
+        { label:"Taxas (MZN)", data:dados.taxas, borderColor:"white", backgroundColor:"transparent" },
+        { label:"Planos (MZN)", data:dados.planos, borderColor:"red", backgroundColor:"transparent" }
+      ]
+    },
+    options: { responsive:true, plugins:{ legend:{ labels:{ color:"white" } } }, scales:{ x:{ ticks:{ color:"white" } }, y:{ ticks:{ color:"white" } } } }
+  });
+
+  // Notificações simuladas
+  const notificacoes = [
+    "💳 Usuário João pagou Plano Premium (500 MZN).",
+    "📤 Maria solicitou saque (1000 MZN) - Taxa 10%.",
+    "⚠️ Conta de Pedro expira em 3 dias."
+  ];
+  document.getElementById("notificacoes").innerHTML = notificacoes.map(n=>`<p>${n}</p>`).join("");
+</script>
 </body>
 </html>
