@@ -6,31 +6,87 @@
   <title>DIGIVEND - Cadastro</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .form-container {
+      background: #111;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      color: red;
+      margin-bottom: 20px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    input, select {
+      background: #222;
+      color: #fff;
+    }
+
+    button {
+      background: red;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: darkred;
+    }
+
+    p {
+      margin-top: 12px;
+    }
+
+    a {
+      color: red;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
     .error-box {
       background: #ff4d4d;
       color: white;
       padding: 12px;
       border-radius: 6px;
       margin: 12px 0;
-      text-align: center;
-      display: none;
-    }
-    .success-box {
-      background: #4caf50;
-      color: white;
-      padding: 12px;
-      border-radius: 6px;
-      margin: 12px 0;
-      text-align: center;
       display: none;
     }
   </style>
 </head>
 <body>
   <main class="form-container">
-    <h2>Criar Conta</h2>
+    <h2>Cadastro</h2>
     <div id="errorMsg" class="error-box"></div>
-    <div id="successMsg" class="success-box"></div>
     <form id="cadastroForm">
       <input type="text" id="nome" placeholder="Nome completo" required>
       <input type="email" id="email" placeholder="E-mail" required>
@@ -43,39 +99,34 @@
       </select>
       <button type="submit">Cadastrar</button>
     </form>
-    <p>Já tem conta? <a href="login.html">Entrar</a></p>
+    <p>Já tem conta? <a href="index.html">Login</a></p>
   </main>
 
-<script>
-  document.getElementById("cadastroForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+  <script>
+    document.getElementById("cadastroForm").addEventListener("submit", function(e) {
+      e.preventDefault();
 
-    const nome = document.getElementById("nome").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const senha = document.getElementById("senha").value.trim();
-    const tipoConta = document.getElementById("tipoConta").value;
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const telefone = document.getElementById("telefone").value.trim();
+      const senha = document.getElementById("senha").value.trim();
+      const tipoConta = document.getElementById("tipoConta").value;
 
-    // 🚫 Bloqueia se tentar criar conta admin
-    if (tipoConta === "admin") {
-      alert("Não é possível criar uma conta de Administrador!");
-      return;
-    }
+      const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-    // 🔍 Impede duplicados
-    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-    if (usuarios.some(u => u.email === email)) {
-      alert("Este e-mail já está cadastrado!");
-      return;
-    }
+      // Impedir e-mail ou telefone duplicado
+      if (usuarios.some(u => u.email === email || u.telefone === telefone)) {
+        document.getElementById("errorMsg").innerText = "E-mail ou telefone já cadastrado!";
+        document.getElementById("errorMsg").style.display = "block";
+        return;
+      }
 
-    // Salva novo usuário
-    usuarios.push({ nome, email, senha, tipo: tipoConta });
-    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+      usuarios.push({ nome, email, telefone, senha, tipo: tipoConta });
+      localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
-    alert("Cadastro realizado com sucesso!");
-    window.location.href = "index.html";
-  });
-</script>
+      alert("Cadastro realizado com sucesso!");
+      window.location.href = "index.html";
+    });
   </script>
 </body>
 </html>
