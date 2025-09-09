@@ -112,14 +112,14 @@
 </head>
 <body>
   <!-- Header -->
-  <header>
-    <h1>Painel do Administrador</h1>
-    <div class="header-icons">
-      <span class="icon" onclick="toggleNotifications()">✉️</span>
-      <span class="icon" onclick="openMenu()">☰</span>
-    </div>
-  </header>
-
+<header class="admin-header">
+  <button class="menu-btn" onclick="openMenu()">☰</button>
+  <h1>Painel do Administrador</h1>
+  <div class="header-right">
+    <span class="notif" onclick="toggleNotifications()">✉️<span id="notifCount" class="notif-count">0</span></span>
+    <span class="admin-user">👤 Admin</span>
+  </div>
+</header>
   <!-- Menu lateral -->
   <nav id="sideMenu" class="side-menu">
     <button class="close-btn" onclick="closeMenu()">×</button>
@@ -278,10 +278,9 @@
   </header>
 
   <!-- Caixa de notificações -->
-  <div id="notificacoesBox">
-    <h4>Notificações</h4>
-    <ul id="listaNotificacoes"></ul>
-  </div>
+<div id="notifBox" class="notif-box">
+  <ul id="notifList"></ul>
+</div>
 
   <!-- Menu lateral -->
   <div id="sideMenu">
@@ -312,53 +311,48 @@
     </div>
   </main>
 
-  <script>
-    // Menu
-    function openMenu() {
-      document.getElementById("sideMenu").style.width = "250px";
+<script>
+  let notifications = [
+    { id: 1, text: "Novo usuário cadastrado", link: "admin_usuarios.html" },
+    { id: 2, text: "Novo produto aguardando aprovação", link: "admin_produtos.html" },
+    { id: 3, text: "Solicitação de saque recebida", link: "admin_saques.html" }
+  ];
+
+  function renderNotifications() {
+    const container = document.getElementById("notifList");
+    container.innerHTML = "";
+    notifications.forEach(n => {
+      let item = document.createElement("li");
+      item.innerHTML = `<a href="${n.link}" onclick="markAsRead(${n.id})">${n.text}</a>`;
+      container.appendChild(item);
+    });
+
+    updateNotifCount();
+  }
+
+  function updateNotifCount() {
+    const count = document.getElementById("notifCount");
+    if (notifications.length > 0) {
+      count.style.display = "inline-block";
+      count.innerText = notifications.length;
+    } else {
+      count.style.display = "none";
     }
-    function closeMenu() {
-      document.getElementById("sideMenu").style.width = "0";
-    }
+  }
 
-    // Notificações
-    let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || [
-      { mensagem: "Novo usuário cadastrado", link: "admin_usuarios.html" },
-      { mensagem: "Solicitação de saque recebida", link: "admin_saques.html" },
-      { mensagem: "Novo produto enviado", link: "admin_produtos.html" }
-    ];
+  function markAsRead(id) {
+    notifications = notifications.filter(n => n.id !== id);
+    renderNotifications();
+  }
 
-    const contador = document.getElementById("contador");
-    const box = document.getElementById("notificacoesBox");
-    const lista = document.getElementById("listaNotificacoes");
-    const icon = document.getElementById("notificacaoIcon");
+  function toggleNotifications() {
+    const box = document.getElementById("notifBox");
+    box.style.display = box.style.display === "block" ? "none" : "block";
+  }
 
-    function atualizarNotificacoes() {
-      lista.innerHTML = "";
-      if (notificacoes.length > 0) {
-        contador.style.display = "inline-block";
-        contador.innerText = notificacoes.length;
-      } else {
-        contador.style.display = "none";
-      }
-
-      notificacoes.forEach((n, index) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<a href="${n.link}">${n.mensagem}</a>`;
-        li.onclick = () => {
-          notificacoes.splice(index, 1);
-          localStorage.setItem("notificacoes", JSON.stringify(notificacoes));
-          atualizarNotificacoes();
-        };
-        lista.appendChild(li);
-      });
-    }
-
-    icon.onclick = () => {
-      box.style.display = box.style.display === "none" ? "block" : "none";
-    };
-
-    atualizarNotificacoes();
+  // inicializa
+  document.addEventListener("DOMContentLoaded", renderNotifications);
+</script>
   </script>
 </body>
 </html>

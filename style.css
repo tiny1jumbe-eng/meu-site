@@ -819,3 +819,89 @@ main, .content {
   border-radius: 4px;
   padding: 4px 8px;
 }
+/* Topo do painel admin */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;       /* fundo preto */
+  color: #fff;
+  padding: 10px 15px;
+}
+
+.admin-header h1 {
+  flex: 1;
+  text-align: center;
+  font-size: 18px;
+  margin: 0;
+  color: red; /* títulos em vermelho */
+}
+
+.menu-btn {
+  font-size: 20px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.admin-user {
+  font-size: 16px;
+}
+
+.notif {
+  position: relative;
+  cursor: pointer;
+}
+
+.notif-count {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  display: none; /* aparece só se houver notificações */
+}
+/* Caixa de notificações */
+.notif-box {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  width: 250px;
+  background: #222;
+  color: white;
+  border: 1px solid red;
+  border-radius: 10px;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.notif-box ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.notif-box li {
+  padding: 8px;
+  border-bottom: 1px solid #444;
+}
+
+.notif-box li a {
+  color: white;
+  text-decoration: none;
+}
+
+.notif-box li a:hover {
+  text-decoration: underline;
+}
