@@ -1,149 +1,194 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin - Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Administrador</title>
+  <link rel="stylesheet" href="style.css">
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #000;
-      color: white;
+      color: #fff;
     }
 
+    /* Cabeçalho */
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: #111;
       padding: 12px 16px;
+      border-bottom: 2px solid red;
+    }
+    .dashboard-header h1 {
+      margin: 0;
+      font-size: 20px;
       color: red;
     }
-
-    .menu-btn {
-      font-size: 24px;
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .icon-btn {
       cursor: pointer;
-      background: none;
-      border: none;
-      color: white;
+      font-size: 20px;
     }
 
+    /* Menu lateral */
     .side-menu {
       height: 100%;
-      width: 0; /* fechado por padrão */
+      width: 0;
       position: fixed;
       top: 0;
-      left: 0;
+      right: 0;
       background-color: #111;
       overflow-x: hidden;
       transition: 0.3s;
       padding-top: 60px;
       z-index: 1000;
     }
-
     .side-menu a {
-      padding: 12px 24px;
+      padding: 10px 20px;
       text-decoration: none;
       font-size: 18px;
-      color: white;
+      color: #fff;
       display: block;
-      transition: 0.3s;
+      transition: 0.2s;
     }
-
     .side-menu a:hover {
       background: red;
-      color: #fff;
     }
-
     .side-menu .close-btn {
       position: absolute;
       top: 10px;
-      right: 20px;
-      font-size: 28px;
+      right: 15px;
+      font-size: 30px;
+      background: none;
+      border: none;
+      color: #fff;
       cursor: pointer;
+    }
+
+    /* Notificações */
+    .notification-panel {
+      position: fixed;
+      top: 60px;
+      right: 20px;
+      width: 300px;
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 8px;
+      display: none;
+      flex-direction: column;
+      z-index: 1100;
+    }
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      border-bottom: 1px solid #444;
+      background: #111;
+    }
+    .notification-header h3 {
+      margin: 0;
+      font-size: 16px;
+      color: red;
+    }
+    .notification-header button {
       background: none;
       border: none;
       color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .notification-item {
+      padding: 10px;
+      border-bottom: 1px solid #333;
+      font-size: 14px;
+    }
+    .notification-item:last-child {
+      border-bottom: none;
     }
 
+    /* Cards do dashboard */
     .cards-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 16px;
       padding: 20px;
     }
-
     .card {
       background: #111;
+      border-radius: 10px;
       padding: 16px;
-      border-radius: 8px;
       text-align: center;
-      color: white;
       border: 1px solid #333;
     }
-
     .card h3 {
+      margin: 0 0 10px;
       color: red;
-      margin-bottom: 8px;
+    }
+    .card p {
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
-<!-- TOPO ADMIN -->
+<!-- Topo -->
 <header class="dashboard-header">
-  <!-- Botão Hamburguer no canto esquerdo -->
-  <button class="menu-btn" onclick="openMenu()" aria-label="Abrir menu">☰</button>
-
-  <!-- Título centralizado -->
-  <h1 class="logo-center">Painel do Administrador</h1>
-
-  <!-- Perfil Admin + Notificações no canto direito -->
-  <div class="right-section">
-    <div class="notification-icon" onclick="toggleNotifications()">
-<span class="notification-icon" onclick="toggleNotifications()">✉️</span>
+  <div class="top-row">
+    <div class="user-section">
+      <span class="icon-btn" onclick="toggleNotifications()">✉️</span>
+      <span class="icon-btn" onclick="openMenu()">☰</span>
+      <span>👤 Admin</span>
     </div>
-    <div class="user-profile">👤 Admin</div>
+  </div>
+  <div class="bottom-row">
+    <h1>Painel do Administrador</h1>
   </div>
 </header>
-
-<!-- Caixa de notificações -->
-<button onclick="closeNotifications()" style="float:right;">✖</button>
-  <h3>Notificações</h3>
-  <ul id="notifList">
-    <li>Nenhuma notificação no momento.</li>
-  </ul>
-</div>
-
-  <!-- MENU LATERAL -->
+  <!-- Menu lateral -->
   <nav id="sideMenu" class="side-menu">
     <button class="close-btn" onclick="closeMenu()">×</button>
-    <a href="admin_dashboard.html" onclick="closeMenu()">Início</a>
-    <a href="admin_usuarios.html" onclick="closeMenu()">Usuários</a>
-    <a href="admin_produtos.html" onclick="closeMenu()">Produtos</a>
-    <a href="admin_saques.html" onclick="closeMenu()">Saques</a>
-    <a href="index.html" onclick="closeMenu()">Sair</a>
+    <a href="admin_dashboard.html">Início</a>
+    <a href="admin_usuarios.html">Usuários</a>
+    <a href="admin_produtos.html">Produtos</a>
+    <a href="admin_saques.html">Saques</a>
+    <a href="admin_seguranca.html">Segurança</a>
   </nav>
 
-  <!-- CONTEÚDO -->
+  <!-- Painel de notificações -->
+  <div id="notificationPanel" class="notification-panel">
+    <div class="notification-header">
+      <h3>Notificações</h3>
+      <button onclick="closeNotifications()">×</button>
+    </div>
+    <div class="notification-item">Novo usuário cadastrado</div>
+    <div class="notification-item">Solicitação de saque pendente</div>
+  </div>
+
+  <!-- Conteúdo -->
   <main>
     <section class="cards-container">
       <div class="card">
-        <h3>👥 Usuários Ativos</h3>
-        <p>120</p>
+        <h3>Usuários</h3>
+        <p>150</p>
       </div>
       <div class="card">
-        <h3>🛒 Produtos</h3>
-        <p>58</p>
+        <h3>Produtos</h3>
+        <p>45</p>
       </div>
       <div class="card">
-        <h3>💰 Saques Pendentes</h3>
-        <p>5</p>
+        <h3>Saques</h3>
+        <p>R$ 12.000</p>
       </div>
       <div class="card">
-        <h3>📊 Relatórios</h3>
-        <p>Acessar detalhes</p>
+        <h3>Comissão</h3>
+        <p>R$ 3.500</p>
       </div>
     </section>
   </main>
@@ -155,23 +200,10 @@
     function closeMenu() {
       document.getElementById("sideMenu").style.width = "0";
     }
+
+    function toggleNotifications() {
+  document.getElementById("notificationsPanel").classList.toggle("active");
+}
   </script>
-
-<script>
-  // Abre e fecha notificações
-  function toggleNotifications() {
-    const panel = document.getElementById("notificationsPanel");
-    if (panel.style.display === "block") {
-      panel.style.display = "none"; // Fecha
-    } else {
-      panel.style.display = "block"; // Abre
-    }
-  }
-
-  // Fecha só quando clicar no botão X
-  function closeNotifications() {
-    document.getElementById("notificationsPanel").style.display = "none";
-  }
-</script>
 </body>
 </html>

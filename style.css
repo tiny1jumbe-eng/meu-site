@@ -756,3 +756,66 @@ main, .content {
   padding: 6px;
   border-bottom: 1px solid #333;
 }
+/* Ajuste do cabeçalho em duas linhas */
+.dashboard-header {
+  background: #111;
+  border-bottom: 2px solid red;
+  padding: 8px 16px;
+}
+
+.dashboard-header .top-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.dashboard-header .bottom-row {
+  text-align: center;
+  margin-top: 4px;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 20px;
+  color: red;
+}/* Painel de notificações */
+.notifications-panel {
+  position: fixed;
+  top: 0;
+  right: -300px; /* começa escondido */
+  width: 300px;
+  height: 100%;
+  background: #111;
+  color: white;
+  border-left: 2px solid red;
+  transition: right 0.3s ease;
+  z-index: 2000;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.notifications-panel.active {
+  right: 0; /* aparece quando ativo */
+}
+
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.notifications-header h3 {
+  margin: 0;
+  color: red;
+}
+
+.close-btn {
+  background: red;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
