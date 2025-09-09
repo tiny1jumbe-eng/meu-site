@@ -3,59 +3,142 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Planos</title>
+  <title>Planos - Administrador</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { background: #000; color: red; margin: 0; font-family: Arial, sans-serif; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #111; color: red; }
-    .table-container { padding: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-    th, td { padding: 10px; border: 1px solid red; text-align: center; }
-    th { background: #111; }
-    canvas { background: #111; padding: 15px; border-radius: 8px; }
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    header {
+      background: #111;
+      padding: 15px;
+      text-align: center;
+      color: red;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    main {
+      padding: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    h2 {
+      color: red;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #111;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #333;
+      text-align: center;
+    }
+    th {
+      background: red;
+      color: white;
+    }
+    .grafico-container {
+      margin-top: 30px;
+      padding: 20px;
+      background: #111;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <button onclick="openMenu()">☰</button>
-    <h2>Planos</h2>
-    <div onclick="toggleNotificacoes()">✉️<span id="notifCount">0</span></div>
-  </header>
+  <header>Painel do Administrador - Planos</header>
 
-  <div class="table-container">
-    <h3>Usuários com planos ativos</h3>
+  <main>
+    <h2>Gerenciamento de Planos</h2>
+
     <table>
       <thead>
         <tr>
-          <th>Email</th>
-          <th>Plano</th>
-          <th>Status</th>
-          <th>Expiração</th>
+          <th>ID</th>
+          <th>Email Usuário</th>
+          <th>Tipo de Plano</th>
+          <th>Validade</th>
         </tr>
       </thead>
       <tbody id="planosTable">
-        <tr><td>user1@email.com</td><td>Premium</td><td>Ativo</td><td>15/09/2025</td></tr>
-        <tr><td>user2@email.com</td><td>Gratuito</td><td>Ativo</td><td>-</td></tr>
+        <!-- Planos carregados aqui -->
       </tbody>
     </table>
-    <canvas id="planosChart"></canvas>
-  </div>
 
-<script>
-  const ctx1 = document.getElementById('planosChart').getContext('2d');
-  new Chart(ctx1, {
-    type: 'bar',
-    data: {
-      labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-      datasets: [{
-        label: 'Novos Planos',
-        data: [3, 7, 5, 8],
-        backgroundColor: 'red'
-      }]
-    },
-    options: { responsive: true }
-  });
-</script>
+    <div class="grafico-container">
+      <h2>Resumo de Planos</h2>
+      <canvas id="planosChart"></canvas>
+    </div>
+  </main>
+
+  <script>
+    async function carregarPlanos() {
+      try {
+        const response = await fetch("http://localhost:3000/planos");
+        const planos = await response.json();
+
+        const tabela = document.getElementById("planosTable");
+        tabela.innerHTML = "";
+
+        let free = 0, premium = 0, pro = 0;
+
+        planos.forEach(plano => {
+          let row = `
+            <tr>
+              <td>${plano.id}</td>
+              <td>${plano.usuario}</td>
+              <td>${plano.tipo}</td>
+              <td>${plano.validade}</td>
+            </tr>
+          `;
+          tabela.innerHTML += row;
+
+          if (plano.tipo === "free") free++;
+          else if (plano.tipo === "premium") premium++;
+          else if (plano.tipo === "pro") pro++;
+        });
+
+        // Gráfico
+        const ctx = document.getElementById("planosChart").getContext("2d");
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: ["Free", "Premium", "Pro"],
+            datasets: [{
+              label: "Usuários por Plano",
+              data: [free, premium, pro],
+              backgroundColor: ["gray", "red", "orange"]
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+
+      } catch (error) {
+        console.error("Erro ao carregar planos:", error);
+      }
+    }
+
+    carregarPlanos();
+  </script>
 </body>
 </html>
