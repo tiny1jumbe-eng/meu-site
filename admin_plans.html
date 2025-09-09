@@ -3,142 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerenciar Planos</title>
+  <title>Admin - Planos</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: white;
-      overflow-x: hidden;
-    }
-    header {
-      background: #111;
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 18px;
-      color: red;
-    }
-    .icon-area {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .icon-area span {
-      cursor: pointer;
-    }
-    #sideMenu {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background: #111;
-      overflow-x: hidden;
-      transition: 0.3s;
-      padding-top: 60px;
-      z-index: 2000;
-    }
-    #sideMenu a {
-      padding: 10px 20px;
-      text-decoration: none;
-      font-size: 16px;
-      color: white;
-      display: block;
-    }
-    #sideMenu a:hover {
-      background: red;
-    }
-    #sideMenu .closeBtn {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 28px;
-      cursor: pointer;
-      color: white;
-    }
-    .plans {
-      padding: 20px;
-    }
-    .plan {
-      background: #111;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
-    .plan h3 {
-      margin: 0;
-      color: red;
-    }
-    .plan button {
-      background: red;
-      border: none;
-      color: white;
-      padding: 8px 12px;
-      margin: 5px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .plan button:hover {
-      background: darkred;
-    }
+    body { background: #000; color: red; margin: 0; font-family: Arial, sans-serif; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #111; color: red; }
+    .table-container { padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { padding: 10px; border: 1px solid red; text-align: center; }
+    th { background: #111; }
+    canvas { background: #111; padding: 15px; border-radius: 8px; }
   </style>
 </head>
 <body>
   <header>
-    <span style="font-size:22px; cursor:pointer;" onclick="openMenu()">☰</span>
-    <h1>Planos</h1>
-    <div class="icon-area">
-      <span style="font-size:18px;">👤 Admin</span>
-    </div>
+    <button onclick="openMenu()">☰</button>
+    <h2>Planos</h2>
+    <div onclick="toggleNotificacoes()">✉️<span id="notifCount">0</span></div>
   </header>
 
-  <!-- Menu lateral -->
-  <div id="sideMenu">
-    <span class="closeBtn" onclick="closeMenu()">×</span>
-    <a href="admin_dashboard.html">Início</a>
-    <a href="admin_usuarios.html">Usuários</a>
-    <a href="admin_produtos.html">Produtos</a>
-    <a href="admin_saques.html">Saques</a>
-    <a href="admin_seguranca.html">Segurança</a>
-    <a href="admin_plans.html">Planos</a>
-    <a href="index.html">Sair</a>
+  <div class="table-container">
+    <h3>Usuários com planos ativos</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Plano</th>
+          <th>Status</th>
+          <th>Expiração</th>
+        </tr>
+      </thead>
+      <tbody id="planosTable">
+        <tr><td>user1@email.com</td><td>Premium</td><td>Ativo</td><td>15/09/2025</td></tr>
+        <tr><td>user2@email.com</td><td>Gratuito</td><td>Ativo</td><td>-</td></tr>
+      </tbody>
+    </table>
+    <canvas id="planosChart"></canvas>
   </div>
 
-  <main class="plans">
-    <div class="plan">
-      <h3>Conta: maria@gmail.com</h3>
-      <p>Plano: Premium</p>
-      <p>Expira em: 12/09/2025</p>
-      <button onclick="cancelarPlano('maria@gmail.com')">Cancelar</button>
-      <button onclick="renovarPlano('maria@gmail.com')">Renovar</button>
-    </div>
-    <div class="plan">
-      <h3>Conta: joao@gmail.com</h3>
-      <p>Plano: Gratuito</p>
-      <p>Expira em: Indefinido</p>
-    </div>
-  </main>
-
-  <script>
-    function openMenu() {
-      document.getElementById("sideMenu").style.width = "250px";
-    }
-    function closeMenu() {
-      document.getElementById("sideMenu").style.width = "0";
-    }
-    function cancelarPlano(email) {
-      alert("Plano do usuário " + email + " foi cancelado.");
-    }
-    function renovarPlano(email) {
-      alert("Plano do usuário " + email + " foi renovado.");
-    }
-  </script>
+<script>
+  const ctx1 = document.getElementById('planosChart').getContext('2d');
+  new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+      datasets: [{
+        label: 'Novos Planos',
+        data: [3, 7, 5, 8],
+        backgroundColor: 'red'
+      }]
+    },
+    options: { responsive: true }
+  });
+</script>
 </body>
 </html>

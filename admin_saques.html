@@ -5,100 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - Saques</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { background:#111; color:#fff; margin:0; font-family:Arial,sans-serif; }
-    header { background:#000; color:red; padding:15px; text-align:center; font-size:20px; }
-    table { width:95%; margin:20px auto; border-collapse:collapse; background:#222; }
-    th,td { border:1px solid #333; padding:10px; text-align:center; }
-    th { background:#000; color:red; }
-    .btn-aprovar { background:green; color:#fff; padding:6px 10px; border:none; cursor:pointer; border-radius:5px; }
-    .btn-recusar { background:red; color:#fff; padding:6px 10px; border:none; cursor:pointer; border-radius:5px; }
+    body { background: #000; color: red; margin: 0; font-family: Arial, sans-serif; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #111; color: red; }
+    .table-container { padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { padding: 10px; border: 1px solid red; text-align: center; }
+    th { background: #111; }
+    canvas { background: #111; padding: 15px; border-radius: 8px; }
   </style>
 </head>
 <body>
-  <header>📤 Solicitações de Saque</header>
+  <header>
+    <button onclick="openMenu()">☰</button>
+    <h2>Saques</h2>
+    <div onclick="toggleNotificacoes()">✉️<span id="notifCount">0</span></div>
+  </header>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Usuário</th>
-        <th>Valor solicitado</th>
-        <th>Taxa aplicada</th>
-        <th>Valor líquido</th>
-        <th>Status</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody id="tabelaSaques"></tbody>
-  </table>
+  <div class="table-container">
+    <h3>Pedidos de Saque</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Valor</th>
+          <th>Status</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody id="saquesTable">
+        <tr><td>user1@email.com</td><td>1200 MZN</td><td>Aceito</td><td>01/09/2025</td></tr>
+        <tr><td>user2@email.com</td><td>500 MZN</td><td>Pendente</td><td>05/09/2025</td></tr>
+      </tbody>
+    </table>
+    <canvas id="saquesChart"></canvas>
+  </div>
 
 <script>
-  // Simulação de saques pendentes
-  const saquesPendentes = [
-    { usuario: "Maria", valor: 500, status:"Pendente" },
-    { usuario: "João", valor: 2500, status:"Pendente" },
-    { usuario: "Carlos", valor: 12000, status:"Pendente" }
-  ];
-
-  /**
-   * Regras de taxa (decrescentes):
-   * 100 a 999 MZN  -> 10%
-   * 1.000 a 10.000 -> 7%
-   * > 10.000       -> 5%
-   * Abaixo de 100  -> 0% (sem taxa)
-   */
-  function calcularTaxa(valor){
-    if(valor >= 100 && valor <= 999){
-      return { taxa: 0.10, percentual: "10%" };
-    } else if(valor >= 1000 && valor <= 10000){
-      return { taxa: 0.07, percentual: "7%" };
-    } else if(valor > 10000){
-      return { taxa: 0.05, percentual: "5%" };
-    } else {
-      return { taxa: 0, percentual: "0%" };
+  const ctx2 = document.getElementById('saquesChart').getContext('2d');
+  new Chart(ctx2, {
+    type: 'pie',
+    data: {
+      labels: ['Aceitos', 'Rejeitados', 'Pendentes'],
+      datasets: [{
+        data: [10, 2, 5],
+        backgroundColor: ['red', 'darkred', 'gray']
+      }]
     }
-  }
-
-  function atualizarTabela(){
-    document.getElementById("tabelaSaques").innerHTML = saquesPendentes.map((s, index)=>{
-      const { taxa, percentual } = calcularTaxa(s.valor);
-      const valorLiquido = s.valor - (s.valor * taxa);
-      return `
-        <tr>
-          <td>${s.usuario}</td>
-          <td>${s.valor} MZN</td>
-          <td>${percentual}</td>
-          <td>${valorLiquido.toFixed(2)} MZN</td>
-          <td id="status-${index}">${s.status}</td>
-          <td>
-            <button class="btn-aprovar" onclick="aprovar(${index})">Aprovar</button>
-            <button class="btn-recusar" onclick="recusar(${index})">Recusar</button>
-          </td>
-        </tr>
-      `;
-    }).join("");
-  }
-
-  function aprovar(i){
-    saquesPendentes[i].status = "Aprovado ✅";
-    atualizarTabela();
-    adicionarNotificacao(`Saque de ${saquesPendentes[i].usuario} aprovado.`);
-  }
-
-  function recusar(i){
-    saquesPendentes[i].status = "Recusado ❌";
-    atualizarTabela();
-    adicionarNotificacao(`Saque de ${saquesPendentes[i].usuario} recusado.`);
-  }
-
-  // Envia notificação para o dashboard (via localStorage)
-  function adicionarNotificacao(msg){
-    let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || [];
-    notificacoes.push("📢 " + msg);
-    localStorage.setItem("notificacoes", JSON.stringify(notificacoes));
-  }
-
-  atualizarTabela();
+  });
 </script>
 </body>
 </html>
