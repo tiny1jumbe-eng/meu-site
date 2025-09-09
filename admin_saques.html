@@ -6,281 +6,99 @@
   <title>Admin - Saques</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: #fff;
-    }
-
-    header {
-      background: #111;
-      color: #ff4d4d;
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 20px;
-    }
-
-    .icons {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .menu-btn, .noti-btn {
-      font-size: 22px;
-      cursor: pointer;
-      color: white;
-    }
-
-    /* Notificações */
-    .notification-badge {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: red;
-      color: white;
-      border-radius: 50%;
-      padding: 3px 7px;
-      font-size: 12px;
-    }
-
-    #notificationBox {
-      display: none;
-      position: absolute;
-      top: 50px;
-      right: 10px;
-      background: #111;
-      color: #fff;
-      padding: 10px;
-      border-radius: 6px;
-      width: 250px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.7);
-      z-index: 100;
-    }
-
-    /* Menu lateral */
-    #sideMenu {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      right: 0;
-      background: #111;
-      overflow-x: hidden;
-      transition: 0.3s;
-      padding-top: 60px;
-      z-index: 200;
-    }
-
-    #sideMenu a {
-      padding: 12px 20px;
-      text-decoration: none;
-      font-size: 18px;
-      color: #fff;
-      display: block;
-      transition: 0.2s;
-    }
-
-    #sideMenu a:hover {
-      background: #ff4d4d;
-    }
-
-    #sideMenu .closebtn {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 30px;
-      cursor: pointer;
-    }
-
-    main {
-      padding: 20px;
-    }
-
-    /* Simulador */
-    .simulador-box {
-      background: #111;
-      padding: 15px;
-      border-radius: 8px;
-      margin-top: 20px;
-      color: white;
-    }
-
-    .simulador-box input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      border-radius: 6px;
-      border: none;
-      font-size: 16px;
-    }
-
-    .resultado-box {
-      margin-top: 15px;
-      background: #222;
-      padding: 12px;
-      border-radius: 6px;
-      color: #ff4d4d;
-      font-weight: bold;
-    }
-
-    /* Lista de saques */
-    .saque-lista {
-      margin-top: 30px;
-    }
-
-    .saque-item {
-      background: #111;
-      padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .saque-item button {
-      background: #ff4d4d;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      color: white;
-      margin-left: 5px;
-    }
-
-    .saque-item button:hover {
-      background: #d13b3b;
-    }
+    body { background:#111; color:#fff; margin:0; font-family:Arial,sans-serif; }
+    header { background:#000; color:red; padding:15px; text-align:center; font-size:20px; }
+    table { width:95%; margin:20px auto; border-collapse:collapse; background:#222; }
+    th,td { border:1px solid #333; padding:10px; text-align:center; }
+    th { background:#000; color:red; }
+    .btn-aprovar { background:green; color:#fff; padding:6px 10px; border:none; cursor:pointer; border-radius:5px; }
+    .btn-recusar { background:red; color:#fff; padding:6px 10px; border:none; cursor:pointer; border-radius:5px; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>💰 Admin - Saques</h1>
-    <div class="icons">
-      <span class="noti-btn" onclick="toggleNotifications()">✉️</span>
-      <span id="notificationCount" class="notification-badge" style="display:none;">0</span>
-      <span class="menu-btn" onclick="openMenu()">☰</span>
-    </div>
-    <div id="notificationBox"></div>
-  </header>
+  <header>📤 Solicitações de Saque</header>
 
-  <!-- Menu lateral -->
-  <div id="sideMenu">
-    <span class="closebtn" onclick="closeMenu()">×</span>
-    <a href="admin_dashboard.html">Início</a>
-    <a href="admin_usuarios.html">Usuários</a>
-    <a href="admin_produtos.html">Produtos</a>
-    <a href="admin_saques.html">Saques</a>
-    <a href="admin_seguranca.html">Segurança</a>
-  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Usuário</th>
+        <th>Valor solicitado</th>
+        <th>Taxa aplicada</th>
+        <th>Valor líquido</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="tabelaSaques"></tbody>
+  </table>
 
-  <main>
-    <h2>Simulador de Saque</h2>
-    <div class="simulador-box">
-      <label for="valorSaque">Digite o valor do saque (MZN):</label>
-      <input type="number" id="valorSaque" placeholder="Ex: 500" oninput="calcularSaque()">
-      
-      <div id="resultadoSaque" class="resultado-box"></div>
-    </div>
+<script>
+  // Simulação de saques pendentes
+  const saquesPendentes = [
+    { usuario: "Maria", valor: 500, status:"Pendente" },
+    { usuario: "João", valor: 2500, status:"Pendente" },
+    { usuario: "Carlos", valor: 12000, status:"Pendente" }
+  ];
 
-    <div class="saque-lista">
-      <h2>Solicitações de Saque</h2>
-      <div class="saque-item">
-        <span>Usuário: joao@gmail.com - Valor: 500 MZN</span>
-        <div>
-          <button onclick="aprovarSaque(this)">Aprovar</button>
-          <button onclick="rejeitarSaque(this)">Rejeitar</button>
-        </div>
-      </div>
-      <div class="saque-item">
-        <span>Usuário: maria@gmail.com - Valor: 1200 MZN</span>
-        <div>
-          <button onclick="aprovarSaque(this)">Aprovar</button>
-          <button onclick="rejeitarSaque(this)">Rejeitar</button>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <script>
-    function openMenu() {
-      document.getElementById("sideMenu").style.width = "250px";
+  /**
+   * Regras de taxa (decrescentes):
+   * 100 a 999 MZN  -> 10%
+   * 1.000 a 10.000 -> 7%
+   * > 10.000       -> 5%
+   * Abaixo de 100  -> 0% (sem taxa)
+   */
+  function calcularTaxa(valor){
+    if(valor >= 100 && valor <= 999){
+      return { taxa: 0.10, percentual: "10%" };
+    } else if(valor >= 1000 && valor <= 10000){
+      return { taxa: 0.07, percentual: "7%" };
+    } else if(valor > 10000){
+      return { taxa: 0.05, percentual: "5%" };
+    } else {
+      return { taxa: 0, percentual: "0%" };
     }
+  }
 
-    function closeMenu() {
-      document.getElementById("sideMenu").style.width = "0";
-    }
-
-    // Simulador de taxas
-    function calcularSaque() {
-      const valor = parseFloat(document.getElementById("valorSaque").value);
-      let taxa = 0;
-      let taxaValor = 0;
-      let liquido = 0;
-
-      if (isNaN(valor) || valor <= 0) {
-        document.getElementById("resultadoSaque").innerHTML = "Digite um valor válido.";
-        return;
-      }
-
-      if (valor <= 999) {
-        taxa = 10;
-      } else if (valor >= 1000 && valor <= 9999) {
-        taxa = 7;
-      } else {
-        taxa = 5;
-      }
-
-      taxaValor = (valor * taxa) / 100;
-      liquido = valor - taxaValor;
-
-      document.getElementById("resultadoSaque").innerHTML = `
-        💰 Valor solicitado: <b>${valor.toFixed(2)} MZN</b><br>
-        📉 Taxa aplicada: <b>${taxa}%</b> (${taxaValor.toFixed(2)} MZN)<br>
-        ✅ Valor líquido a receber: <b>${liquido.toFixed(2)} MZN</b>
+  function atualizarTabela(){
+    document.getElementById("tabelaSaques").innerHTML = saquesPendentes.map((s, index)=>{
+      const { taxa, percentual } = calcularTaxa(s.valor);
+      const valorLiquido = s.valor - (s.valor * taxa);
+      return `
+        <tr>
+          <td>${s.usuario}</td>
+          <td>${s.valor} MZN</td>
+          <td>${percentual}</td>
+          <td>${valorLiquido.toFixed(2)} MZN</td>
+          <td id="status-${index}">${s.status}</td>
+          <td>
+            <button class="btn-aprovar" onclick="aprovar(${index})">Aprovar</button>
+            <button class="btn-recusar" onclick="recusar(${index})">Recusar</button>
+          </td>
+        </tr>
       `;
-    }
+    }).join("");
+  }
 
-    // Aprovação / Rejeição
-    function aprovarSaque(btn) {
-      const item = btn.closest(".saque-item");
-      item.style.background = "green";
-      addNotification("✅ Saque aprovado: " + item.innerText);
-    }
+  function aprovar(i){
+    saquesPendentes[i].status = "Aprovado ✅";
+    atualizarTabela();
+    adicionarNotificacao(`Saque de ${saquesPendentes[i].usuario} aprovado.`);
+  }
 
-    function rejeitarSaque(btn) {
-      const item = btn.closest(".saque-item");
-      item.style.background = "darkred";
-      addNotification("❌ Saque rejeitado: " + item.innerText);
-    }
+  function recusar(i){
+    saquesPendentes[i].status = "Recusado ❌";
+    atualizarTabela();
+    adicionarNotificacao(`Saque de ${saquesPendentes[i].usuario} recusado.`);
+  }
 
-    // Notificações
-    let notifications = [];
-    function addNotification(msg) {
-      notifications.unshift(msg);
-      document.getElementById("notificationCount").style.display = "block";
-      document.getElementById("notificationCount").innerText = notifications.length;
-      renderNotifications();
-    }
+  // Envia notificação para o dashboard (via localStorage)
+  function adicionarNotificacao(msg){
+    let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || [];
+    notificacoes.push("📢 " + msg);
+    localStorage.setItem("notificacoes", JSON.stringify(notificacoes));
+  }
 
-    function toggleNotifications() {
-      const box = document.getElementById("notificationBox");
-      box.style.display = (box.style.display === "block") ? "none" : "block";
-    }
-
-    function renderNotifications() {
-      const box = document.getElementById("notificationBox");
-      box.innerHTML = notifications.map(n => `<div style="padding:5px; border-bottom:1px solid #333;">${n}</div>`).join("");
-    }
-  </script>
+  atualizarTabela();
+</script>
 </body>
 </html>
