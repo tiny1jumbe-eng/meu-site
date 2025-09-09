@@ -4,48 +4,283 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - Saques</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    body { margin: 0; font-family: Arial, sans-serif; background: #000; color: white; }
-    .dashboard-header { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 12px 16px; color: red; }
-    .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; color: white; }
-    .side-menu { height: 100%; width: 0; position: fixed; top: 0; left: 0; background-color: #111; overflow-x: hidden; transition: 0.3s; padding-top: 60px; z-index: 1000; }
-    .side-menu a { padding: 12px 24px; text-decoration: none; font-size: 18px; color: white; display: block; transition: 0.3s; }
-    .side-menu a:hover { background: red; }
-    .side-menu .close-btn { position: absolute; top: 10px; right: 20px; font-size: 28px; cursor: pointer; background: none; border: none; color: white; }
-    main { padding: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 10px; border: 1px solid #333; text-align: center; }
-    th { color: red; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+    }
+
+    header {
+      background: #111;
+      color: #ff4d4d;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .menu-btn, .noti-btn {
+      font-size: 22px;
+      cursor: pointer;
+      color: white;
+    }
+
+    /* Notificações */
+    .notification-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: red;
+      color: white;
+      border-radius: 50%;
+      padding: 3px 7px;
+      font-size: 12px;
+    }
+
+    #notificationBox {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 10px;
+      background: #111;
+      color: #fff;
+      padding: 10px;
+      border-radius: 6px;
+      width: 250px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+      z-index: 100;
+    }
+
+    /* Menu lateral */
+    #sideMenu {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      background: #111;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      z-index: 200;
+    }
+
+    #sideMenu a {
+      padding: 12px 20px;
+      text-decoration: none;
+      font-size: 18px;
+      color: #fff;
+      display: block;
+      transition: 0.2s;
+    }
+
+    #sideMenu a:hover {
+      background: #ff4d4d;
+    }
+
+    #sideMenu .closebtn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    /* Simulador */
+    .simulador-box {
+      background: #111;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      color: white;
+    }
+
+    .simulador-box input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+    }
+
+    .resultado-box {
+      margin-top: 15px;
+      background: #222;
+      padding: 12px;
+      border-radius: 6px;
+      color: #ff4d4d;
+      font-weight: bold;
+    }
+
+    /* Lista de saques */
+    .saque-lista {
+      margin-top: 30px;
+    }
+
+    .saque-item {
+      background: #111;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .saque-item button {
+      background: #ff4d4d;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      margin-left: 5px;
+    }
+
+    .saque-item button:hover {
+      background: #d13b3b;
+    }
   </style>
 </head>
 <body>
-  <header class="dashboard-header">
-    <button class="menu-btn" onclick="openMenu()">☰</button>
-    <h1>Gerenciar Saques</h1>
-    <div>👤 Admin</div>
+  <header>
+    <h1>💰 Admin - Saques</h1>
+    <div class="icons">
+      <span class="noti-btn" onclick="toggleNotifications()">✉️</span>
+      <span id="notificationCount" class="notification-badge" style="display:none;">0</span>
+      <span class="menu-btn" onclick="openMenu()">☰</span>
+    </div>
+    <div id="notificationBox"></div>
   </header>
 
-  <nav id="sideMenu" class="side-menu">
-    <button class="close-btn" onclick="closeMenu()">×</button>
-    <a href="admin_dashboard.html" onclick="closeMenu()">Início</a>
-    <a href="admin_usuario.html" onclick="closeMenu()">Usuários</a>
-    <a href="admin_produtos.html" onclick="closeMenu()">Produtos</a>
-    <a href="admin_saques.html" onclick="closeMenu()">Saques</a>
-    <a href="index.html" onclick="closeMenu()">Sair</a>
-  </nav>
+  <!-- Menu lateral -->
+  <div id="sideMenu">
+    <span class="closebtn" onclick="closeMenu()">×</span>
+    <a href="admin_dashboard.html">Início</a>
+    <a href="admin_usuarios.html">Usuários</a>
+    <a href="admin_produtos.html">Produtos</a>
+    <a href="admin_saques.html">Saques</a>
+    <a href="admin_seguranca.html">Segurança</a>
+  </div>
 
   <main>
-    <h2>Solicitações de Saque</h2>
-    <table>
-      <tr><th>Usuário</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
-      <tr><td>João</td><td>R$ 150,00</td><td>Pendente</td><td><button>Aprovar</button> <button>Rejeitar</button></td></tr>
-      <tr><td>Maria</td><td>R$ 300,00</td><td>Pendente</td><td><button>Aprovar</button> <button>Rejeitar</button></td></tr>
-    </table>
+    <h2>Simulador de Saque</h2>
+    <div class="simulador-box">
+      <label for="valorSaque">Digite o valor do saque (MZN):</label>
+      <input type="number" id="valorSaque" placeholder="Ex: 500" oninput="calcularSaque()">
+      
+      <div id="resultadoSaque" class="resultado-box"></div>
+    </div>
+
+    <div class="saque-lista">
+      <h2>Solicitações de Saque</h2>
+      <div class="saque-item">
+        <span>Usuário: joao@gmail.com - Valor: 500 MZN</span>
+        <div>
+          <button onclick="aprovarSaque(this)">Aprovar</button>
+          <button onclick="rejeitarSaque(this)">Rejeitar</button>
+        </div>
+      </div>
+      <div class="saque-item">
+        <span>Usuário: maria@gmail.com - Valor: 1200 MZN</span>
+        <div>
+          <button onclick="aprovarSaque(this)">Aprovar</button>
+          <button onclick="rejeitarSaque(this)">Rejeitar</button>
+        </div>
+      </div>
+    </div>
   </main>
 
   <script>
-    function openMenu() { document.getElementById("sideMenu").style.width = "250px"; }
-    function closeMenu() { document.getElementById("sideMenu").style.width = "0"; }
+    function openMenu() {
+      document.getElementById("sideMenu").style.width = "250px";
+    }
+
+    function closeMenu() {
+      document.getElementById("sideMenu").style.width = "0";
+    }
+
+    // Simulador de taxas
+    function calcularSaque() {
+      const valor = parseFloat(document.getElementById("valorSaque").value);
+      let taxa = 0;
+      let taxaValor = 0;
+      let liquido = 0;
+
+      if (isNaN(valor) || valor <= 0) {
+        document.getElementById("resultadoSaque").innerHTML = "Digite um valor válido.";
+        return;
+      }
+
+      if (valor <= 999) {
+        taxa = 10;
+      } else if (valor >= 1000 && valor <= 9999) {
+        taxa = 7;
+      } else {
+        taxa = 5;
+      }
+
+      taxaValor = (valor * taxa) / 100;
+      liquido = valor - taxaValor;
+
+      document.getElementById("resultadoSaque").innerHTML = `
+        💰 Valor solicitado: <b>${valor.toFixed(2)} MZN</b><br>
+        📉 Taxa aplicada: <b>${taxa}%</b> (${taxaValor.toFixed(2)} MZN)<br>
+        ✅ Valor líquido a receber: <b>${liquido.toFixed(2)} MZN</b>
+      `;
+    }
+
+    // Aprovação / Rejeição
+    function aprovarSaque(btn) {
+      const item = btn.closest(".saque-item");
+      item.style.background = "green";
+      addNotification("✅ Saque aprovado: " + item.innerText);
+    }
+
+    function rejeitarSaque(btn) {
+      const item = btn.closest(".saque-item");
+      item.style.background = "darkred";
+      addNotification("❌ Saque rejeitado: " + item.innerText);
+    }
+
+    // Notificações
+    let notifications = [];
+    function addNotification(msg) {
+      notifications.unshift(msg);
+      document.getElementById("notificationCount").style.display = "block";
+      document.getElementById("notificationCount").innerText = notifications.length;
+      renderNotifications();
+    }
+
+    function toggleNotifications() {
+      const box = document.getElementById("notificationBox");
+      box.style.display = (box.style.display === "block") ? "none" : "block";
+    }
+
+    function renderNotifications() {
+      const box = document.getElementById("notificationBox");
+      box.innerHTML = notifications.map(n => `<div style="padding:5px; border-bottom:1px solid #333;">${n}</div>`).join("");
+    }
   </script>
 </body>
 </html>
