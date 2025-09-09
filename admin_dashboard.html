@@ -129,77 +129,236 @@
     <a href="admin_saques.html">Saques</a>
     <a href="admin_financas.html">Finanças</a>
     <a href="admin_seguranca.html">Segurança</a>
+    <a href="admin_plans.html">planos</a>
   </nav>
 
   <!-- Notificações -->
-  <div id="notificationBox" class="notification-box">
+<header>
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="font-size:20px; color:red;">Painel do Administrador</div>
+    <div style="display:flex; align-items:center; gap:15px;">
+      <div style="position:relative;">
+        <span id="notificacaoIcon" style="cursor:pointer; font-size:22px;">✉️</span>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Administrador</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: white;
+      overflow-x: hidden; /* remove rolagem lateral */
+    }
+    header {
+      background: #111;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      color: red;
+    }
+    /* Ícones */
+    .icon-area {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .icon-area span {
+      cursor: pointer;
+    }
+    /* Notificações */
+    #contador {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      display: none;
+    }
+    #notificacoesBox {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      width: 250px;
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 10px;
+      z-index: 1000;
+    }
+    #notificacoesBox h4 {
+      margin: 0;
+      color: red;
+    }
+    #notificacoesBox ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+    #notificacoesBox li a {
+      color: white;
+      text-decoration: none;
+      display: block;
+      padding: 5px 0;
+    }
+    #sideMenu {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: #111;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      z-index: 2000;
+    }
+    #sideMenu a {
+      padding: 10px 20px;
+      text-decoration: none;
+      font-size: 16px;
+      color: white;
+      display: block;
+      transition: 0.3s;
+    }
+    #sideMenu a:hover {
+      background: red;
+    }
+    #sideMenu .closeBtn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: white;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+    .card {
+      background: #111;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .card h3 {
+      margin: 0;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span style="font-size:22px; cursor:pointer;" onclick="openMenu()">☰</span>
+    <h1>Painel do Administrador</h1>
+    <div class="icon-area">
+      <div style="position:relative;">
+        <span id="notificacaoIcon" style="font-size:22px;">✉️</span>
+        <span id="contador"></span>
+      </div>
+      <span style="font-size:18px;">👤 Admin</span>
+    </div>
+  </header>
+
+  <!-- Caixa de notificações -->
+  <div id="notificacoesBox">
     <h4>Notificações</h4>
-    <div id="notificacoes"></div>
+    <ul id="listaNotificacoes"></ul>
   </div>
 
-  <!-- Cards -->
-  <section class="cards">
-    <div class="card">
-      <h3>💰 Taxas arrecadadas</h3>
-      <p id="taxasTotal">0 MZN</p>
-    </div>
-    <div class="card">
-      <h3>📦 Ganhos com Planos</h3>
-      <p id="planosTotal">0 MZN</p>
-    </div>
-    <div class="card">
-      <h3>👥 Usuários ativos</h3>
-      <p id="usuariosAtivos">0</p>
-    </div>
-  </section>
-
-  <!-- Gráfico -->
-  <div class="chart-container">
-    <canvas id="financasChart"></canvas>
+  <!-- Menu lateral -->
+  <div id="sideMenu">
+    <span class="closeBtn" onclick="closeMenu()">×</span>
+    <a href="admin_dashboard.html">Início</a>
+    <a href="admin_usuarios.html">Usuários</a>
+    <a href="admin_produtos.html">Produtos</a>
+    <a href="admin_saques.html">Saques</a>
+    <a href="admin_seguranca.html">Segurança</a>
+    <a href="admin_plans.html">Planos</a>
+    <a href="index.html">Sair</a>
   </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  function openMenu(){ document.getElementById("sideMenu").style.width = "250px"; }
-  function closeMenu(){ document.getElementById("sideMenu").style.width = "0"; }
+  <main>
+    <div class="cards">
+      <div class="card">
+        <h3>Usuários</h3>
+        <p>54 cadastrados</p>
+      </div>
+      <div class="card">
+        <h3>Produtos</h3>
+        <p>32 pendentes</p>
+      </div>
+      <div class="card">
+        <h3>Saques</h3>
+        <p>5 em análise</p>
+      </div>
+    </div>
+  </main>
 
-  function toggleNotifications(){
-    const box = document.getElementById("notificationBox");
-    box.style.display = box.style.display === "block" ? "none" : "block";
-  }
+  <script>
+    // Menu
+    function openMenu() {
+      document.getElementById("sideMenu").style.width = "250px";
+    }
+    function closeMenu() {
+      document.getElementById("sideMenu").style.width = "0";
+    }
 
-  // Simulação de dados
-  const dados = {
-    taxas: [100, 200, 150, 300, 400],
-    planos: [50, 100, 120, 200, 250],
-    usuarios: 87
-  };
+    // Notificações
+    let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || [
+      { mensagem: "Novo usuário cadastrado", link: "admin_usuarios.html" },
+      { mensagem: "Solicitação de saque recebida", link: "admin_saques.html" },
+      { mensagem: "Novo produto enviado", link: "admin_produtos.html" }
+    ];
 
-  // Preenche cards
-  document.getElementById("taxasTotal").textContent = dados.taxas.reduce((a,b)=>a+b,0) + " MZN";
-  document.getElementById("planosTotal").textContent = dados.planos.reduce((a,b)=>a+b,0) + " MZN";
-  document.getElementById("usuariosAtivos").textContent = dados.usuarios;
+    const contador = document.getElementById("contador");
+    const box = document.getElementById("notificacoesBox");
+    const lista = document.getElementById("listaNotificacoes");
+    const icon = document.getElementById("notificacaoIcon");
 
-  // Gráfico
-  new Chart(document.getElementById("financasChart"), {
-    type: "line",
-    data: {
-      labels: ["Jan","Fev","Mar","Abr","Mai"],
-      datasets: [
-        { label:"Taxas (MZN)", data:dados.taxas, borderColor:"white", backgroundColor:"transparent" },
-        { label:"Planos (MZN)", data:dados.planos, borderColor:"red", backgroundColor:"transparent" }
-      ]
-    },
-    options: { responsive:true, plugins:{ legend:{ labels:{ color:"white" } } }, scales:{ x:{ ticks:{ color:"white" } }, y:{ ticks:{ color:"white" } } } }
-  });
+    function atualizarNotificacoes() {
+      lista.innerHTML = "";
+      if (notificacoes.length > 0) {
+        contador.style.display = "inline-block";
+        contador.innerText = notificacoes.length;
+      } else {
+        contador.style.display = "none";
+      }
 
-  // Notificações simuladas
-  const notificacoes = [
-    "💳 Usuário João pagou Plano Premium (500 MZN).",
-    "📤 Maria solicitou saque (1000 MZN) - Taxa 10%.",
-    "⚠️ Conta de Pedro expira em 3 dias."
-  ];
-  document.getElementById("notificacoes").innerHTML = notificacoes.map(n=>`<p>${n}</p>`).join("");
-</script>
+      notificacoes.forEach((n, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="${n.link}">${n.mensagem}</a>`;
+        li.onclick = () => {
+          notificacoes.splice(index, 1);
+          localStorage.setItem("notificacoes", JSON.stringify(notificacoes));
+          atualizarNotificacoes();
+        };
+        lista.appendChild(li);
+      });
+    }
+
+    icon.onclick = () => {
+      box.style.display = box.style.display === "none" ? "block" : "none";
+    };
+
+    atualizarNotificacoes();
+  </script>
 </body>
 </html>
