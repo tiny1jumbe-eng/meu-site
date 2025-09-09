@@ -1,358 +1,103 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
-    }
-
-    /* Header */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #000;
-      padding: 12px 20px;
-      color: red;
-    }
-    header h1 { margin: 0; font-size: 20px; }
-    .header-icons { display: flex; align-items: center; gap: 20px; }
-    .icon { cursor: pointer; font-size: 20px; }
-
-    /* Side menu */
-    .side-menu {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      right: 0;
-      background-color: #222;
-      overflow-x: hidden;
-      transition: 0.5s;
-      padding-top: 60px;
-      z-index: 999;
-    }
-    .side-menu a {
-      padding: 10px 20px;
-      text-decoration: none;
-      font-size: 18px;
-      color: #fff;
-      display: block;
-      transition: 0.3s;
-    }
-    .side-menu a:hover { background: red; }
-    .side-menu .close-btn {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 24px;
-      background: none;
-      border: none;
-      color: red;
-      cursor: pointer;
-    }
-
-    /* Cards */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      padding: 20px;
-    }
-    .card {
-      background: #222;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 0 8px rgba(0,0,0,0.6);
-    }
-    .card h3 { margin-bottom: 10px; color: red; }
-
-    /* Gráfico */
-    .chart-container {
-      background: #222;
-      margin: 20px;
-      padding: 20px;
-      border-radius: 12px;
-    }
-
-    /* Notificações */
-    .notification-box {
-      display: none;
-      position: absolute;
-      top: 50px;
-      right: 20px;
-      background: #fff;
-      color: #000;
-      width: 280px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-      padding: 10px;
-      z-index: 1000;
-    }
-    .notification-box h4 {
-      margin: 0 0 10px;
-      color: red;
-    }
-    .notification-box p {
-      font-size: 14px;
-      margin: 5px 0;
-      padding: 6px;
-      background: #f5f5f5;
-      border-radius: 6px;
-    }
-  </style>
-</head>
-<body>
-  <!-- Header -->
-<header class="admin-header">
-  <button class="menu-btn" onclick="openMenu()">☰</button>
-  <h1>Painel do Administrador</h1>
-  <div class="header-right">
-    <span class="notif" onclick="toggleNotifications()">✉️<span id="notifCount" class="notif-count">0</span></span>
-    <span class="admin-user">👤 Admin</span>
-  </div>
-</header>
-  <!-- Menu lateral -->
-  <nav id="sideMenu" class="side-menu">
-    <button class="close-btn" onclick="closeMenu()">×</button>
-    <a href="admin_dashboard.html">Início</a>
-    <a href="admin_usuarios.html">Usuários</a>
-    <a href="admin_produtos.html">Produtos</a>
-    <a href="admin_saques.html">Saques</a>
-    <a href="admin_financas.html">Finanças</a>
-    <a href="admin_seguranca.html">Segurança</a>
-    <a href="admin_plans.html">planos</a>
-  </nav>
-
-  <!-- Notificações -->
-<header>
-  <div style="display:flex; justify-content:space-between; align-items:center;">
-    <div style="font-size:20px; color:red;">Painel do Administrador</div>
-    <div style="display:flex; align-items:center; gap:15px;">
-      <div style="position:relative;">
-        <span id="notificacaoIcon" style="cursor:pointer; font-size:22px;">✉️</span>
-<!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel do Administrador</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: white;
-      overflow-x: hidden; /* remove rolagem lateral */
-    }
-    header {
-      background: #111;
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 18px;
-      color: red;
-    }
-    /* Ícones */
-    .icon-area {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .icon-area span {
-      cursor: pointer;
-    }
-    /* Notificações */
-    #contador {
-      position: absolute;
-      top: -6px;
-      right: -6px;
-      background: red;
-      color: white;
-      border-radius: 50%;
-      padding: 2px 6px;
-      font-size: 12px;
-      display: none;
-    }
-    #notificacoesBox {
-      display: none;
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      width: 250px;
-      background: #222;
-      border: 1px solid #444;
-      border-radius: 8px;
-      padding: 10px;
-      z-index: 1000;
-    }
-    #notificacoesBox h4 {
-      margin: 0;
-      color: red;
-    }
-    #notificacoesBox ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 10px;
-    }
-    #notificacoesBox li a {
-      color: white;
-      text-decoration: none;
-      display: block;
-      padding: 5px 0;
-    }
-    #sideMenu {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background: #111;
-      overflow-x: hidden;
-      transition: 0.3s;
-      padding-top: 60px;
-      z-index: 2000;
-    }
-    #sideMenu a {
-      padding: 10px 20px;
-      text-decoration: none;
-      font-size: 16px;
-      color: white;
-      display: block;
-      transition: 0.3s;
-    }
-    #sideMenu a:hover {
-      background: red;
-    }
-    #sideMenu .closeBtn {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 28px;
-      cursor: pointer;
-      color: white;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
-      padding: 20px;
-    }
-    .card {
-      background: #111;
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
-    }
-    .card h3 {
-      margin: 0;
-      color: red;
-    }
-  </style>
 </head>
-<body>
-  <header>
-    <span style="font-size:22px; cursor:pointer;" onclick="openMenu()">☰</span>
-    <h1>Painel do Administrador</h1>
-    <div class="icon-area">
-      <div style="position:relative;">
-        <span id="notificacaoIcon" style="font-size:22px;">✉️</span>
-        <span id="contador"></span>
-      </div>
-      <span style="font-size:18px;">👤 Admin</span>
+<body class="dashboard">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <!-- Botão hamburguer -->
+    <span class="hamburguer" onclick="openMenu()">☰</span>
+
+    <!-- Título -->
+    <h1 class="titulo">Painel do Administrador</h1>
+
+    <!-- Usuário + Notificação -->
+    <div class="top-right">
+      <span class="user">👤 Admin</span>
+      <span class="notificacao" onclick="toggleNotif()">✉️<span id="notifCount">0</span></span>
     </div>
   </header>
 
-  <!-- Caixa de notificações -->
-<div id="notifBox" class="notif-box">
-  <ul id="notifList"></ul>
-</div>
-
-  <!-- Menu lateral -->
-  <div id="sideMenu">
-    <span class="closeBtn" onclick="closeMenu()">×</span>
+  <!-- Menu lateral hamburguer -->
+  <nav id="sideMenu" class="side-menu">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">×</a>
     <a href="admin_dashboard.html">Início</a>
     <a href="admin_usuarios.html">Usuários</a>
     <a href="admin_produtos.html">Produtos</a>
     <a href="admin_saques.html">Saques</a>
-    <a href="admin_seguranca.html">Segurança</a>
     <a href="admin_plans.html">Planos</a>
-    <a href="index.html">Sair</a>
+    <a href="admin_seguranca.html">Segurança</a>
+  </nav>
+
+  <!-- Caixa de notificações -->
+  <div id="notifBox" class="notif-box">
+    <span class="closebtn" onclick="toggleNotif()">×</span>
+    <h2>Notificações</h2>
+    <ul id="notifList"></ul>
   </div>
 
-  <main>
-    <div class="cards">
-      <div class="card">
-        <h3>Usuários</h3>
-        <p>54 cadastrados</p>
-      </div>
-      <div class="card">
-        <h3>Produtos</h3>
-        <p>32 pendentes</p>
-      </div>
-      <div class="card">
-        <h3>Saques</h3>
-        <p>5 em análise</p>
-      </div>
-    </div>
+  <!-- Cards principais -->
+  <main class="conteudo">
+    <div class="card">👥 <h2>Usuários</h2><p>150 ativos</p></div>
+    <div class="card">📦 <h2>Produtos</h2><p>80 listados</p></div>
+    <div class="card">💰 <h2>Saques</h2><p>20 pendentes</p></div>
+    <div class="card">📈 <h2>Ganhos</h2><p>+5.000 MZN</p></div>
   </main>
 
-<script>
-  let notifications = [
-    { id: 1, text: "Novo usuário cadastrado", link: "admin_usuarios.html" },
-    { id: 2, text: "Novo produto aguardando aprovação", link: "admin_produtos.html" },
-    { id: 3, text: "Solicitação de saque recebida", link: "admin_saques.html" }
-  ];
-
-  function renderNotifications() {
-    const container = document.getElementById("notifList");
-    container.innerHTML = "";
-    notifications.forEach(n => {
-      let item = document.createElement("li");
-      item.innerHTML = `<a href="${n.link}" onclick="markAsRead(${n.id})">${n.text}</a>`;
-      container.appendChild(item);
-    });
-
-    updateNotifCount();
-  }
-
-  function updateNotifCount() {
-    const count = document.getElementById("notifCount");
-    if (notifications.length > 0) {
-      count.style.display = "inline-block";
-      count.innerText = notifications.length;
-    } else {
-      count.style.display = "none";
+  <script>
+    // ---- Menu Hamburguer ----
+    function openMenu() {
+      document.getElementById("sideMenu").style.width = "250px";
     }
-  }
+    function closeMenu() {
+      document.getElementById("sideMenu").style.width = "0";
+    }
 
-  function markAsRead(id) {
-    notifications = notifications.filter(n => n.id !== id);
-    renderNotifications();
-  }
+    // ---- Notificações ----
+    let notificacoes = [
+      {texto: "Novo usuário cadastrado", link: "admin_usuarios.html"},
+      {texto: "Produto aguardando aprovação", link: "admin_produtos.html"},
+      {texto: "Solicitação de saque", link: "admin_saques.html"}
+    ];
+    let notifCount = notificacoes.length;
 
-  function toggleNotifications() {
-    const box = document.getElementById("notifBox");
-    box.style.display = box.style.display === "block" ? "none" : "block";
-  }
+    function renderNotificacoes() {
+      let list = document.getElementById("notifList");
+      list.innerHTML = "";
+      notificacoes.forEach((n, i) => {
+        let li = document.createElement("li");
+        let a = document.createElement("a");
+        a.href = n.link;
+        a.innerText = n.texto;
+        a.onclick = () => marcarLida(i);
+        li.appendChild(a);
+        list.appendChild(li);
+      });
+      document.getElementById("notifCount").innerText = notifCount;
+    }
 
-  // inicializa
-  document.addEventListener("DOMContentLoaded", renderNotifications);
-</script>
+    function marcarLida(index) {
+      notificacoes.splice(index, 1);
+      notifCount = notificacoes.length;
+      renderNotificacoes();
+    }
+
+    function toggleNotif() {
+      let box = document.getElementById("notifBox");
+      if (box.style.display === "block") {
+        box.style.display = "none";
+      } else {
+        box.style.display = "block";
+      }
+    }
+
+    // Inicializar notificações
+    renderNotificacoes();
   </script>
 </body>
 </html>
