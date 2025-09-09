@@ -102,14 +102,14 @@
   <!-- Perfil Admin + Notificações no canto direito -->
   <div class="right-section">
     <div class="notification-icon" onclick="toggleNotifications()">
-      ✉️ <span id="notifCount" class="notif-count">0</span>
+<span class="notification-icon" onclick="toggleNotifications()">✉️</span>
     </div>
     <div class="user-profile">👤 Admin</div>
   </div>
 </header>
 
 <!-- Caixa de notificações -->
-<div id="notificationBox" class="notification-box">
+<button onclick="closeNotifications()" style="float:right;">✖</button>
   <h3>Notificações</h3>
   <ul id="notifList">
     <li>Nenhuma notificação no momento.</li>
@@ -158,26 +158,20 @@
   </script>
 
 <script>
-function toggleNotifications() {
-  const box = document.getElementById("notificationBox");
-  box.style.display = box.style.display === "block" ? "none" : "block";
-}
-
-// exemplo para adicionar notificações
-function addNotification(msg) {
-  const list = document.getElementById("notifList");
-  const count = document.getElementById("notifCount");
-
-  if (list.children[0].innerText === "Nenhuma notificação no momento.") {
-    list.innerHTML = "";
+  // Abre e fecha notificações
+  function toggleNotifications() {
+    const panel = document.getElementById("notificationsPanel");
+    if (panel.style.display === "block") {
+      panel.style.display = "none"; // Fecha
+    } else {
+      panel.style.display = "block"; // Abre
+    }
   }
 
-  const li = document.createElement("li");
-  li.textContent = msg;
-  list.appendChild(li);
-
-  count.textContent = parseInt(count.textContent) + 1;
-}
+  // Fecha só quando clicar no botão X
+  function closeNotifications() {
+    document.getElementById("notificationsPanel").style.display = "none";
+  }
 </script>
 </body>
 </html>
