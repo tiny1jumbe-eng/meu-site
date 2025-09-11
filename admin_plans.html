@@ -9,7 +9,7 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #000;
+      background: #000;
       color: white;
     }
 
@@ -132,36 +132,30 @@
       background: #222;
     }
 
-    /* Conteúdo principal */
-    .container {
-      padding: 20px;
-    }
-
-    h2 {
-      color: red;
-    }
-
+    /* Tabela */
     table {
-      width: 100%;
+      width: 90%;
+      margin: 20px auto;
       border-collapse: collapse;
-      margin-top: 15px;
       background: #111;
       border: 1px solid red;
     }
 
-    table th, table td {
+    th, td {
       padding: 10px;
-      border: 1px solid #333;
       text-align: center;
+      border: 1px solid #333;
     }
 
-    table th {
-      background: #222;
-      color: red;
+    th {
+      background: red;
+      color: black;
     }
 
+    /* Gráfico */
     canvas {
-      margin-top: 20px;
+      display: block;
+      margin: 20px auto;
       background: #111;
       border-radius: 10px;
       padding: 10px;
@@ -196,25 +190,23 @@
     <div id="notifList"></div>
   </div>
 
-  <!-- Conteúdo -->
-  <div class="container">
-    <h2>Lista de Planos</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Usuário</th>
-          <th>Tipo</th>
-          <th>Validade</th>
-        </tr>
-      </thead>
-      <tbody id="planosTable">
-        <tr><td colspan="4">Carregando planos...</td></tr>
-      </tbody>
-    </table>
+  <!-- Tabela de Planos -->
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuário</th>
+        <th>Tipo</th>
+        <th>Validade</th>
+      </tr>
+    </thead>
+    <tbody id="planosTable">
+      <tr><td colspan="4">Carregando planos...</td></tr>
+    </tbody>
+  </table>
 
-    <canvas id="planosChart"></canvas>
-  </div>
+  <!-- Gráfico -->
+  <canvas id="planosChart"></canvas>
 
   <script>
     // Notificações simuladas
