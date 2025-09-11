@@ -2,35 +2,62 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel de Planos</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
-      background-color: #000;
-      color: #fff;
+      margin: 0;
       font-family: Arial, sans-serif;
-      margin: 0;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-      background: #111;
-      border-bottom: 2px solid red;
-    }
-    header h1 {
-      color: red;
-      margin: 0;
-    }
-    .icon-btn {
-      font-size: 22px;
-      cursor: pointer;
-      margin-left: 10px;
-      background: none;
-      border: none;
+      background-color: #000;
       color: white;
     }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #111;
+      padding: 10px 20px;
+      border-bottom: 2px solid red;
+    }
+
+    .menu-btn {
+      font-size: 26px;
+      cursor: pointer;
+      color: red;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: bold;
+      color: red;
+    }
+
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .notif {
+      position: relative;
+      cursor: pointer;
+      font-size: 22px;
+    }
+
+    .notif span {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: red;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+
+    /* Menu lateral */
     #sideMenu {
       height: 100%;
       width: 0;
@@ -41,87 +68,119 @@
       overflow-x: hidden;
       transition: 0.3s;
       padding-top: 60px;
-      z-index: 1000;
+      border-right: 2px solid red;
     }
+
     #sideMenu a {
-      padding: 10px 20px;
+      padding: 12px 20px;
       text-decoration: none;
+      font-size: 18px;
       color: white;
       display: block;
+      transition: 0.2s;
     }
+
     #sideMenu a:hover {
       background: red;
+      color: black;
     }
+
     #sideMenu .closebtn {
       position: absolute;
-      top: 15px;
-      right: 25px;
-      font-size: 30px;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
       cursor: pointer;
       color: red;
     }
-    #notificacaoCard {
+
+    /* Caixa de notificações */
+    #notifBox {
+      height: 100%;
+      width: 0;
       position: fixed;
       top: 0;
-      right: -400px;
-      width: 300px;
-      height: 100%;
+      right: 0;
       background: #111;
+      overflow-x: hidden;
       transition: 0.3s;
-      padding: 20px;
-      z-index: 1000;
+      padding-top: 60px;
       border-left: 2px solid red;
     }
-    #notificacaoCard h2 {
+
+    #notifBox h2 {
+      text-align: center;
       color: red;
     }
-    #notificacaoCard .closebtn {
+
+    #notifBox .closebtn {
       position: absolute;
-      top: 15px;
+      top: 10px;
       right: 20px;
-      font-size: 25px;
+      font-size: 28px;
+      cursor: pointer;
       color: red;
-      cursor: pointer;
     }
+
     .notif-item {
-      background: #222;
       padding: 10px;
-      margin: 5px 0;
+      border-bottom: 1px solid #333;
       cursor: pointer;
-      border-radius: 5px;
     }
+
     .notif-item:hover {
-      background: red;
+      background: #222;
     }
-    main {
+
+    /* Conteúdo principal */
+    .container {
       padding: 20px;
     }
+
+    h2 {
+      color: red;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 30px;
+      margin-top: 15px;
+      background: #111;
+      border: 1px solid red;
     }
+
     table th, table td {
-      border: 1px solid #333;
       padding: 10px;
+      border: 1px solid #333;
       text-align: center;
     }
+
     table th {
-      background: red;
-      color: white;
+      background: #222;
+      color: red;
+    }
+
+    canvas {
+      margin-top: 20px;
+      background: #111;
+      border-radius: 10px;
+      padding: 10px;
     }
   </style>
 </head>
 <body>
   <header>
-    <button class="icon-btn" onclick="openMenu()">☰</button>
-    <h1>Painel de Planos</h1>
-    <button class="icon-btn" onclick="openNotificacoes()">✉️ <span id="notifCount">3</span></button>
+    <span class="menu-btn" onclick="openMenu()">☰</span>
+    <div class="title">Painel de Planos</div>
+    <div class="user-area">
+      <div>👤 Admin</div>
+      <div class="notif" onclick="openNotif()">✉️<span id="notifCount">3</span></div>
+    </div>
   </header>
 
-  <!-- MENU -->
+  <!-- Menu lateral -->
   <div id="sideMenu">
-    <span class="closebtn" onclick="closeMenu()">&times;</span>
+    <span class="closebtn" onclick="closeMenu()">×</span>
     <a href="admin_dashboard.html">Dashboard</a>
     <a href="admin_usuarios.html">Usuários</a>
     <a href="admin_produtos.html">Produtos</a>
@@ -130,19 +189,16 @@
     <a href="admin_seguranca.html">Segurança</a>
   </div>
 
-  <!-- NOTIFICAÇÕES -->
-  <div id="notificacaoCard">
-    <span class="closebtn" onclick="closeNotificacoes()">&times;</span>
+  <!-- Caixa de notificações -->
+  <div id="notifBox">
+    <span class="closebtn" onclick="closeNotif()">×</span>
     <h2>Notificações</h2>
-    <div id="notifList">
-      <div class="notif-item" onclick="abrirLink('admin_usuarios.html')">Novo usuário cadastrado</div>
-      <div class="notif-item" onclick="abrirLink('admin_saques.html')">Pedido de saque recebido</div>
-      <div class="notif-item" onclick="abrirLink('admin_produtos.html')">Novo produto adicionado</div>
-    </div>
+    <div id="notifList"></div>
   </div>
 
-  <main>
-    <h2 style="color: red;">Planos Ativos</h2>
+  <!-- Conteúdo -->
+  <div class="container">
+    <h2>Lista de Planos</h2>
     <table>
       <thead>
         <tr>
@@ -152,37 +208,54 @@
           <th>Validade</th>
         </tr>
       </thead>
-      <tbody id="planosTable"></tbody>
+      <tbody id="planosTable">
+        <tr><td colspan="4">Carregando planos...</td></tr>
+      </tbody>
     </table>
 
-    <h2 style="color: red;">Gráfico de Planos</h2>
-    <canvas id="planosChart" height="120"></canvas>
-  </main>
+    <canvas id="planosChart"></canvas>
+  </div>
 
   <script>
-    // MENU
-    function openMenu() {
-      document.getElementById("sideMenu").style.width = "250px";
-    }
-    function closeMenu() {
-      document.getElementById("sideMenu").style.width = "0";
+    // Notificações simuladas
+    let notifications = [
+      { text: "Novo usuário cadastrou um plano", link: "admin_usuarios.html", read: false },
+      { text: "Upgrade de plano realizado", link: "admin_plans.html", read: false },
+      { text: "Plano expirado detectado", link: "admin_plans.html", read: false }
+    ];
+
+    function updateNotif() {
+      const notifList = document.getElementById("notifList");
+      notifList.innerHTML = "";
+      let unread = 0;
+
+      notifications.forEach((n, i) => {
+        let div = document.createElement("div");
+        div.className = "notif-item";
+        div.textContent = n.text;
+        div.onclick = () => {
+          notifications[i].read = true;
+          window.location.href = n.link;
+        };
+        notifList.appendChild(div);
+        if (!n.read) unread++;
+      });
+
+      document.getElementById("notifCount").textContent = unread;
     }
 
-    // NOTIFICAÇÕES
-    let notifCount = 3;
-    function openNotificacoes() {
-      document.getElementById("notificacaoCard").style.right = "0";
-    }
-    function closeNotificacoes() {
-      document.getElementById("notificacaoCard").style.right = "-400px";
-    }
-    function abrirLink(pagina) {
-      notifCount--;
-      document.getElementById("notifCount").textContent = notifCount;
-      window.location.href = pagina;
-    }
+    function openMenu() { document.getElementById("sideMenu").style.width = "250px"; }
+    function closeMenu() { document.getElementById("sideMenu").style.width = "0"; }
 
-    // TABELA E GRÁFICO
+    function openNotif() { 
+      document.getElementById("notifBox").style.width = "300px"; 
+      updateNotif();
+    }
+    function closeNotif() { document.getElementById("notifBox").style.width = "0"; }
+
+    updateNotif();
+
+    // Carregar planos e gráfico
     async function carregarPlanos() {
       try {
         const response = await fetch("http://localhost:3000/planos");
@@ -193,24 +266,28 @@
 
         let free = 0, premium = 0, pro = 0;
 
-        planos.forEach(plano => {
-          let row = `
-            <tr>
-              <td>${plano.id}</td>
-              <td>${plano.usuario}</td>
-              <td>${plano.tipo}</td>
-              <td>${plano.validade}</td>
-            </tr>
-          `;
-          tabela.innerHTML += row;
+        if (planos.length === 0) {
+          tabela.innerHTML = `<tr><td colspan="4">Nenhum plano encontrado</td></tr>`;
+        } else {
+          planos.forEach(plano => {
+            let row = `
+              <tr>
+                <td>${plano.id}</td>
+                <td>${plano.usuario}</td>
+                <td>${plano.tipo}</td>
+                <td>${plano.validade}</td>
+              </tr>
+            `;
+            tabela.innerHTML += row;
 
-          if (plano.tipo === "free") free++;
-          else if (plano.tipo === "premium") premium++;
-          else if (plano.tipo === "pro") pro++;
-        });
+            if (plano.tipo === "free") free++;
+            else if (plano.tipo === "premium") premium++;
+            else if (plano.tipo === "pro") pro++;
+          });
+        }
 
-        // Gráfico
         const ctx = document.getElementById("planosChart").getContext("2d");
+
         new Chart(ctx, {
           type: "bar",
           data: {
@@ -223,12 +300,8 @@
           },
           options: {
             responsive: true,
-            plugins: {
-              legend: { display: false }
-            },
-            scales: {
-              y: { beginAtZero: true }
-            }
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
           }
         });
 
