@@ -1,61 +1,232 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Produtos</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Painel de Produtos</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { background: #000; color: red; margin: 0; font-family: Arial, sans-serif; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #111; color: red; }
-    .table-container { padding: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-    th, td { padding: 10px; border: 1px solid red; text-align: center; }
-    th { background: #111; }
-    canvas { background: #111; padding: 15px; border-radius: 8px; }
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background: #111;
+      border-bottom: 2px solid red;
+    }
+    header h1 {
+      color: red;
+      margin: 0;
+    }
+    .icon-btn {
+      font-size: 22px;
+      cursor: pointer;
+      margin-left: 10px;
+      background: none;
+      border: none;
+      color: white;
+    }
+    #sideMenu {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: #111;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      z-index: 1000;
+    }
+    #sideMenu a {
+      padding: 10px 20px;
+      text-decoration: none;
+      color: white;
+      display: block;
+    }
+    #sideMenu a:hover {
+      background: red;
+    }
+    #sideMenu .closebtn {
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      font-size: 30px;
+      cursor: pointer;
+      color: red;
+    }
+    #notificacaoCard {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 300px;
+      height: 100%;
+      background: #111;
+      transition: 0.3s;
+      padding: 20px;
+      z-index: 1000;
+      border-left: 2px solid red;
+    }
+    #notificacaoCard h2 {
+      color: red;
+    }
+    #notificacaoCard .closebtn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 25px;
+      color: red;
+      cursor: pointer;
+    }
+    .notif-item {
+      background: #222;
+      padding: 10px;
+      margin: 5px 0;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .notif-item:hover {
+      background: red;
+    }
+    main {
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    table th, table td {
+      border: 1px solid #333;
+      padding: 10px;
+      text-align: center;
+    }
+    table th {
+      background: red;
+      color: white;
+    }
   </style>
 </head>
 <body>
   <header>
-    <button onclick="openMenu()">☰</button>
-    <h2>Produtos</h2>
-    <div onclick="toggleNotificacoes()">✉️<span id="notifCount">0</span></div>
+    <button class="icon-btn" onclick="openMenu()">☰</button>
+    <h1>Painel de Produtos</h1>
+    <button class="icon-btn" onclick="openNotificacoes()">✉️ <span id="notifCount">3</span></button>
   </header>
 
-  <div class="table-container">
-    <h3>Pedidos de Produtos</h3>
+  <!-- MENU -->
+  <div id="sideMenu">
+    <span class="closebtn" onclick="closeMenu()">&times;</span>
+    <a href="admin_dashboard.html">Dashboard</a>
+    <a href="admin_usuarios.html">Usuários</a>
+    <a href="admin_produtos.html">Produtos</a>
+    <a href="admin_saques.html">Saques</a>
+    <a href="admin_plans.html">Planos</a>
+    <a href="admin_seguranca.html">Segurança</a>
+  </div>
+
+  <!-- NOTIFICAÇÕES -->
+  <div id="notificacaoCard">
+    <span class="closebtn" onclick="closeNotificacoes()">&times;</span>
+    <h2>Notificações</h2>
+    <div id="notifList">
+      <div class="notif-item" onclick="abrirLink('admin_usuarios.html')">Novo usuário cadastrado</div>
+      <div class="notif-item" onclick="abrirLink('admin_saques.html')">Pedido de saque recebido</div>
+      <div class="notif-item" onclick="abrirLink('admin_produtos.html')">Novo produto adicionado</div>
+    </div>
+  </div>
+
+  <main>
+    <h2 style="color: red;">Lista de Produtos</h2>
     <table>
       <thead>
         <tr>
-          <th>Produto</th>
-          <th>Vendedor</th>
-          <th>Status</th>
-          <th>Ações</th>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Preço</th>
+          <th>Afiliação</th>
+          <th>Comissão</th>
+          <th>Afil. ativos</th>
+          <th>Vendas afiliados</th>
         </tr>
       </thead>
-      <tbody id="produtosTable">
-        <tr><td>Curso Online</td><td>user1@email.com</td><td>Pendente</td><td>Aprovar | Rejeitar</td></tr>
-        <tr><td>Livro Digital</td><td>user2@email.com</td><td>Aceito</td><td>-</td></tr>
-      </tbody>
+      <tbody id="produtosTable"></tbody>
     </table>
-    <canvas id="produtosChart"></canvas>
-  </div>
 
-<script>
-  const ctx3 = document.getElementById('produtosChart').getContext('2d');
-  new Chart(ctx3, {
-    type: 'line',
-    data: {
-      labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-      datasets: [
-        { label: 'Pedidos', data: [5, 8, 6, 10], borderColor: 'red', fill: false },
-        { label: 'Aceitos', data: [3, 6, 4, 8], borderColor: 'darkred', fill: false },
-        { label: 'Rejeitados', data: [2, 2, 2, 1], borderColor: 'gray', fill: false }
-      ]
-    },
-    options: { responsive: true }
-  });
-</script>
+    <h2 style="color: red;">Gráfico de Produtos</h2>
+    <canvas id="produtosChart" height="120"></canvas>
+  </main>
+
+  <script>
+    // MENU
+    function openMenu() {
+      document.getElementById("sideMenu").style.width = "250px";
+    }
+    function closeMenu() {
+      document.getElementById("sideMenu").style.width = "0";
+    }
+
+    // NOTIFICAÇÕES
+    let notifCount = 3;
+    function openNotificacoes() {
+      document.getElementById("notificacaoCard").style.right = "0";
+    }
+    function closeNotificacoes() {
+      document.getElementById("notificacaoCard").style.right = "-400px";
+    }
+    function abrirLink(pagina) {
+      notifCount--;
+      document.getElementById("notifCount").textContent = notifCount;
+      window.location.href = pagina;
+    }
+
+    // TABELA DE PRODUTOS
+    async function carregarProdutos() {
+      try {
+        const response = await fetch("http://localhost:3000/produtos");
+        const produtos = await response.json();
+        const tabela = document.getElementById("produtosTable");
+        tabela.innerHTML = "";
+
+        produtos.forEach(prod => {
+          let row = `
+            <tr>
+              <td>${prod.id}</td>
+              <td>${prod.nome}</td>
+              <td>${prod.preco} MZN</td>
+              <td>${prod.afiliacao ? "Sim" : "Não"}</td>
+              <td>${prod.comissao ? prod.comissao : "-"}</td>
+              <td>${prod.afiliados}</td>
+              <td>${prod.vendas_afiliados}</td>
+            </tr>
+          `;
+          tabela.innerHTML += row;
+        });
+      } catch (err) {
+        console.error("Erro ao carregar produtos:", err);
+      }
+    }
+    carregarProdutos();
+
+    // GRÁFICO
+    const ctx3 = document.getElementById('produtosChart').getContext('2d');
+    new Chart(ctx3, {
+      type: 'line',
+      data: {
+        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+        datasets: [
+          { label: 'Pedidos', data: [5, 8, 6, 10], borderColor: 'red', fill: false },
+          { label: 'Aceitos', data: [3, 6, 4, 8], borderColor: 'darkred', fill: false },
+          { label: 'Rejeitados', data: [2, 2, 2, 1], borderColor: 'gray', fill: false }
+        ]
+      },
+      options: { responsive: true }
+    });
+  </script>
 </body>
 </html>

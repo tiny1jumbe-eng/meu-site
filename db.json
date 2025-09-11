@@ -13,6 +13,13 @@
       "tipo": "comprador",
       "email": "maria@digivend.com",
       "telefone": "258841111111"
+    },
+    {
+      "id": 3,
+      "nome": "Carlos",
+      "tipo": "admin",
+      "email": "carlos@digivend.com",
+      "telefone": "258842222222"
     }
   ],
   "saldo": {
@@ -24,14 +31,14 @@
   "transacoes": [
     {
       "id": 1,
-      "data": "07/09/2025",
+      "data": "2025-09-07",
       "tipo": "Venda",
       "valor": 150.0,
       "status": "Concluído"
     },
     {
       "id": 2,
-      "data": "06/09/2025",
+      "data": "2025-09-06",
       "tipo": "Saque",
       "valor": 100.0,
       "status": "Pendente"
@@ -68,5 +75,15 @@
       "vendas_afiliados": 10,
       "imagem": "https://via.placeholder.com/150"
     }
+  ],
+  "planos": [
+    { "id": 1, "usuario": "Leonardo", "tipo": "free", "validade": "2025-12-31" },
+    { "id": 2, "usuario": "Maria", "tipo": "premium", "validade": "2025-10-15" },
+    { "id": 3, "usuario": "Carlos", "tipo": "pro", "validade": "2025-11-20" }
+  ],
+  "notificacoes": [
+    { "id": 1, "mensagem": "Novo usuário cadastrado", "lida": false, "link": "admin_usuarios.html" },
+    { "id": 2, "mensagem": "Pedido de saque recebido", "lida": false, "link": "admin_saques.html" },
+    { "id": 3, "mensagem": "Novo produto adicionado", "lida": false, "link": "admin_produtos.html" }
   ]
 }

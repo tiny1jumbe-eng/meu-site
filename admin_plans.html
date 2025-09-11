@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Planos - Administrador</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Painel de Planos</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
@@ -12,78 +10,179 @@
       color: #fff;
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
-      overflow-x: hidden;
     }
     header {
-      background: #111;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 15px;
-      text-align: center;
+      background: #111;
+      border-bottom: 2px solid red;
+    }
+    header h1 {
       color: red;
-      font-size: 20px;
-      font-weight: bold;
+      margin: 0;
+    }
+    .icon-btn {
+      font-size: 22px;
+      cursor: pointer;
+      margin-left: 10px;
+      background: none;
+      border: none;
+      color: white;
+    }
+    #sideMenu {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: #111;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      z-index: 1000;
+    }
+    #sideMenu a {
+      padding: 10px 20px;
+      text-decoration: none;
+      color: white;
+      display: block;
+    }
+    #sideMenu a:hover {
+      background: red;
+    }
+    #sideMenu .closebtn {
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      font-size: 30px;
+      cursor: pointer;
+      color: red;
+    }
+    #notificacaoCard {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 300px;
+      height: 100%;
+      background: #111;
+      transition: 0.3s;
+      padding: 20px;
+      z-index: 1000;
+      border-left: 2px solid red;
+    }
+    #notificacaoCard h2 {
+      color: red;
+    }
+    #notificacaoCard .closebtn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 25px;
+      color: red;
+      cursor: pointer;
+    }
+    .notif-item {
+      background: #222;
+      padding: 10px;
+      margin: 5px 0;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .notif-item:hover {
+      background: red;
     }
     main {
       padding: 20px;
-      max-width: 1000px;
-      margin: auto;
-    }
-    h2 {
-      color: red;
-      text-align: center;
-      margin-bottom: 20px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      background: #111;
-      border-radius: 10px;
-      overflow: hidden;
+      margin-bottom: 30px;
     }
-    th, td {
-      padding: 12px;
+    table th, table td {
       border: 1px solid #333;
+      padding: 10px;
       text-align: center;
     }
-    th {
+    table th {
       background: red;
       color: white;
-    }
-    .grafico-container {
-      margin-top: 30px;
-      padding: 20px;
-      background: #111;
-      border-radius: 10px;
     }
   </style>
 </head>
 <body>
-  <header>Painel do Administrador - Planos</header>
+  <header>
+    <button class="icon-btn" onclick="openMenu()">☰</button>
+    <h1>Painel de Planos</h1>
+    <button class="icon-btn" onclick="openNotificacoes()">✉️ <span id="notifCount">3</span></button>
+  </header>
+
+  <!-- MENU -->
+  <div id="sideMenu">
+    <span class="closebtn" onclick="closeMenu()">&times;</span>
+    <a href="admin_dashboard.html">Dashboard</a>
+    <a href="admin_usuarios.html">Usuários</a>
+    <a href="admin_produtos.html">Produtos</a>
+    <a href="admin_saques.html">Saques</a>
+    <a href="admin_plans.html">Planos</a>
+    <a href="admin_seguranca.html">Segurança</a>
+  </div>
+
+  <!-- NOTIFICAÇÕES -->
+  <div id="notificacaoCard">
+    <span class="closebtn" onclick="closeNotificacoes()">&times;</span>
+    <h2>Notificações</h2>
+    <div id="notifList">
+      <div class="notif-item" onclick="abrirLink('admin_usuarios.html')">Novo usuário cadastrado</div>
+      <div class="notif-item" onclick="abrirLink('admin_saques.html')">Pedido de saque recebido</div>
+      <div class="notif-item" onclick="abrirLink('admin_produtos.html')">Novo produto adicionado</div>
+    </div>
+  </div>
 
   <main>
-    <h2>Gerenciamento de Planos</h2>
-
+    <h2 style="color: red;">Planos Ativos</h2>
     <table>
       <thead>
         <tr>
           <th>ID</th>
-          <th>Email Usuário</th>
-          <th>Tipo de Plano</th>
+          <th>Usuário</th>
+          <th>Tipo</th>
           <th>Validade</th>
         </tr>
       </thead>
-      <tbody id="planosTable">
-        <!-- Planos carregados aqui -->
-      </tbody>
+      <tbody id="planosTable"></tbody>
     </table>
 
-    <div class="grafico-container">
-      <h2>Resumo de Planos</h2>
-      <canvas id="planosChart"></canvas>
-    </div>
+    <h2 style="color: red;">Gráfico de Planos</h2>
+    <canvas id="planosChart" height="120"></canvas>
   </main>
 
   <script>
+    // MENU
+    function openMenu() {
+      document.getElementById("sideMenu").style.width = "250px";
+    }
+    function closeMenu() {
+      document.getElementById("sideMenu").style.width = "0";
+    }
+
+    // NOTIFICAÇÕES
+    let notifCount = 3;
+    function openNotificacoes() {
+      document.getElementById("notificacaoCard").style.right = "0";
+    }
+    function closeNotificacoes() {
+      document.getElementById("notificacaoCard").style.right = "-400px";
+    }
+    function abrirLink(pagina) {
+      notifCount--;
+      document.getElementById("notifCount").textContent = notifCount;
+      window.location.href = pagina;
+    }
+
+    // TABELA E GRÁFICO
     async function carregarPlanos() {
       try {
         const response = await fetch("http://localhost:3000/planos");
