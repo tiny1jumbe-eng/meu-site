@@ -4,100 +4,269 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel do Administrador</title>
-  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: white;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #111;
+      padding: 10px 20px;
+      border-bottom: 2px solid red;
+    }
+
+    .menu-btn {
+      font-size: 26px;
+      cursor: pointer;
+      color: red;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: bold;
+      color: red;
+    }
+
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .notif {
+      position: relative;
+      cursor: pointer;
+      font-size: 22px;
+    }
+
+    .notif span {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: red;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+
+    /* Menu lateral */
+    #sideMenu {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: #111;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      border-right: 2px solid red;
+    }
+
+    #sideMenu a {
+      padding: 12px 20px;
+      text-decoration: none;
+      font-size: 18px;
+      color: white;
+      display: block;
+      transition: 0.2s;
+    }
+
+    #sideMenu a:hover {
+      background: red;
+      color: black;
+    }
+
+    #sideMenu .closebtn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: red;
+    }
+
+    /* Caixa de notificações */
+    #notifBox {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      background: #111;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      border-left: 2px solid red;
+    }
+
+    #notifBox h2 {
+      text-align: center;
+      color: red;
+    }
+
+    #notifBox .closebtn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: red;
+    }
+
+    .notif-item {
+      padding: 10px;
+      border-bottom: 1px solid #333;
+      cursor: pointer;
+    }
+
+    .notif-item:hover {
+      background: #222;
+    }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .card {
+      background: #111;
+      border: 1px solid red;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .card h3 {
+      margin: 0;
+      color: red;
+    }
+
+    canvas {
+      background: #111;
+      border-radius: 10px;
+      margin: 20px;
+      padding: 10px;
+    }
+  </style>
 </head>
-<body class="dashboard">
-
-  <!-- Topbar -->
-  <header class="topbar">
-    <!-- Botão hamburguer -->
-    <span class="hamburguer" onclick="openMenu()">☰</span>
-
-    <!-- Título -->
-    <h1 class="titulo">Painel do Administrador</h1>
-
-    <!-- Usuário + Notificação -->
-    <div class="top-right">
-      <span class="user">👤 Admin</span>
-      <span class="notificacao" onclick="toggleNotif()">✉️<span id="notifCount">0</span></span>
+<body>
+  <header>
+    <span class="menu-btn" onclick="openMenu()">☰</span>
+    <div class="title">Painel do Administrador</div>
+    <div class="user-area">
+      <div>👤 Admin</div>
+      <div class="notif" onclick="openNotif()">✉️<span id="notifCount">3</span></div>
     </div>
   </header>
 
-  <!-- Menu lateral hamburguer -->
-  <nav id="sideMenu" class="side-menu">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">×</a>
-    <a href="admin_dashboard.html">Início</a>
+  <!-- Menu lateral -->
+  <div id="sideMenu">
+    <span class="closebtn" onclick="closeMenu()">×</span>
+    <a href="admin_dashboard.html">Dashboard</a>
     <a href="admin_usuarios.html">Usuários</a>
     <a href="admin_produtos.html">Produtos</a>
     <a href="admin_saques.html">Saques</a>
     <a href="admin_plans.html">Planos</a>
     <a href="admin_seguranca.html">Segurança</a>
-  </nav>
-
-  <!-- Caixa de notificações -->
-  <div id="notifBox" class="notif-box">
-    <span class="closebtn" onclick="toggleNotif()">×</span>
-    <h2>Notificações</h2>
-    <ul id="notifList"></ul>
   </div>
 
-  <!-- Cards principais -->
-  <main class="conteudo">
-    <div class="card">👥 <h2>Usuários</h2><p>150 ativos</p></div>
-    <div class="card">📦 <h2>Produtos</h2><p>80 listados</p></div>
-    <div class="card">💰 <h2>Saques</h2><p>20 pendentes</p></div>
-    <div class="card">📈 <h2>Ganhos</h2><p>+5.000 MZN</p></div>
-  </main>
+  <!-- Caixa de notificações -->
+  <div id="notifBox">
+    <span class="closebtn" onclick="closeNotif()">×</span>
+    <h2>Notificações</h2>
+    <div id="notifList"></div>
+  </div>
+
+  <!-- Cards -->
+  <section class="cards">
+    <div class="card">
+      <h3>Ganhos Totais</h3>
+      <p>400 MZN</p>
+    </div>
+    <div class="card">
+      <h3>Saldo Disponível</h3>
+      <p>250 MZN</p>
+    </div>
+    <div class="card">
+      <h3>Saques</h3>
+      <p>100 MZN</p>
+    </div>
+    <div class="card">
+      <h3>Pendentes</h3>
+      <p>50 MZN</p>
+    </div>
+  </section>
+
+  <!-- Gráfico -->
+  <canvas id="myChart"></canvas>
 
   <script>
-    // ---- Menu Hamburguer ----
-    function openMenu() {
-      document.getElementById("sideMenu").style.width = "250px";
-    }
-    function closeMenu() {
-      document.getElementById("sideMenu").style.width = "0";
-    }
-
-    // ---- Notificações ----
-    let notificacoes = [
-      {texto: "Novo usuário cadastrado", link: "admin_usuarios.html"},
-      {texto: "Produto aguardando aprovação", link: "admin_produtos.html"},
-      {texto: "Solicitação de saque", link: "admin_saques.html"}
+    // Notificações simuladas
+    let notifications = [
+      { text: "Novo usuário cadastrado", link: "admin_usuarios.html", read: false },
+      { text: "Pedido de saque pendente", link: "admin_saques.html", read: false },
+      { text: "Novo produto aguardando aprovação", link: "admin_produtos.html", read: false }
     ];
-    let notifCount = notificacoes.length;
 
-    function renderNotificacoes() {
-      let list = document.getElementById("notifList");
-      list.innerHTML = "";
-      notificacoes.forEach((n, i) => {
-        let li = document.createElement("li");
-        let a = document.createElement("a");
-        a.href = n.link;
-        a.innerText = n.texto;
-        a.onclick = () => marcarLida(i);
-        li.appendChild(a);
-        list.appendChild(li);
+    function updateNotif() {
+      const notifList = document.getElementById("notifList");
+      notifList.innerHTML = "";
+      let unread = 0;
+
+      notifications.forEach((n, i) => {
+        let div = document.createElement("div");
+        div.className = "notif-item";
+        div.textContent = n.text;
+        div.onclick = () => {
+          notifications[i].read = true;
+          window.location.href = n.link;
+        };
+        notifList.appendChild(div);
+        if (!n.read) unread++;
       });
-      document.getElementById("notifCount").innerText = notifCount;
+
+      document.getElementById("notifCount").textContent = unread;
     }
 
-    function marcarLida(index) {
-      notificacoes.splice(index, 1);
-      notifCount = notificacoes.length;
-      renderNotificacoes();
-    }
+    function openMenu() { document.getElementById("sideMenu").style.width = "250px"; }
+    function closeMenu() { document.getElementById("sideMenu").style.width = "0"; }
 
-    function toggleNotif() {
-      let box = document.getElementById("notifBox");
-      if (box.style.display === "block") {
-        box.style.display = "none";
-      } else {
-        box.style.display = "block";
-      }
+    function openNotif() { 
+      document.getElementById("notifBox").style.width = "300px"; 
+      updateNotif();
     }
+    function closeNotif() { document.getElementById("notifBox").style.width = "0"; }
 
-    // Inicializar notificações
-    renderNotificacoes();
+    updateNotif();
+
+    // Gráfico exemplo
+    const ctx = document.getElementById('myChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+        datasets: [{
+          label: 'Ganhos',
+          data: [50, 100, 150, 200, 250, 400],
+          borderColor: 'red',
+          backgroundColor: 'rgba(255,0,0,0.3)',
+          fill: true
+        }]
+      },
+      options: { responsive: true }
+    });
   </script>
 </body>
 </html>
