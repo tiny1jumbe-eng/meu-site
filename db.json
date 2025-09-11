@@ -3,91 +3,46 @@
     {
       "id": 1,
       "nome": "Leonardo",
-      "tipo": "vendedor",
-      "email": "leo@digivend.com",
-      "telefone": "258840000000"
+      "email": "leonardo@email.com",
+      "tipo": "Vendedor"
     },
     {
       "id": 2,
       "nome": "Maria",
-      "tipo": "comprador",
-      "email": "maria@digivend.com",
-      "telefone": "258841111111"
+      "email": "maria@email.com",
+      "tipo": "Comprador"
     },
     {
       "id": 3,
       "nome": "Carlos",
-      "tipo": "comprador",
-      "email": "carlos@digivend.com",
-      "telefone": "258842222222"
+      "email": "carlos@email.com",
+      "tipo": "Vendedor"
     },
     {
       "id": 4,
       "nome": "Ana",
-      "tipo": "vendedor",
-      "email": "ana@digivend.com",
-      "telefone": "258843333333"
-    }
-  ],
-  "saldo": {
-    "disponivel": 250.0,
-    "pendente": 50.0,
-    "saques": 100.0,
-    "total_ganhos": 400.0
-  },
-  "transacoes": [
-    {
-      "id": 1,
-      "data": "07/09/2025",
-      "tipo": "Venda",
-      "valor": 150.0,
-      "status": "Concluído"
-    },
-    {
-      "id": 2,
-      "data": "06/09/2025",
-      "tipo": "Saque",
-      "valor": 100.0,
-      "status": "Pendente"
-    },
-    {
-      "id": 3,
-      "data": "05/09/2025",
-      "tipo": "Venda",
-      "valor": 200.0,
-      "status": "Concluído"
+      "email": "ana@email.com",
+      "tipo": "Comprador"
     }
   ],
   "produtos": [
     {
       "id": 1,
-      "nome": "Curso de Marketing Digital",
-      "preco": 199.9,
-      "afiliacao": true,
-      "comissao": "30%",
-      "afiliados": 12,
-      "vendas_afiliados": 34,
-      "imagem": "https://via.placeholder.com/150"
+      "nome": "Camiseta Vermelha",
+      "preco": 500,
+      "status": "Aprovado"
     },
     {
       "id": 2,
-      "nome": "Ebook de Vendas",
-      "preco": 49.9,
-      "afiliacao": false,
-      "comissao": null,
-      "afiliados": 0,
-      "vendas_afiliados": 0,
-      "imagem": "https://via.placeholder.com/150"
+      "nome": "Tênis Branco",
+      "preco": 2000,
+      "status": "Pendente"
     },
     {
       "id": 3,
-      "nome": "Produto Físico - Camiseta",
-      "preco": 89.9,
-      "afiliacao": true,
-      "comissao": "15%",
-      "afiliados": 5,
-      "vendas_afiliados": 10,
-      "imagem": "https://via.placeholder.com/150"
+      "nome": "Relógio Digital",
+      "preco": 1500,
+      "status": "Aprovado"
     }
   ],
   "saques": [
@@ -95,15 +50,15 @@
       "id": 1,
       "usuario": "Leonardo",
       "valor": 100,
-      "status": "Pendente",
-      "data": "06/09/2025"
+      "status": "Concluído",
+      "data": "01/09/2025"
     },
     {
       "id": 2,
-      "usuario": "Ana",
+      "usuario": "Carlos",
       "valor": 200,
-      "status": "Aceito",
-      "data": "04/09/2025"
+      "status": "Pendente",
+      "data": "05/09/2025"
     },
     {
       "id": 3,
@@ -137,6 +92,30 @@
       "usuario": "Ana",
       "tipo": "premium",
       "validade": "01/10/2025"
+    }
+  ],
+  "saldo": {
+    "total": 400,
+    "disponivel": 250
+  },
+  "transacoes": [
+    {
+      "id": 1,
+      "descricao": "Venda de produto",
+      "valor": 150,
+      "tipo": "entrada"
+    },
+    {
+      "id": 2,
+      "descricao": "Saque realizado",
+      "valor": 100,
+      "tipo": "saida"
+    },
+    {
+      "id": 3,
+      "descricao": "Compra de plano",
+      "valor": 50,
+      "tipo": "saida"
     }
   ]
 }

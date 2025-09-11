@@ -2,155 +2,21 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Admin - Usuários</title>
+  <title>Painel de Usuários</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden; /* sem rolagem lateral */
-    }
-    header {
-      background: #111;
-      color: red;
-      padding: 10px;
-      text-align: center;
-      position: relative;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 22px;
-    }
-    #menuBtn {
-      position: absolute;
-      left: 10px;
-      top: 10px;
-      font-size: 25px;
-      cursor: pointer;
-      color: red;
-    }
-    #userInfo {
-      position: absolute;
-      right: 60px;
-      top: 10px;
-      font-size: 18px;
-    }
-    #notiBtn {
-      position: absolute;
-      right: 20px;
-      top: 10px;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    #notiCount {
-      position: absolute;
-      top: 2px;
-      right: 12px;
-      background: red;
-      color: white;
-      border-radius: 50%;
-      font-size: 12px;
-      padding: 2px 6px;
-    }
-    /* menu lateral */
-    #sideMenu {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background-color: #111;
-      overflow-x: hidden;
-      transition: 0.3s;
-      padding-top: 60px;
-      z-index: 1000;
-    }
-    #sideMenu a {
-      padding: 10px 20px;
-      text-decoration: none;
-      color: white;
-      display: block;
-    }
-    #sideMenu a:hover {
-      background: red;
-    }
-    #sideMenu .closeBtn {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 30px;
-      color: red;
-      cursor: pointer;
-    }
-    /* notificações */
-    #notiBox {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      right: 0;
-      background: #111;
-      overflow-x: hidden;
-      transition: 0.3s;
-      padding-top: 60px;
-      z-index: 1000;
-    }
-    #notiBox .closeBtn {
-      position: absolute;
-      top: 10px;
-      left: 20px;
-      font-size: 30px;
-      color: red;
-      cursor: pointer;
-    }
-    #notiBox h3 {
-      text-align: center;
-      color: red;
-    }
-    #notiList p {
-      padding: 10px;
-    }
-    #notiList a {
-      color: red;
-      text-decoration: none;
-    }
-    main {
-      padding: 20px;
-      text-align: center;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 30px;
-    }
-    table, th, td {
-      border: 1px solid red;
-    }
-    th {
-      background: red;
-      color: white;
-    }
-    td {
-      padding: 8px;
-    }
-  </style>
 </head>
 <body>
-
+  <!-- Topo -->
   <header>
-    <span id="menuBtn" onclick="openMenu()">☰</span>
+    <button onclick="openMenu()">☰</button>
     <h1>Painel de Usuários</h1>
-    <span id="userInfo">👤 Admin</span>
-    <span id="notiBtn" onclick="abrirNotificacoes()">✉️</span>
-    <span id="notiCount"></span>
+    <button onclick="openNotif()">🔔 <span id="notifCount">0</span></button>
   </header>
 
-  <!-- menu -->
-  <div id="sideMenu">
-    <span class="closeBtn" onclick="closeMenu()">×</span>
+  <!-- Menu lateral -->
+  <div id="sideMenu" class="side-menu">
+    <a href="javascript:void(0)" onclick="closeMenu()">×</a>
     <a href="admin_dashboard.html">Dashboard</a>
     <a href="admin_usuarios.html">Usuários</a>
     <a href="admin_produtos.html">Produtos</a>
@@ -159,15 +25,16 @@
     <a href="admin_seguranca.html">Segurança</a>
   </div>
 
-  <!-- notificações -->
-  <div id="notiBox">
-    <span class="closeBtn" onclick="fecharNotificacoes()">×</span>
+  <!-- Caixa de notificações -->
+  <div id="notifBox" class="notif-box">
+    <a href="javascript:void(0)" onclick="closeNotif()">×</a>
     <h3>Notificações</h3>
-    <div id="notiList"></div>
+    <div id="notifList"></div>
   </div>
 
+  <!-- Conteúdo principal -->
   <main>
-    <h2 style="color:red;">Lista de Usuários</h2>
+    <h2>Lista de Usuários</h2>
     <table>
       <thead>
         <tr>
@@ -175,93 +42,107 @@
           <th>Nome</th>
           <th>Email</th>
           <th>Tipo</th>
-          <th>Ação</th>
         </tr>
       </thead>
       <tbody id="usuariosTable">
-        <tr>
-          <td>1</td>
-          <td>Leonardo</td>
-          <td>leo@digivend.com</td>
-          <td>Vendedor</td>
-          <td><button onclick="bloquearUsuario(1)">Bloquear</button></td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Maria</td>
-          <td>maria@digivend.com</td>
-          <td>Comprador</td>
-          <td><button onclick="bloquearUsuario(2)">Bloquear</button></td>
-        </tr>
+        <tr><td colspan="4">Carregando usuários...</td></tr>
       </tbody>
     </table>
 
-    <h2 style="color:red;">Gráfico de Usuários</h2>
-    <canvas id="usuariosChart"></canvas>
+    <h2>Gráfico de Usuários</h2>
+    <canvas id="usuariosChart" width="400" height="200"></canvas>
   </main>
 
   <script>
-    /* MENU */
-    function openMenu() {
-      document.getElementById("sideMenu").style.width = "250px";
-    }
-    function closeMenu() {
-      document.getElementById("sideMenu").style.width = "0";
-    }
-
-    /* NOTIFICAÇÕES */
-    let notificacoes = [
-      { id: 1, texto: "Novo usuário cadastrado", link: "admin_usuarios.html" },
-      { id: 2, texto: "Pedido de saque recebido", link: "admin_saques.html" },
-      { id: 3, texto: "Novo produto adicionado", link: "admin_produtos.html" }
+    // Notificações simuladas
+    let notifications = [
+      { text: "Novo usuário cadastrado", link: "admin_usuarios.html" },
+      { text: "Pedido de saque recebido", link: "admin_saques.html" },
+      { text: "Novo produto adicionado", link: "admin_produtos.html" }
     ];
 
-    function atualizarContagem() {
-      document.getElementById("notiCount").innerText = notificacoes.length;
-    }
+    function updateNotif() {
+      const notifList = document.getElementById("notifList");
+      notifList.innerHTML = "";
+      let unread = 0;
 
-    function abrirNotificacoes() {
-      document.getElementById("notiBox").style.width = "300px";
-      const lista = document.getElementById("notiList");
-      lista.innerHTML = "";
-      notificacoes.forEach((n, i) => {
-        let item = document.createElement("p");
-        item.innerHTML = `<a href="${n.link}">${n.texto}</a>`;
-        item.onclick = () => {
-          notificacoes.splice(i, 1);
-          atualizarContagem();
-          fecharNotificacoes();
+      notifications.forEach((n, i) => {
+        let div = document.createElement("div");
+        div.className = "notif-item";
+        div.textContent = n.text;
+        div.onclick = () => {
+          notifications[i].read = true;
+          window.location.href = n.link;
         };
-        lista.appendChild(item);
+        notifList.appendChild(div);
+        if (!n.read) unread++;
       });
+
+      document.getElementById("notifCount").textContent = unread;
     }
 
-    function fecharNotificacoes() {
-      document.getElementById("notiBox").style.width = "0";
+    function openMenu() { document.getElementById("sideMenu").style.width = "250px"; }
+    function closeMenu() { document.getElementById("sideMenu").style.width = "0"; }
+
+    function openNotif() {
+      document.getElementById("notifBox").style.width = "300px";
+      updateNotif();
+    }
+    function closeNotif() { document.getElementById("notifBox").style.width = "0"; }
+
+    // Carregar usuários e gráfico
+    async function carregarUsuarios() {
+      try {
+        const response = await fetch("http://localhost:3000/usuarios");
+        const usuarios = await response.json();
+
+        const tabela = document.getElementById("usuariosTable");
+        tabela.innerHTML = "";
+
+        let compradores = 0, vendedores = 0;
+
+        if (usuarios.length === 0) {
+          tabela.innerHTML = `<tr><td colspan="4">Nenhum usuário encontrado</td></tr>`;
+        } else {
+          usuarios.forEach(user => {
+            let row = `
+              <tr>
+                <td>${user.id}</td>
+                <td>${user.nome}</td>
+                <td>${user.email}</td>
+                <td>${user.tipo}</td>
+              </tr>
+            `;
+            tabela.innerHTML += row;
+
+            if (user.tipo === "comprador") compradores++;
+            else if (user.tipo === "vendedor") vendedores++;
+          });
+        }
+
+        const ctx = document.getElementById("usuariosChart").getContext("2d");
+        new Chart(ctx, {
+          type: "pie",
+          data: {
+            labels: ["Compradores", "Vendedores"],
+            datasets: [{
+              data: [compradores, vendedores],
+              backgroundColor: ["#36a2eb", "#ff6384"]
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: "bottom" }
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Erro ao carregar usuários:", error);
+      }
     }
 
-    atualizarContagem();
-
-    /* GRÁFICO */
-    const ctx = document.getElementById("usuariosChart").getContext("2d");
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["Ativos", "Bloqueados"],
-        datasets: [{
-          label: "Usuários",
-          data: [10, 2],
-          backgroundColor: ["red", "darkred"]
-        }]
-      },
-      options: { responsive: true }
-    });
-
-    /* BLOQUEAR USUÁRIO */
-    function bloquearUsuario(id) {
-      alert("Usuário " + id + " bloqueado!");
-    }
+    carregarUsuarios();
   </script>
-
 </body>
 </html>
