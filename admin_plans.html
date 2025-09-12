@@ -1,179 +1,66 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Planos</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Painel Admin — Planos</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: white;
-    }
+    /* Tema alinhado com o resto do painel (fundo preto, títulos vermelhos) */
+    :root { --bg:#000; --card:#111; --accent:red; --muted:#333; --text:#fff; }
+    body { margin:0; font-family:Arial, sans-serif; background:var(--bg); color:var(--text); }
+    header { display:flex; align-items:center; justify-content:space-between; padding:12px 18px; background:var(--card); border-bottom:2px solid var(--accent); }
+    .menu-btn { font-size:22px; cursor:pointer; color:var(--accent); background:transparent; border:none; }
+    .title { color:var(--accent); font-weight:700; font-size:18px; }
+    .user-area { display:flex; gap:12px; align-items:center; }
 
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #111;
-      padding: 10px 20px;
-      border-bottom: 2px solid red;
-    }
+    /* menu lateral */
+    #sideMenu { position:fixed; top:0; left:0; width:0; height:100%; overflow-x:hidden; background:var(--card); transition:0.28s; padding-top:60px; border-right:2px solid var(--accent); }
+    #sideMenu a { display:block; padding:12px 18px; color:var(--text); text-decoration:none; }
+    #sideMenu .closebtn { position:absolute; top:10px; right:16px; font-size:22px; color:var(--accent); cursor:pointer; }
 
-    .menu-btn {
-      font-size: 26px;
-      cursor: pointer;
-      color: red;
-    }
+    /* caixa notificações */
+    #notifBox { position:fixed; top:0; right:0; width:0; height:100%; background:var(--card); transition:0.28s; padding-top:60px; border-left:2px solid var(--accent); }
+    #notifBox h2 { color:var(--accent); text-align:center; margin:10px 0; }
 
-    .title {
-      font-size: 22px;
-      font-weight: bold;
-      color: red;
-    }
+    /* Conteúdo */
+    .container { padding:18px; max-width:1200px; margin:0 auto; }
+    .card { background:var(--card); border:1px solid var(--muted); padding:12px; border-radius:8px; margin-bottom:12px; }
+    h2 { color:var(--accent); margin:8px 0 12px 0; }
 
-    .user-area {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
+    .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .form-inline input, .form-inline select, .form-inline button { padding:8px; border-radius:6px; border:1px solid var(--muted); background:#0b0b0b; color:var(--text); }
+    .form-inline button { background:var(--accent); color:white; border:none; cursor:pointer; }
 
-    .notif {
-      position: relative;
-      cursor: pointer;
-      font-size: 22px;
-    }
+    table { width:100%; border-collapse:collapse; margin-top:12px; background:var(--card); color:var(--text); border-radius:8px; overflow:hidden; }
+    th, td { padding:10px; border-bottom:1px solid #222; text-align:center; font-size:14px; }
+    th { background:#1a1a1a; color:var(--accent); }
+    .small-btn { padding:6px 8px; border-radius:6px; border:none; cursor:pointer; font-size:13px; }
+    .btn-edit { background:orange; color:black; }
+    .btn-toggle { background:green; color:white; }
+    .btn-delete { background:#cc0000; color:white; }
 
-    .notif span {
-      position: absolute;
-      top: -8px;
-      right: -10px;
-      background: red;
-      color: white;
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 50%;
-    }
+    canvas { display:block; margin:18px auto; max-width:100%; background:var(--card); border-radius:8px; padding:8px; }
 
-    /* Menu lateral */
-    #sideMenu {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background: #111;
-      overflow-x: hidden;
-      transition: 0.3s;
-      padding-top: 60px;
-      border-right: 2px solid red;
-    }
-
-    #sideMenu a {
-      padding: 12px 20px;
-      text-decoration: none;
-      font-size: 18px;
-      color: white;
-      display: block;
-      transition: 0.2s;
-    }
-
-    #sideMenu a:hover {
-      background: red;
-      color: black;
-    }
-
-    #sideMenu .closebtn {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 28px;
-      cursor: pointer;
-      color: red;
-    }
-
-    /* Caixa de notificações */
-    #notifBox {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      right: 0;
-      background: #111;
-      overflow-x: hidden;
-      transition: 0.3s;
-      padding-top: 60px;
-      border-left: 2px solid red;
-    }
-
-    #notifBox h2 {
-      text-align: center;
-      color: red;
-    }
-
-    #notifBox .closebtn {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 28px;
-      cursor: pointer;
-      color: red;
-    }
-
-    .notif-item {
-      padding: 10px;
-      border-bottom: 1px solid #333;
-      cursor: pointer;
-    }
-
-    .notif-item:hover {
-      background: #222;
-    }
-
-    /* Tabela */
-    table {
-      width: 90%;
-      margin: 20px auto;
-      border-collapse: collapse;
-      background: #111;
-      border: 1px solid red;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: center;
-      border: 1px solid #333;
-    }
-
-    th {
-      background: red;
-      color: black;
-    }
-
-    /* Gráfico */
-    canvas {
-      display: block;
-      margin: 20px auto;
-      background: #111;
-      border-radius: 10px;
-      padding: 10px;
+    /* responsividade simples */
+    @media (max-width:700px){
+      .row { flex-direction:column; align-items:stretch; }
+      th, td { font-size:13px; padding:8px; }
     }
   </style>
 </head>
 <body>
   <header>
-    <span class="menu-btn" onclick="openMenu()">☰</span>
+    <button class="menu-btn" onclick="openMenu()">☰</button>
     <div class="title">Painel de Planos</div>
     <div class="user-area">
       <div>👤 Admin</div>
-      <div class="notif" onclick="openNotif()">✉️<span id="notifCount">3</span></div>
+      <div style="cursor:pointer;" onclick="openNotif()">✉️ <span id="notifCount" style="color:var(--accent); margin-left:6px;">0</span></div>
     </div>
   </header>
 
-  <!-- Menu lateral -->
-  <div id="sideMenu">
+  <!-- menu lateral -->
+  <nav id="sideMenu">
     <span class="closebtn" onclick="closeMenu()">×</span>
     <a href="admin_dashboard.html">Dashboard</a>
     <a href="admin_usuarios.html">Usuários</a>
@@ -181,127 +68,269 @@
     <a href="admin_saques.html">Saques</a>
     <a href="admin_plans.html">Planos</a>
     <a href="admin_seguranca.html">Segurança</a>
-  </div>
+  </nav>
 
-  <!-- Caixa de notificações -->
+  <!-- notificações -->
   <div id="notifBox">
     <span class="closebtn" onclick="closeNotif()">×</span>
     <h2>Notificações</h2>
-    <div id="notifList"></div>
+    <div id="notifList" style="padding:8px;"></div>
   </div>
 
-  <!-- Tabela de Planos -->
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Usuário</th>
-        <th>Tipo</th>
-        <th>Validade</th>
-      </tr>
-    </thead>
-    <tbody id="planosTable">
-      <tr><td colspan="4">Carregando planos...</td></tr>
-    </tbody>
-  </table>
+  <main class="container">
+    <section class="card">
+      <h2>Criar novo plano</h2>
+      <form id="novoPlanoForm" class="form-inline row">
+        <input id="p_usuario" placeholder="Usuário (nome)" required />
+        <select id="p_tipo" required>
+          <option value="">Tipo do plano</option>
+          <option value="free">Free</option>
+          <option value="premium">Premium</option>
+          <option value="pro">Pro</option>
+        </select>
+        <input id="p_validade" type="date" required />
+        <select id="p_status">
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
+        </select>
+        <button type="submit">Adicionar Plano</button>
+      </form>
+    </section>
 
-  <!-- Gráfico -->
-  <canvas id="planosChart"></canvas>
+    <section class="card">
+      <h2>Buscar / Filtrar</h2>
+      <div class="row">
+        <input id="search" placeholder="Buscar por usuário ou tipo..." style="flex:1" />
+        <select id="filterTipo">
+          <option value="">Todos os tipos</option>
+          <option value="free">Free</option>
+          <option value="premium">Premium</option>
+          <option value="pro">Pro</option>
+        </select>
+        <select id="filterStatus">
+          <option value="">Qualquer status</option>
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
+        </select>
+        <button onclick="carregarPlanos()">Aplicar</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Lista de Planos</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuário</th>
+            <th>Tipo</th>
+            <th>Validade</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="planosTable">
+          <tr><td colspan="6">Carregando planos...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Visão dos Planos</h2>
+      <canvas id="planosChart" height="160"></canvas>
+    </section>
+  </main>
 
   <script>
-    // Notificações simuladas
+    const API = "http://localhost:3000/planos";
+    let chartInstance = null;
+
+    // notificações (exemplo)
     let notifications = [
-      { text: "Novo usuário cadastrou um plano", link: "admin_usuarios.html", read: false },
-      { text: "Upgrade de plano realizado", link: "admin_plans.html", read: false },
-      { text: "Plano expirado detectado", link: "admin_plans.html", read: false }
+      { text: "Novo plano criado", link: "admin_plans.html", read: false },
+      { text: "Plano expirando em 3 dias", link: "admin_plans.html", read: false }
     ];
-
-    function updateNotif() {
-      const notifList = document.getElementById("notifList");
-      notifList.innerHTML = "";
+    function updateNotif(){
+      const list = document.getElementById('notifList');
+      list.innerHTML = "";
       let unread = 0;
-
-      notifications.forEach((n, i) => {
-        let div = document.createElement("div");
-        div.className = "notif-item";
-        div.textContent = n.text;
-        div.onclick = () => {
-          notifications[i].read = true;
-          window.location.href = n.link;
-        };
-        notifList.appendChild(div);
-        if (!n.read) unread++;
+      notifications.forEach((n,i)=>{
+        const d = document.createElement('div');
+        d.textContent = n.text;
+        d.className = "notif-item";
+        d.style.padding="8px";
+        d.style.borderBottom="1px solid #222";
+        d.style.cursor="pointer";
+        d.onclick = () => { notifications[i].read = true; window.location.href = n.link; };
+        list.appendChild(d);
+        if(!n.read) unread++;
       });
-
-      document.getElementById("notifCount").textContent = unread;
+      document.getElementById('notifCount').textContent = unread;
     }
 
-    function openMenu() { document.getElementById("sideMenu").style.width = "250px"; }
-    function closeMenu() { document.getElementById("sideMenu").style.width = "0"; }
+    function openMenu(){ document.getElementById('sideMenu').style.width = '260px'; }
+    function closeMenu(){ document.getElementById('sideMenu').style.width = '0'; }
+    function openNotif(){ document.getElementById('notifBox').style.width = '320px'; updateNotif(); }
+    function closeNotif(){ document.getElementById('notifBox').style.width = '0'; }
 
-    function openNotif() { 
-      document.getElementById("notifBox").style.width = "300px"; 
-      updateNotif();
-    }
-    function closeNotif() { document.getElementById("notifBox").style.width = "0"; }
+    // form adicionar
+    document.getElementById('novoPlanoForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const usuario = document.getElementById('p_usuario').value.trim();
+      const tipo = document.getElementById('p_tipo').value;
+      const validade = document.getElementById('p_validade').value; // yyyy-mm-dd
+      const status = document.getElementById('p_status').value;
 
-    updateNotif();
+      if(!usuario || !tipo || !validade){ alert('Preencha todos os campos'); return; }
 
-    // Carregar planos e gráfico
-    async function carregarPlanos() {
-      try {
-        const response = await fetch("http://localhost:3000/planos");
-        const planos = await response.json();
+      try{
+        await fetch(API, {
+          method: 'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ usuario, tipo, validade, status })
+        });
+        this.reset();
+        carregarPlanos();
+        notifications.unshift({ text: `Plano criado: ${tipo} - ${usuario}`, link: "admin_plans.html", read:false });
+        updateNotif();
+      }catch(err){ console.error('Erro criar plano', err); alert('Erro ao criar plano'); }
+    });
 
-        const tabela = document.getElementById("planosTable");
+    // carregar e renderizar
+    async function carregarPlanos(){
+      try{
+        const resp = await fetch(API);
+        const planos = await resp.json();
+
+        const tabela = document.getElementById('planosTable');
         tabela.innerHTML = "";
 
-        let free = 0, premium = 0, pro = 0;
+        const q = document.getElementById('search').value.trim().toLowerCase();
+        const filtroTipo = document.getElementById('filterTipo').value;
+        const filtroStatus = document.getElementById('filterStatus').value;
 
-        if (planos.length === 0) {
-          tabela.innerHTML = `<tr><td colspan="4">Nenhum plano encontrado</td></tr>`;
+        let cntFree=0, cntPremium=0, cntPro=0;
+
+        const filtrados = planos.filter(p=>{
+          const matchQ = q === "" || (p.usuario && p.usuario.toLowerCase().includes(q)) || (p.tipo && p.tipo.toLowerCase().includes(q));
+          const matchTipo = !filtroTipo || p.tipo === filtroTipo;
+          const matchStatus = !filtroStatus || (p.status ? p.status === filtroStatus : true);
+          return matchQ && matchTipo && matchStatus;
+        });
+
+        if(filtrados.length === 0){
+          tabela.innerHTML = `<tr><td colspan="6">Nenhum plano encontrado.</td></tr>`;
         } else {
-          planos.forEach(plano => {
-            let row = `
-              <tr>
-                <td>${plano.id}</td>
-                <td>${plano.usuario}</td>
-                <td>${plano.tipo}</td>
-                <td>${plano.validade}</td>
-              </tr>
-            `;
-            tabela.innerHTML += row;
+          filtrados.forEach(p=>{
+            // contar para gráfico
+            if(p.tipo === 'free') cntFree++;
+            else if(p.tipo === 'premium') cntPremium++;
+            else if(p.tipo === 'pro') cntPro++;
 
-            if (plano.tipo === "free") free++;
-            else if (plano.tipo === "premium") premium++;
-            else if (plano.tipo === "pro") pro++;
+            const validadeDisplay = p.validade ? formatDateForDisplay(p.validade) : '-';
+            const status = p.status ? p.status : 'inativo';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${p.id}</td>
+              <td>${escapeHtml(p.usuario)}</td>
+              <td>${p.tipo}</td>
+              <td>${validadeDisplay}</td>
+              <td>${status}</td>
+              <td>
+                <button class="small-btn btn-edit" onclick="editarPlano(${p.id})">Editar</button>
+                <button class="small-btn btn-toggle" onclick="toggleStatus(${p.id}, '${status}')">${status === 'ativo' ? 'Cancelar' : 'Ativar'}</button>
+                <button class="small-btn btn-delete" onclick="excluirPlano(${p.id})">Excluir</button>
+              </td>
+            `;
+            tabela.appendChild(row);
           });
         }
 
-        const ctx = document.getElementById("planosChart").getContext("2d");
-
-        new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: ["Free", "Premium", "Pro"],
-            datasets: [{
-              label: "Usuários por Plano",
-              data: [free, premium, pro],
-              backgroundColor: ["gray", "red", "orange"]
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
-          }
-        });
-
-      } catch (error) {
-        console.error("Erro ao carregar planos:", error);
+        renderChart([cntFree,cntPremium,cntPro]);
+      }catch(err){
+        console.error('Erro ao carregar planos', err);
+        document.getElementById('planosTable').innerHTML = `<tr><td colspan="6">Erro ao carregar planos</td></tr>`;
       }
     }
 
+    function renderChart(dataArr){
+      const ctx = document.getElementById('planosChart').getContext('2d');
+      if(chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Free','Premium','Pro'],
+          datasets: [{ label: 'Usuários por Plano', data: dataArr, backgroundColor: ['gray','red','orange'] }]
+        },
+        options: { responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } }
+      });
+    }
+
+    // editar (usa prompt simples para não precisar lib)
+    async function editarPlano(id){
+      try{
+        const r = await fetch(`${API}/${id}`);
+        const p = await r.json();
+        const novoUsuario = prompt('Usuário (nome):', p.usuario || '');
+        const novoTipo = prompt('Tipo (free|premium|pro):', p.tipo || '');
+        const novaValidade = prompt('Validade (AAAA-MM-DD):', p.validade || '');
+        const novoStatus = prompt('Status (ativo|inativo):', p.status || 'ativo');
+
+        if(novoUsuario === null) return; // cancelou
+        // validações básicas
+        await fetch(`${API}/${id}`, {
+          method:'PATCH',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ usuario:novoUsuario, tipo:novoTipo, validade:novaValidade, status:novoStatus })
+        });
+        carregarPlanos();
+        notifications.unshift({ text: `Plano editado: ${novoTipo} - ${novoUsuario}`, link:"admin_plans.html", read:false });
+        updateNotif();
+      }catch(err){ console.error('Erro editar plano', err); alert('Erro ao editar'); }
+    }
+
+    // ativar/cancelar
+    async function toggleStatus(id, current){
+      const novo = (current === 'ativo') ? 'inativo' : 'ativo';
+      try{
+        await fetch(`${API}/${id}`, {
+          method:'PATCH',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ status: novo })
+        });
+        carregarPlanos();
+      }catch(err){ console.error('Erro toggle status', err); }
+    }
+
+    // excluir
+    async function excluirPlano(id){
+      if(!confirm('Tem certeza que deseja excluir este plano?')) return;
+      try{
+        await fetch(`${API}/${id}`, { method:'DELETE' });
+        carregarPlanos();
+        notifications.unshift({ text:`Plano ${id} removido`, link:"admin_plans.html", read:false });
+        updateNotif();
+      }catch(err){ console.error('Erro ao excluir plano', err); }
+    }
+
+    // util helpers
+    function formatDateForDisplay(isoOrYmd){
+      // aceita yyyy-mm-dd ou já dd/mm/yyyy
+      if(!isoOrYmd) return '';
+      if(/\d{4}\-\d{2}\-\d{2}/.test(isoOrYmd)){
+        const [y,m,d] = isoOrYmd.split('-'); return `${d}/${m}/${y}`;
+      }
+      return isoOrYmd;
+    }
+    function escapeHtml(s){ return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    // listeners
+    document.getElementById('search').addEventListener('input', carregarPlanos);
+    document.getElementById('filterTipo').addEventListener('change', carregarPlanos);
+    document.getElementById('filterStatus').addEventListener('change', carregarPlanos);
+
+    // inicia
+    updateNotif();
     carregarPlanos();
   </script>
 </body>

@@ -1,272 +1,137 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Saques</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Painel Admin - Saques</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: #000;
-      color: white;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #111;
-      padding: 10px 20px;
-      border-bottom: 2px solid red;
-    }
-    .menu-btn {
-      font-size: 26px;
-      cursor: pointer;
-      color: red;
-    }
-    .title {
-      font-size: 22px;
-      font-weight: bold;
-      color: red;
-    }
-    .user-area {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .notif {
-      position: relative;
-      cursor: pointer;
-      font-size: 22px;
-    }
-    .notif span {
-      position: absolute;
-      top: -8px;
-      right: -10px;
-      background: red;
-      color: white;
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 50%;
-    }
-    #sideMenu {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background: #111;
-      overflow-x: hidden;
-      transition: 0.3s;
-      padding-top: 60px;
-      border-right: 2px solid red;
-    }
-    #sideMenu a {
-      padding: 12px 20px;
-      text-decoration: none;
-      font-size: 18px;
-      color: white;
-      display: block;
-      transition: 0.2s;
-    }
-    #sideMenu a:hover {
-      background: red;
-      color: black;
-    }
-    #sideMenu .closebtn {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 28px;
-      cursor: pointer;
-      color: red;
-    }
-    .container {
-      padding: 20px;
+      margin: 20px;
+      background: #f9f9f9;
     }
     h2 {
-      color: red;
-      margin-bottom: 15px;
+      color: #333;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      background: #111;
-      margin-bottom: 20px;
+      margin-top: 20px;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    table th, table td {
-      padding: 10px;
-      border: 1px solid #333;
-      text-align: center;
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
     }
-    table th {
-      background: #222;
-      color: red;
-    }
-    button {
-      background: red;
-      border: none;
-      padding: 5px 10px;
-      cursor: pointer;
-      border-radius: 5px;
+    th {
+      background: #28a745;
       color: white;
     }
-    button:hover {
-      background: darkred;
+    tr:hover {
+      background: #f1f1f1;
     }
-    .filters {
-      margin-bottom: 15px;
-      display: flex;
-      gap: 15px;
-    }
-    input, select {
-      padding: 5px;
-      border-radius: 5px;
+    button {
+      padding: 5px 10px;
       border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 5px;
     }
-    canvas {
-      background: #111;
-      border-radius: 10px;
-      margin-top: 20px;
-      padding: 10px;
-    }
+    .aprovar { background: #28a745; color: white; }
+    .rejeitar { background: #ffc107; color: black; }
+    .excluir { background: #dc3545; color: white; }
   </style>
 </head>
 <body>
-  <header>
-    <span class="menu-btn" onclick="openMenu()">☰</span>
-    <div class="title">Painel de Saques</div>
-    <div class="user-area">
-      <div>👤 Admin</div>
-      <div class="notif" onclick="openNotif()">✉️<span id="notifCount">2</span></div>
-    </div>
-  </header>
+  <h2>Gerenciamento de Saques</h2>
 
-  <!-- Menu lateral -->
-  <div id="sideMenu">
-    <span class="closebtn" onclick="closeMenu()">×</span>
-    <a href="admin_dashboard.html">Dashboard</a>
-    <a href="admin_usuarios.html">Usuários</a>
-    <a href="admin_produtos.html">Produtos</a>
-    <a href="admin_saques.html">Saques</a>
-    <a href="admin_plans.html">Planos</a>
-    <a href="admin_seguranca.html">Segurança</a>
-  </div>
-
-  <div class="container">
-    <h2>Lista de Saques</h2>
-
-    <div class="filters">
-      <input type="text" id="searchUser" placeholder="Buscar por usuário...">
-      <select id="filterStatus">
-        <option value="">Todos</option>
-        <option value="Aprovado">Aprovado</option>
-        <option value="Pendente">Pendente</option>
-        <option value="Rejeitado">Rejeitado</option>
-      </select>
-    </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Usuário</th>
-          <th>Valor</th>
-          <th>Status</th>
-          <th>Data</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="saquesTable">
-        <tr><td colspan="6">Carregando saques...</td></tr>
-      </tbody>
-    </table>
-
-    <canvas id="saquesChart"></canvas>
-  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuário</th>
+        <th>Valor</th>
+        <th>Status</th>
+        <th>Data</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="saquesTable">
+      <tr><td colspan="6">Carregando saques...</td></tr>
+    </tbody>
+  </table>
 
   <script>
-    function openMenu() { document.getElementById("sideMenu").style.width = "250px"; }
-    function closeMenu() { document.getElementById("sideMenu").style.width = "0"; }
+    const API_URL = "http://localhost:3000/saques";
 
+    // Carregar saques
     async function carregarSaques() {
       try {
-        const response = await fetch("http://localhost:3000/saques");
+        const response = await fetch(API_URL);
         const saques = await response.json();
 
         const tabela = document.getElementById("saquesTable");
-        const search = document.getElementById("searchUser").value.toLowerCase();
-        const filtro = document.getElementById("filterStatus").value;
-
         tabela.innerHTML = "";
 
-        let aprovados = 0, pendentes = 0, rejeitados = 0;
-
-        const filtrados = saques.filter(s => 
-          (s.usuario.toLowerCase().includes(search)) &&
-          (filtro === "" || s.status === filtro)
-        );
-
-        if (filtrados.length === 0) {
-          tabela.innerHTML = `<tr><td colspan="6">Nenhum saque encontrado.</td></tr>`;
+        if (saques.length === 0) {
+          tabela.innerHTML = `<tr><td colspan="6">Nenhum saque encontrado</td></tr>`;
         } else {
-          filtrados.forEach(saque => {
+          saques.forEach(saque => {
             let row = `
               <tr>
                 <td>${saque.id}</td>
                 <td>${saque.usuario}</td>
-                <td>${saque.valor} MZN</td>
+                <td>R$ ${saque.valor.toFixed(2)}</td>
                 <td>${saque.status}</td>
                 <td>${saque.data}</td>
                 <td>
-                  <button onclick="atualizarStatus(${saque.id}, 'Aprovado')">✔️ Aprovar</button>
-                  <button onclick="atualizarStatus(${saque.id}, 'Rejeitado')">❌ Rejeitar</button>
+                  <button class="aprovar" onclick="atualizarStatus(${saque.id}, 'Aprovado')">Aprovar</button>
+                  <button class="rejeitar" onclick="atualizarStatus(${saque.id}, 'Rejeitado')">Rejeitar</button>
+                  <button class="excluir" onclick="excluirSaque(${saque.id})">Excluir</button>
                 </td>
               </tr>
             `;
             tabela.innerHTML += row;
-
-            if (saque.status === "Aprovado") aprovados++;
-            else if (saque.status === "Pendente") pendentes++;
-            else if (saque.status === "Rejeitado") rejeitados++;
           });
         }
-
-        // Gráfico
-        const ctx = document.getElementById("saquesChart").getContext("2d");
-        new Chart(ctx, {
-          type: "doughnut",
-          data: {
-            labels: ["Aprovados", "Pendentes", "Rejeitados"],
-            datasets: [{
-              data: [aprovados, pendentes, rejeitados],
-              backgroundColor: ["green", "orange", "red"]
-            }]
-          }
-        });
-
       } catch (error) {
         console.error("Erro ao carregar saques:", error);
       }
     }
 
-    async function atualizarStatus(id, novoStatus) {
+    // Atualizar status (aprovar ou rejeitar)
+    async function atualizarStatus(id, status) {
       try {
-        await fetch(`http://localhost:3000/saques/${id}`, {
-          method: "PATCH",
+        const response = await fetch(`${API_URL}/${id}`);
+        const saque = await response.json();
+
+        await fetch(`${API_URL}/${id}`, {
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: novoStatus })
+          body: JSON.stringify({ ...saque, status })
         });
+
         carregarSaques();
       } catch (error) {
         console.error("Erro ao atualizar status:", error);
       }
     }
 
-    document.getElementById("searchUser").addEventListener("input", carregarSaques);
-    document.getElementById("filterStatus").addEventListener("change", carregarSaques);
+    // Excluir saque
+    async function excluirSaque(id) {
+      if (!confirm("Tem certeza que deseja excluir este saque?")) return;
+      try {
+        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        carregarSaques();
+      } catch (error) {
+        console.error("Erro ao excluir saque:", error);
+      }
+    }
 
+    // Inicia carregando os saques
     carregarSaques();
   </script>
 </body>

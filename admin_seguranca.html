@@ -1,219 +1,114 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Segurança</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Painel Admin - Segurança</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: #000;
-      color: white;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #111;
-      padding: 10px 20px;
-      border-bottom: 2px solid red;
-    }
-    .menu-btn {
-      font-size: 26px;
-      cursor: pointer;
-      color: red;
-    }
-    .title {
-      font-size: 22px;
-      font-weight: bold;
-      color: red;
-    }
-    .user-area {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .notif {
-      position: relative;
-      cursor: pointer;
-      font-size: 22px;
-    }
-    .notif span {
-      position: absolute;
-      top: -8px;
-      right: -10px;
-      background: red;
-      color: white;
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 50%;
-    }
-    #sideMenu {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background: #111;
-      overflow-x: hidden;
-      transition: 0.3s;
-      padding-top: 60px;
-      border-right: 2px solid red;
-    }
-    #sideMenu a {
-      padding: 12px 20px;
-      text-decoration: none;
-      font-size: 18px;
-      color: white;
-      display: block;
-    }
-    #sideMenu a:hover {
-      background: red;
-      color: black;
-    }
-    #sideMenu .closebtn {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 28px;
-      cursor: pointer;
-      color: red;
-    }
-    section {
-      padding: 20px;
+      margin: 20px;
+      background: #f9f9f9;
     }
     h2 {
-      color: red;
+      color: #333;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-      background: #111;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     th, td {
-      border: 1px solid red;
-      padding: 10px;
-      text-align: center;
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
     }
     th {
-      background: #222;
-      color: red;
+      background: #6c757d;
+      color: white;
     }
-    canvas {
-      margin-top: 20px;
-      background: #111;
-      border-radius: 10px;
-      padding: 10px;
+    tr:hover {
+      background: #f1f1f1;
+    }
+    button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .excluir {
+      background: #dc3545;
+      color: white;
     }
   </style>
 </head>
 <body>
-  <header>
-    <span class="menu-btn" onclick="openMenu()">☰</span>
-    <div class="title">Painel de Segurança</div>
-    <div class="user-area">
-      <div>👤 Admin</div>
-      <div class="notif" onclick="openNotif()">✉️<span id="notifCount">2</span></div>
-    </div>
-  </header>
+  <h2>Monitoramento de Segurança</h2>
 
-  <!-- Menu lateral -->
-  <div id="sideMenu">
-    <span class="closebtn" onclick="closeMenu()">×</span>
-    <a href="admin_dashboard.html">Dashboard</a>
-    <a href="admin_usuarios.html">Usuários</a>
-    <a href="admin_produtos.html">Produtos</a>
-    <a href="admin_saques.html">Saques</a>
-    <a href="admin_plans.html">Planos</a>
-    <a href="admin_seguranca.html">Segurança</a>
-  </div>
-
-  <section>
-    <h2>Últimos Logs de Segurança</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Usuário</th>
-          <th>Ação</th>
-          <th>Data</th>
-        </tr>
-      </thead>
-      <tbody id="logsTable">
-        <tr><td colspan="4">Carregando logs...</td></tr>
-      </tbody>
-    </table>
-
-    <canvas id="logsChart"></canvas>
-  </section>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuário</th>
+        <th>Evento</th>
+        <th>Data</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="segTable">
+      <tr><td colspan="5">Carregando eventos de segurança...</td></tr>
+    </tbody>
+  </table>
 
   <script>
-    let notifications = [
-      { text: "Tentativa de login suspeita", link: "#", read: false },
-      { text: "Usuário bloqueado por falha de senha", link: "#", read: false }
-    ];
+    const API_URL = "http://localhost:3000/seguranca";
 
-    function updateNotif() {
-      const notifCount = document.getElementById("notifCount");
-      const unread = notifications.filter(n => !n.read).length;
-      notifCount.textContent = unread;
-    }
-
-    function openMenu() { document.getElementById("sideMenu").style.width = "250px"; }
-    function closeMenu() { document.getElementById("sideMenu").style.width = "0"; }
-    function openNotif() { alert("Abrir notificações de segurança"); }
-
-    async function carregarLogs() {
+    // Carregar eventos
+    async function carregarSeguranca() {
       try {
-        const response = await fetch("http://localhost:3000/logs");
-        const logs = await response.json();
+        const response = await fetch(API_URL);
+        const eventos = await response.json();
 
-        const tabela = document.getElementById("logsTable");
+        const tabela = document.getElementById("segTable");
         tabela.innerHTML = "";
 
-        let acessos = 0, bloqueios = 0, alertas = 0;
-
-        if (logs.length === 0) {
-          tabela.innerHTML = `<tr><td colspan="4">Nenhum log encontrado</td></tr>`;
+        if (eventos.length === 0) {
+          tabela.innerHTML = `<tr><td colspan="5">Nenhum evento registrado</td></tr>`;
         } else {
-          logs.forEach(log => {
+          eventos.forEach(ev => {
             let row = `
               <tr>
-                <td>${log.id}</td>
-                <td>${log.usuario}</td>
-                <td>${log.acao}</td>
-                <td>${log.data}</td>
+                <td>${ev.id}</td>
+                <td>${ev.usuario}</td>
+                <td>${ev.evento}</td>
+                <td>${ev.data}</td>
+                <td><button class="excluir" onclick="excluirEvento(${ev.id})">Excluir</button></td>
               </tr>
             `;
             tabela.innerHTML += row;
-
-            if (log.acao.includes("Acesso")) acessos++;
-            else if (log.acao.includes("Bloqueio")) bloqueios++;
-            else alertas++;
           });
         }
-
-        const ctx = document.getElementById("logsChart").getContext("2d");
-        new Chart(ctx, {
-          type: "pie",
-          data: {
-            labels: ["Acessos", "Bloqueios", "Alertas"],
-            datasets: [{
-              data: [acessos, bloqueios, alertas],
-              backgroundColor: ["green", "red", "orange"]
-            }]
-          }
-        });
       } catch (error) {
-        console.error("Erro ao carregar logs:", error);
+        console.error("Erro ao carregar eventos:", error);
       }
     }
 
-    updateNotif();
-    carregarLogs();
+    // Excluir evento
+    async function excluirEvento(id) {
+      if (!confirm("Deseja excluir este evento de segurança?")) return;
+      try {
+        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        carregarSeguranca();
+      } catch (error) {
+        console.error("Erro ao excluir evento:", error);
+      }
+    }
+
+    // Inicia carregando os eventos
+    carregarSeguranca();
   </script>
 </body>
 </html>

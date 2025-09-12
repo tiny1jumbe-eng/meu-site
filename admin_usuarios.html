@@ -2,146 +2,135 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Painel de Usuários</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Painel Admin - Usuários</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f4f4f9;
+    }
+    h2 {
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: #007bff;
+      color: white;
+    }
+    tr:hover {
+      background: #f1f1f1;
+    }
+    button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+    .ativo { background: #28a745; color: white; }
+    .suspenso { background: #ffc107; color: black; }
+    .excluir { background: #dc3545; color: white; }
+  </style>
 </head>
 <body>
-  <!-- Topo -->
-  <header>
-    <button onclick="openMenu()">☰</button>
-    <h1>Painel de Usuários</h1>
-    <button onclick="openNotif()">🔔 <span id="notifCount">0</span></button>
-  </header>
+  <h2>Gerenciamento de Usuários</h2>
 
-  <!-- Menu lateral -->
-  <div id="sideMenu" class="side-menu">
-    <a href="javascript:void(0)" onclick="closeMenu()">×</a>
-    <a href="admin_dashboard.html">Dashboard</a>
-    <a href="admin_usuarios.html">Usuários</a>
-    <a href="admin_produtos.html">Produtos</a>
-    <a href="admin_saques.html">Saques</a>
-    <a href="admin_plans.html">Planos</a>
-    <a href="admin_seguranca.html">Segurança</a>
-  </div>
-
-  <!-- Caixa de notificações -->
-  <div id="notifBox" class="notif-box">
-    <a href="javascript:void(0)" onclick="closeNotif()">×</a>
-    <h3>Notificações</h3>
-    <div id="notifList"></div>
-  </div>
-
-  <!-- Conteúdo principal -->
-  <main>
-    <h2>Lista de Usuários</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th>Email</th>
-          <th>Tipo</th>
-        </tr>
-      </thead>
-      <tbody id="usuariosTable">
-        <tr><td colspan="4">Carregando usuários...</td></tr>
-      </tbody>
-    </table>
-
-    <h2>Gráfico de Usuários</h2>
-    <canvas id="usuariosChart" width="400" height="200"></canvas>
-  </main>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th>Tipo</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="usuariosTable">
+      <tr><td colspan="7">Carregando usuários...</td></tr>
+    </tbody>
+  </table>
 
   <script>
-    // Notificações simuladas
-    let notifications = [
-      { text: "Novo usuário cadastrado", link: "admin_usuarios.html" },
-      { text: "Pedido de saque recebido", link: "admin_saques.html" },
-      { text: "Novo produto adicionado", link: "admin_produtos.html" }
-    ];
+    const API_URL = "http://localhost:3000/usuarios";
 
-    function updateNotif() {
-      const notifList = document.getElementById("notifList");
-      notifList.innerHTML = "";
-      let unread = 0;
-
-      notifications.forEach((n, i) => {
-        let div = document.createElement("div");
-        div.className = "notif-item";
-        div.textContent = n.text;
-        div.onclick = () => {
-          notifications[i].read = true;
-          window.location.href = n.link;
-        };
-        notifList.appendChild(div);
-        if (!n.read) unread++;
-      });
-
-      document.getElementById("notifCount").textContent = unread;
-    }
-
-    function openMenu() { document.getElementById("sideMenu").style.width = "250px"; }
-    function closeMenu() { document.getElementById("sideMenu").style.width = "0"; }
-
-    function openNotif() {
-      document.getElementById("notifBox").style.width = "300px";
-      updateNotif();
-    }
-    function closeNotif() { document.getElementById("notifBox").style.width = "0"; }
-
-    // Carregar usuários e gráfico
+    // Carregar usuários
     async function carregarUsuarios() {
       try {
-        const response = await fetch("http://localhost:3000/usuarios");
+        const response = await fetch(API_URL);
         const usuarios = await response.json();
 
         const tabela = document.getElementById("usuariosTable");
         tabela.innerHTML = "";
 
-        let compradores = 0, vendedores = 0;
-
         if (usuarios.length === 0) {
-          tabela.innerHTML = `<tr><td colspan="4">Nenhum usuário encontrado</td></tr>`;
+          tabela.innerHTML = `<tr><td colspan="7">Nenhum usuário encontrado</td></tr>`;
         } else {
-          usuarios.forEach(user => {
+          usuarios.forEach(usuario => {
             let row = `
               <tr>
-                <td>${user.id}</td>
-                <td>${user.nome}</td>
-                <td>${user.email}</td>
-                <td>${user.tipo}</td>
+                <td>${usuario.id}</td>
+                <td>${usuario.nome}</td>
+                <td>${usuario.email}</td>
+                <td>${usuario.telefone}</td>
+                <td>${usuario.tipo}</td>
+                <td>${usuario.status}</td>
+                <td>
+                  <button class="ativo" onclick="atualizarStatus(${usuario.id}, 'ativo')">Ativar</button>
+                  <button class="suspenso" onclick="atualizarStatus(${usuario.id}, 'suspenso')">Suspender</button>
+                  <button class="excluir" onclick="excluirUsuario(${usuario.id})">Excluir</button>
+                </td>
               </tr>
             `;
             tabela.innerHTML += row;
-
-            if (user.tipo === "comprador") compradores++;
-            else if (user.tipo === "vendedor") vendedores++;
           });
         }
-
-        const ctx = document.getElementById("usuariosChart").getContext("2d");
-        new Chart(ctx, {
-          type: "pie",
-          data: {
-            labels: ["Compradores", "Vendedores"],
-            datasets: [{
-              data: [compradores, vendedores],
-              backgroundColor: ["#36a2eb", "#ff6384"]
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { position: "bottom" }
-            }
-          }
-        });
       } catch (error) {
         console.error("Erro ao carregar usuários:", error);
       }
     }
 
+    // Atualizar status do usuário
+    async function atualizarStatus(id, status) {
+      try {
+        await fetch(`${API_URL}/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status })
+        });
+        carregarUsuarios();
+      } catch (error) {
+        console.error("Erro ao atualizar status:", error);
+      }
+    }
+
+    // Excluir usuário
+    async function excluirUsuario(id) {
+      if (!confirm("Tem certeza que deseja excluir este usuário?")) return;
+      try {
+        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        carregarUsuarios();
+      } catch (error) {
+        console.error("Erro ao excluir usuário:", error);
+      }
+    }
+
+    // Inicia carregando os usuários
     carregarUsuarios();
   </script>
 </body>

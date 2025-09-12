@@ -3,46 +3,46 @@
     {
       "id": 1,
       "nome": "Leonardo",
-      "email": "leonardo@email.com",
-      "tipo": "Vendedor"
+      "email": "leo@digivend.com",
+      "tipo": "Vendedor",
+      "status": "ativo"
     },
     {
       "id": 2,
       "nome": "Maria",
-      "email": "maria@email.com",
-      "tipo": "Comprador"
+      "email": "maria@digivend.com",
+      "tipo": "Comprador",
+      "status": "ativo"
     },
     {
       "id": 3,
       "nome": "Carlos",
-      "email": "carlos@email.com",
-      "tipo": "Vendedor"
-    },
-    {
-      "id": 4,
-      "nome": "Ana",
-      "email": "ana@email.com",
-      "tipo": "Comprador"
+      "email": "carlos@digivend.com",
+      "tipo": "Vendedor",
+      "status": "bloqueado"
     }
   ],
   "produtos": [
     {
       "id": 1,
-      "nome": "Camiseta Vermelha",
-      "preco": 500,
-      "status": "Aprovado"
+      "nome": "Teclado Mecânico",
+      "categoria": "Eletrônicos",
+      "status": "Pendente",
+      "preco": 200
     },
     {
       "id": 2,
-      "nome": "Tênis Branco",
-      "preco": 2000,
-      "status": "Pendente"
+      "nome": "Smartphone",
+      "categoria": "Eletrônicos",
+      "status": "Aprovado",
+      "preco": 15000
     },
     {
       "id": 3,
-      "nome": "Relógio Digital",
-      "preco": 1500,
-      "status": "Aprovado"
+      "nome": "Fones de Ouvido",
+      "categoria": "Acessórios",
+      "status": "Rejeitado",
+      "preco": 500
     }
   ],
   "saques": [
@@ -50,22 +50,22 @@
       "id": 1,
       "usuario": "Leonardo",
       "valor": 100,
-      "status": "Concluído",
-      "data": "01/09/2025"
+      "status": "Aceito",
+      "data": "2025-09-01"
     },
     {
       "id": 2,
       "usuario": "Carlos",
       "valor": 200,
       "status": "Pendente",
-      "data": "05/09/2025"
+      "data": "2025-09-05"
     },
     {
       "id": 3,
       "usuario": "Maria",
       "valor": 50,
       "status": "Rejeitado",
-      "data": "03/09/2025"
+      "data": "2025-09-03"
     }
   ],
   "planos": [
@@ -73,49 +73,49 @@
       "id": 1,
       "usuario": "Leonardo",
       "tipo": "premium",
-      "validade": "30/09/2025"
+      "validade": "2025-09-30",
+      "status": "ativo"
     },
     {
       "id": 2,
       "usuario": "Maria",
       "tipo": "free",
-      "validade": "15/09/2025"
+      "validade": "2025-09-15",
+      "status": "ativo"
     },
     {
       "id": 3,
       "usuario": "Carlos",
       "tipo": "pro",
-      "validade": "20/09/2025"
+      "validade": "2025-09-20",
+      "status": "inativo"
     },
     {
       "id": 4,
       "usuario": "Ana",
       "tipo": "premium",
-      "validade": "01/10/2025"
+      "validade": "2025-10-01",
+      "status": "ativo"
     }
   ],
-  "saldo": {
-    "total": 400,
-    "disponivel": 250
-  },
-  "transacoes": [
+  "seguranca": [
     {
       "id": 1,
-      "descricao": "Venda de produto",
-      "valor": 150,
-      "tipo": "entrada"
+      "evento": "Login realizado com sucesso",
+      "usuario": "Leonardo",
+      "data": "2025-09-01 10:30"
     },
     {
       "id": 2,
-      "descricao": "Saque realizado",
-      "valor": 100,
-      "tipo": "saida"
+      "evento": "Tentativa de acesso inválida",
+      "usuario": "Desconhecido",
+      "data": "2025-09-02 14:15"
     },
     {
       "id": 3,
-      "descricao": "Compra de plano",
-      "valor": 50,
-      "tipo": "saida"
+      "evento": "Senha alterada",
+      "usuario": "Maria",
+      "data": "2025-09-05 18:45"
     }
   ]
 }
