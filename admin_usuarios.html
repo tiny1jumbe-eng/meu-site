@@ -227,78 +227,57 @@
     </table>
   </div>
 
-  <script>
-    // Notificações simuladas
-    let notifications = [
-      { text: "Novo usuário cadastrado", link: "admin_usuarios.html", read: false },
-      { text: "Usuário bloqueado", link: "admin_usuarios.html", read: false }
-    ];
+<script>
+  async function carregarUsuarios() {
+    try {
+      const response = await fetch("http://localhost:3000/usuarios");
+      const usuarios = await response.json();
 
-    function updateNotif() {
-      const notifList = document.getElementById("notifList");
-      notifList.innerHTML = "";
-      let unread = 0;
+      const tabela = document.getElementById("usuariosTable");
+      tabela.innerHTML = "";
 
-      notifications.forEach((n, i) => {
-        let div = document.createElement("div");
-        div.className = "notif-item";
-        div.textContent = n.text;
-        div.onclick = () => {
-          notifications[i].read = true;
-          window.location.href = n.link;
-        };
-        notifList.appendChild(div);
-        if (!n.read) unread++;
+      usuarios.forEach(user => {
+        let row = `
+          <tr>
+            <td>${user.id}</td>
+            <td>${user.nome}</td>
+            <td>${user.email}</td>
+            <td>${user.tipo}</td>
+            <td>
+              <button onclick="bloquearUsuario(${user.id})">
+                ${user.status === "bloqueado" ? "Desbloquear" : "Bloquear"}
+              </button>
+            </td>
+          </tr>
+        `;
+        tabela.innerHTML += row;
+      });
+    } catch (error) {
+      console.error("Erro ao carregar usuários:", error);
+    }
+  }
+
+  async function bloquearUsuario(id) {
+    try {
+      const response = await fetch(`http://localhost:3000/usuarios/${id}`);
+      const user = await response.json();
+
+      const novoStatus = user.status === "bloqueado" ? "ativo" : "bloqueado";
+
+      await fetch(`http://localhost:3000/usuarios/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: novoStatus })
       });
 
-      document.getElementById("notifCount").textContent = unread;
+      alert(`Usuário ${novoStatus === "bloqueado" ? "bloqueado" : "desbloqueado"} com sucesso!`);
+      carregarUsuarios();
+    } catch (error) {
+      console.error("Erro ao atualizar usuário:", error);
     }
+  }
 
-    function openMenu() { document.getElementById("sideMenu").style.width = "250px"; }
-    function closeMenu() { document.getElementById("sideMenu").style.width = "0"; }
-
-    function openNotif() { 
-      document.getElementById("notifBox").style.width = "300px"; 
-      updateNotif();
-    }
-    function closeNotif() { document.getElementById("notifBox").style.width = "0"; }
-
-    updateNotif();
-
-    // Carregar usuários do db.json
-    async function carregarUsuarios() {
-      try {
-        const response = await fetch("http://localhost:3000/usuarios");
-        const usuarios = await response.json();
-        const tabela = document.getElementById("usuariosTable");
-        tabela.innerHTML = "";
-
-        if (usuarios.length === 0) {
-          tabela.innerHTML = `<tr><td colspan="5">Nenhum usuário encontrado</td></tr>`;
-        } else {
-          usuarios.forEach(usuario => {
-            let row = `
-              <tr>
-                <td>${usuario.id}</td>
-                <td>${usuario.nome}</td>
-                <td>${usuario.email}</td>
-                <td>${usuario.tipo}</td>
-                <td><button onclick="bloquearUsuario(${usuario.id})">Bloquear</button></td>
-              </tr>
-            `;
-            tabela.innerHTML += row;
-          });
-        }
-      } catch (error) {
-        console.error("Erro ao carregar usuários:", error);
-      }
-    }
-
-    function bloquearUsuario(id) {
-      alert("Usuário " + id + " bloqueado!");
-    }
-
-    carregarUsuarios();
-  </script>
+  carregarUsuarios();
+</script>
 </body>
 </html>

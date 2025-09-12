@@ -12,60 +12,60 @@
       "nome": "Maria",
       "email": "maria@digivend.com",
       "tipo": "Comprador",
-      "status": "ativo"
+      "status": "bloqueado"
     },
     {
       "id": 3,
       "nome": "Carlos",
       "email": "carlos@digivend.com",
       "tipo": "Vendedor",
-      "status": "bloqueado"
+      "status": "ativo"
     }
   ],
   "produtos": [
     {
       "id": 1,
-      "nome": "Teclado Mecânico",
+      "nome": "Celular Samsung",
       "categoria": "Eletrônicos",
-      "status": "Pendente",
-      "preco": 200
+      "preco": 1200,
+      "status": "ativo"
     },
     {
       "id": 2,
-      "nome": "Smartphone",
-      "categoria": "Eletrônicos",
-      "status": "Aprovado",
-      "preco": 15000
+      "nome": "Notebook Dell",
+      "categoria": "Informática",
+      "preco": 3500,
+      "status": "pendente"
     },
     {
       "id": 3,
-      "nome": "Fones de Ouvido",
+      "nome": "Fone de Ouvido",
       "categoria": "Acessórios",
-      "status": "Rejeitado",
-      "preco": 500
+      "preco": 150,
+      "status": "rejeitado"
     }
   ],
   "saques": [
     {
       "id": 1,
       "usuario": "Leonardo",
-      "valor": 100,
-      "status": "Aceito",
-      "data": "2025-09-01"
+      "valor": 200,
+      "status": "pendente",
+      "data": "01/09/2025"
     },
     {
       "id": 2,
       "usuario": "Carlos",
-      "valor": 200,
-      "status": "Pendente",
-      "data": "2025-09-05"
+      "valor": 100,
+      "status": "aprovado",
+      "data": "02/09/2025"
     },
     {
       "id": 3,
       "usuario": "Maria",
       "valor": 50,
-      "status": "Rejeitado",
-      "data": "2025-09-03"
+      "status": "rejeitado",
+      "data": "03/09/2025"
     }
   ],
   "planos": [
@@ -73,49 +73,25 @@
       "id": 1,
       "usuario": "Leonardo",
       "tipo": "premium",
-      "validade": "2025-09-30",
-      "status": "ativo"
+      "validade": "30/09/2025"
     },
     {
       "id": 2,
       "usuario": "Maria",
       "tipo": "free",
-      "validade": "2025-09-15",
-      "status": "ativo"
+      "validade": "15/09/2025"
     },
     {
       "id": 3,
       "usuario": "Carlos",
       "tipo": "pro",
-      "validade": "2025-09-20",
-      "status": "inativo"
+      "validade": "20/09/2025"
     },
     {
       "id": 4,
       "usuario": "Ana",
       "tipo": "premium",
-      "validade": "2025-10-01",
-      "status": "ativo"
-    }
-  ],
-  "seguranca": [
-    {
-      "id": 1,
-      "evento": "Login realizado com sucesso",
-      "usuario": "Leonardo",
-      "data": "2025-09-01 10:30"
-    },
-    {
-      "id": 2,
-      "evento": "Tentativa de acesso inválida",
-      "usuario": "Desconhecido",
-      "data": "2025-09-02 14:15"
-    },
-    {
-      "id": 3,
-      "evento": "Senha alterada",
-      "usuario": "Maria",
-      "data": "2025-09-05 18:45"
+      "validade": "01/10/2025"
     }
   ]
 }
