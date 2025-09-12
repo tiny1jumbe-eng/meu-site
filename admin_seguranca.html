@@ -1,113 +1,291 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Painel Admin - Segurança</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Segurança</title>
   <style>
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
+      background-color: #000;
+      color: white;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #111;
+      padding: 10px 20px;
+      border-bottom: 2px solid red;
+    }
+
+    .menu-btn {
+      font-size: 26px;
+      cursor: pointer;
+      color: red;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: bold;
+      color: red;
+    }
+
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .notif {
+      position: relative;
+      cursor: pointer;
+      font-size: 22px;
+    }
+
+    .notif span {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: red;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+
+    /* Menu lateral */
+    #sideMenu {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: #111;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      border-right: 2px solid red;
+    }
+
+    #sideMenu a {
+      padding: 12px 20px;
+      text-decoration: none;
+      font-size: 18px;
+      color: white;
+      display: block;
+      transition: 0.2s;
+    }
+
+    #sideMenu a:hover {
+      background: red;
+      color: black;
+    }
+
+    #sideMenu .closebtn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: red;
+    }
+
+    /* Caixa de notificações */
+    #notifBox {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      background: #111;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      border-left: 2px solid red;
+    }
+
+    #notifBox h2 {
+      text-align: center;
+      color: red;
+    }
+
+    #notifBox .closebtn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: red;
+    }
+
+    .notif-item {
+      padding: 10px;
+      border-bottom: 1px solid #333;
+      cursor: pointer;
+    }
+
+    .notif-item:hover {
+      background: #222;
+    }
+
+    /* Card da tabela */
+    .card {
+      background: #111;
+      border: 1px solid red;
+      border-radius: 10px;
+      padding: 20px;
       margin: 20px;
-      background: #f9f9f9;
     }
-    h2 {
-      color: #333;
+
+    .card h3 {
+      margin-top: 0;
+      color: red;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 15px;
     }
+
     th, td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
+      border: 1px solid #333;
+      padding: 10px;
+      text-align: center;
     }
+
     th {
-      background: #6c757d;
-      color: white;
+      background: red;
+      color: black;
     }
-    tr:hover {
-      background: #f1f1f1;
+
+    td {
+      background: #222;
     }
-    button {
-      padding: 5px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .excluir {
-      background: #dc3545;
-      color: white;
+
+    .alerta {
+      color: red;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h2>Monitoramento de Segurança</h2>
+  <header>
+    <span class="menu-btn" onclick="openMenu()">☰</span>
+    <div class="title">Monitoramento de Segurança</div>
+    <div class="user-area">
+      <div>👤 Admin</div>
+      <div class="notif" onclick="openNotif()">⚠️<span id="notifCount">1</span></div>
+    </div>
+  </header>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Usuário</th>
-        <th>Evento</th>
-        <th>Data</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody id="segTable">
-      <tr><td colspan="5">Carregando eventos de segurança...</td></tr>
-    </tbody>
-  </table>
+  <!-- Menu lateral -->
+  <div id="sideMenu">
+    <span class="closebtn" onclick="closeMenu()">×</span>
+    <a href="admin_dashboard.html">Dashboard</a>
+    <a href="admin_usuarios.html">Usuários</a>
+    <a href="admin_produtos.html">Produtos</a>
+    <a href="admin_saques.html">Saques</a>
+    <a href="admin_plans.html">Planos</a>
+    <a href="admin_seguranca.html">Segurança</a>
+  </div>
+
+  <!-- Caixa de notificações -->
+  <div id="notifBox">
+    <span class="closebtn" onclick="closeNotif()">×</span>
+    <h2>Alertas de Segurança</h2>
+    <div id="notifList"></div>
+  </div>
+
+  <!-- Card com tabela -->
+  <div class="card">
+    <h3>Eventos de Segurança</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuário</th>
+          <th>Evento</th>
+          <th>Data</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="segTable">
+        <!-- Dados via JS -->
+      </tbody>
+    </table>
+  </div>
 
   <script>
-    const API_URL = "http://localhost:3000/seguranca";
+    // Notificações simuladas
+    let notifications = [
+      { text: "Tentativa de login falhada detectada", link: "admin_seguranca.html", read: false }
+    ];
 
-    // Carregar eventos
+    function updateNotif() {
+      const notifList = document.getElementById("notifList");
+      notifList.innerHTML = "";
+      let unread = 0;
+
+      notifications.forEach((n, i) => {
+        let div = document.createElement("div");
+        div.className = "notif-item";
+        div.textContent = n.text;
+        div.onclick = () => {
+          notifications[i].read = true;
+          window.location.href = n.link;
+        };
+        notifList.appendChild(div);
+        if (!n.read) unread++;
+      });
+
+      document.getElementById("notifCount").textContent = unread;
+    }
+
+    function openMenu() { document.getElementById("sideMenu").style.width = "250px"; }
+    function closeMenu() { document.getElementById("sideMenu").style.width = "0"; }
+
+    function openNotif() { 
+      document.getElementById("notifBox").style.width = "300px"; 
+      updateNotif();
+    }
+    function closeNotif() { document.getElementById("notifBox").style.width = "0"; }
+
+    updateNotif();
+
+    // Carregar eventos de segurança
     async function carregarSeguranca() {
       try {
-        const response = await fetch(API_URL);
+        const response = await fetch("http://localhost:3000/seguranca");
         const eventos = await response.json();
-
         const tabela = document.getElementById("segTable");
         tabela.innerHTML = "";
 
         if (eventos.length === 0) {
-          tabela.innerHTML = `<tr><td colspan="5">Nenhum evento registrado</td></tr>`;
+          tabela.innerHTML = `<tr><td colspan="5">Nenhum evento de segurança encontrado</td></tr>`;
         } else {
           eventos.forEach(ev => {
+            let statusClass = ev.status === "crítico" ? "alerta" : "";
             let row = `
               <tr>
                 <td>${ev.id}</td>
                 <td>${ev.usuario}</td>
                 <td>${ev.evento}</td>
                 <td>${ev.data}</td>
-                <td><button class="excluir" onclick="excluirEvento(${ev.id})">Excluir</button></td>
+                <td class="${statusClass}">${ev.status}</td>
               </tr>
             `;
             tabela.innerHTML += row;
           });
         }
       } catch (error) {
-        console.error("Erro ao carregar eventos:", error);
+        console.error("Erro ao carregar eventos de segurança:", error);
       }
     }
 
-    // Excluir evento
-    async function excluirEvento(id) {
-      if (!confirm("Deseja excluir este evento de segurança?")) return;
-      try {
-        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        carregarSeguranca();
-      } catch (error) {
-        console.error("Erro ao excluir evento:", error);
-      }
-    }
-
-    // Inicia carregando os eventos
     carregarSeguranca();
   </script>
 </body>
